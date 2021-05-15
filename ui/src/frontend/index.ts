@@ -215,6 +215,18 @@ function main() {
   globals.store.subscribe(scheduleRafAndRunControllersOnStateChange);
   globals.publishRedraw = () => raf.scheduleFullRedraw();
 
+  // Try to load the function map
+  fetch("http://127.0.0.1:9001/file_info")
+  .then(data => {
+    return data.json();
+  })
+  .then(res => {
+    globals.sourceFileStorage = res;
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
   // We proxy messages between the extension and the controller because the
   // controller's worker can't access chrome.runtime.
   const extensionPort =

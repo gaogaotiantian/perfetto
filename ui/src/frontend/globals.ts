@@ -62,7 +62,7 @@ type TrackDataStore = Map<string, {}>;
 type QueryResultsStore = Map<string, {} | undefined>;
 type AggregateDataStore = Map<string, AggregateData>;
 type Description = Map<string, string>;
-
+type SourceFileStorage = any;
 export interface SliceDetails {
   ts?: time;
   absTime?: string;
@@ -275,6 +275,7 @@ class Globals implements AppContext {
 
   // Used for permalink load by trace_controller.ts.
   restoreAppStateAfterTraceLoad?: SerializedAppState;
+  private _sourceFileStorage?: SourceFileStorage = undefined;
 
   // TODO(hjd): Remove once we no longer need to update UUID on redraw.
   private _publishRedraw?: () => void = undefined;
@@ -324,6 +325,7 @@ class Globals implements AppContext {
     this._visibleFlowCategories = new Map<string, boolean>();
     this._threadStateDetails = {};
     this._cpuProfileDetails = {};
+    this._sourceFileStorage = {};
     this.engines.clear();
     this._selectionManager.clear();
   }
@@ -460,6 +462,14 @@ class Globals implements AppContext {
 
   set cpuProfileDetails(click: CpuProfileDetails) {
     this._cpuProfileDetails = assertExists(click);
+  }
+
+  get sourceFileStorage() {
+    return assertExists(this._sourceFileStorage);
+  }
+
+  set sourceFileStorage(value: any) {
+    this._sourceFileStorage = value;
   }
 
   set numQueuedQueries(value: number) {
