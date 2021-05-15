@@ -407,6 +407,18 @@ function main() {
   globals.initialize(dispatch, controller);
   globals.serviceWorkerController.install();
 
+  // Try to load the function map
+  fetch("http://127.0.0.1:9001/file_info")
+  .then(data => {
+    return data.json();
+  })
+  .then(res => {
+    globals.sourceFileStorage = res;
+  })
+  .catch(error => {
+    console.log(error);
+  })
+
   const router = new Router(
       '/',
       {
@@ -513,6 +525,12 @@ function onCssLoaded(router: Router) {
         .catch(e => {
           console.error(e);
         });
+  } else {
+    // This is for VizTracer use only!
+    // To make it auto-load the trace, we try to load localtrace
+    globals.dispatch(Actions.openTraceFromUrl({
+      url: 'http://127.0.0.1:9001/localtrace',
+    }));
   }
 
   // Add support for opening traces from postMessage().

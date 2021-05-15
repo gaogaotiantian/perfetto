@@ -35,6 +35,7 @@ type TrackDataStore = Map<string, {}>;
 type QueryResultsStore = Map<string, {}>;
 type AggregateDataStore = Map<string, AggregateData>;
 type Description = Map<string, string>;
+type SourceFileStorage = any;
 export interface SliceDetails {
   ts?: number;
   dur?: number;
@@ -176,6 +177,7 @@ class Globals {
   private _metricResult?: MetricResult = undefined;
   private _hasFtrace?: boolean = undefined;
   private _jobStatus?: Map<ConversionJobName, ConversionJobStatus> = undefined;
+  private _sourceFileStorage?: SourceFileStorage = undefined;
 
   private _currentSearchResults: CurrentSearchResults = {
     sliceIds: [],
@@ -214,6 +216,7 @@ class Globals {
     this._threadStateDetails = {};
     this._heapProfileDetails = {};
     this._cpuProfileDetails = {};
+    this._sourceFileStorage = {};
   }
 
   get state(): State {
@@ -351,6 +354,14 @@ class Globals {
 
   set cpuProfileDetails(click: CpuProfileDetails) {
     this._cpuProfileDetails = assertExists(click);
+  }
+
+  get sourceFileStorage() {
+    return assertExists(this._sourceFileStorage);
+  }
+
+  set sourceFileStorage(value: any) {
+    this._sourceFileStorage = value;
   }
 
   set numQueuedQueries(value: number) {

@@ -248,6 +248,23 @@ class TraceErrorIcon implements m.ClassComponent {
   }
 }
 
+class RefreshIcon implements m.ClassComponent {
+  view() {
+    return m(
+      'button.topbar-button',
+      {
+        onclick: () => {
+          // @ts-ignore this function is set in index.html
+          window.clearAllCaches();
+        },
+      },
+      m('i.material-icons',
+        'refresh'
+      )
+    )
+  }
+}
+
 export class Topbar implements m.ClassComponent {
   view() {
     return m(
@@ -260,6 +277,7 @@ export class Topbar implements m.ClassComponent {
             m(Omnibox),
         m(Progress),
         m(HelpPanningNotification),
-        m(TraceErrorIcon));
+        m(TraceErrorIcon),
+        m(RefreshIcon));
   }
 }
