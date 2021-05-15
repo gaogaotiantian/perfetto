@@ -13,6 +13,9 @@
 // limitations under the License.
 
 import * as m from 'mithril';
+import * as Prism from 'prismjs';
+import 'prismjs/components/prism-python';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
 
 import {Actions} from '../common/actions';
 import {Arg, ArgsTree, isArgTreeArray, isArgTreeMap} from '../common/arg_types';
@@ -171,6 +174,7 @@ class TableBuilder {
 }
 
 export class ChromeSliceDetailsPanel extends SlicePanel {
+  private pre_height = 100;
   view() {
     const sliceInfo = globals.sliceDetails;
     if (sliceInfo.ts !== undefined && sliceInfo.dur !== undefined &&
@@ -210,10 +214,43 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
         this.fillDescription(sliceInfo.description, builder);
       }
       this.fillArgs(sliceInfo, builder);
+
+      // Find source code
+      const funcName = sliceInfo.name;
+      const sourceStorage = globals.sourceFileStorage;
+      if (sourceStorage && sourceStorage["functions"]) {
+        const file_data = sourceStorage["functions"][funcName] || null;
+        if (file_data) {
+          const file_name = file_data[0];
+          const lineno = file_data[1];
+          const code = sourceStorage["files"][file_name][0];
+          const total_lineno = sourceStorage["files"][file_name][1];
+          return m(
+              '.details-panel',
+              m(
+                '.details-panel-heading',
+                m('h2', `Slice Details`)
+              ),
+              m(
+                '.details-table',
+                this.renderTable(builder),
+                m('.details-source .half-width', this.renderSourceCode(code, lineno, total_lineno))
+              )
+          );
+        }
+      }
+
       return m(
           '.details-panel',
-          m('.details-panel-heading', m('h2', `Slice Details`)),
-          m('.details-table', this.renderTable(builder)));
+          m(
+            '.details-panel-heading',
+            m('h2', `Slice Details`)
+          ),
+          m(
+            '.details-table',
+            this.renderTable(builder)
+          )
+      )
     } else {
       return m(
           '.details-panel',
@@ -307,6 +344,52 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
     }
 
     return m('table.half-width.auto-layout', rows);
+  }
+
+  renderSourceCode(code: string, lineno: number, total_lineno: number): m.Vnode {
+    var el_pre = document.createElement("pre");
+    var el_code = document.createElement("code");
+    el_pre.className = "language-py line-numbers"
+    el_code.className = "language-py"
+    el_pre.appendChild(el_code)
+    el_code.innerHTML = Prism.highlight(code, Prism.languages.python, "python");
+    var env = {
+      element: el_code,
+      language: "python",
+      grammar: Prism.languages.python,
+      code: code
+    }
+    Prism.hooks.run("complete", env);
+
+    return m(
+      'pre.language-py.line-numbers',
+      {
+        style: {
+          height: `${this.pre_height}px`
+        },
+        oncreate: () => {
+          this.resize(lineno, total_lineno);
+        },
+        onupdate: () => {
+          this.resize(lineno, total_lineno)
+        }
+      },
+      m.trust(el_pre.innerHTML)
+    )
+  }
+
+  resize(lineno: number, total_lineno: number) {
+    var contents_height = document.getElementsByClassName("details-content")[0].clientHeight;
+    var handle_height = document.getElementsByClassName("handle")[0].clientHeight;
+    var heading_height = document.getElementsByClassName("details-panel-heading")[0].clientHeight;
+    this.pre_height = contents_height - handle_height - heading_height;
+
+    const pre_el: HTMLElement | null = document.querySelector("pre.language-py");
+    const code_el: HTMLElement | null = document.querySelector("code.language-py");
+
+    if (pre_el !== null && code_el !== null) {
+      pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
+    }
   }
 
   fillDescription(description: Map<string, string>, builder: TableBuilder) {

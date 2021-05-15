@@ -233,6 +233,10 @@
     }
   }
 
+  //.details-table {
+  //  display: flex;
+  //}
+
   table {
     @include transition(0.1s);
     font-size: 14px;

@@ -44,6 +44,7 @@ import {CheckHttpRpcConnection} from './rpc_http_dialog';
 import {TraceInfoPage} from './trace_info_page';
 import {maybeOpenTraceFromRoute} from './trace_url_handler';
 import {ViewerPage} from './viewer_page';
+import {ProfilePage} from './profile_page'
 
 const EXTENSION_ID = 'lfmkphfpdbjijhpomgecfikhfohaoine';
 
@@ -232,6 +233,7 @@ function main() {
     '/flags': FlagsPage,
     '/metrics': MetricsPage,
     '/info': TraceInfoPage,
+    '/profile': ProfilePage,
   });
   router.onRouteChanged = (route) => {
     globals.rafScheduler.scheduleFullRedraw();
@@ -242,6 +244,18 @@ function main() {
 
   const frontendApi = new FrontendApi(controllerChannel.port2);
   globals.publishRedraw = () => globals.rafScheduler.scheduleFullRedraw();
+
+  // Try to load the function map
+  fetch("http://127.0.0.1:9001/file_info")
+  .then(data => {
+    return data.json();
+  })
+  .then(res => {
+    globals.sourceFileStorage = res;
+  })
+  .catch(error => {
+    console.log(error);
+  })
 
   // We proxy messages between the extension and the controller because the
   // controller's worker can't access chrome.runtime.

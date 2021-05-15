@@ -359,12 +359,21 @@ export class Flamegraph {
   private displaySize(totalSize: number, unit: string, step = 1024): string {
     if (unit === '') return totalSize.toLocaleString();
     if (totalSize === 0) return `0 ${unit}`;
-    const units = [
-      ['', 1],
-      ['K', step],
-      ['M', Math.pow(step, 2)],
-      ['G', Math.pow(step, 3)]
-    ];
+    let units: any = [];
+    if (unit === "s") {
+      units = [
+        ['u', 1],
+        ['m', step],
+        ['', Math.pow(step, 2)],
+      ];
+    } else {
+      units = [
+        ['', 1],
+        ['K', step],
+        ['M', Math.pow(step, 2)],
+        ['G', Math.pow(step, 3)]
+      ];
+    }
     let unitsIndex = Math.trunc(Math.log(totalSize) / Math.log(step));
     unitsIndex = unitsIndex > units.length - 1 ? units.length - 1 : unitsIndex;
     const result = totalSize / +units[unitsIndex][1];

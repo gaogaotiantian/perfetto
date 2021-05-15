@@ -40,7 +40,7 @@ type QueryResultsStore = Map<string, {}|undefined>;
 type PivotTableHelperStore = Map<string, PivotTableHelper>;
 type AggregateDataStore = Map<string, AggregateData>;
 type Description = Map<string, string>;
-
+type SourceFileStorage = any;
 export interface SliceDetails {
   ts?: number;
   dur?: number;
@@ -135,6 +135,13 @@ export interface FlamegraphDetails {
   graphIncomplete?: boolean;
 }
 
+export interface FunctionProfileDetails {
+  name?: string;
+  flamegraph?: CallsiteInfo[];
+  expandedCallsite?: CallsiteInfo;
+  expandedId?: number;
+}
+
 export interface CpuProfileDetails {
   id?: number;
   ts?: number;
@@ -203,6 +210,7 @@ class Globals {
   private _visibleFlowCategories?: Map<string, boolean> = undefined;
   private _counterDetails?: CounterDetails = undefined;
   private _flamegraphDetails?: FlamegraphDetails = undefined;
+  private _functionProfileDetails?: FunctionProfileDetails[] = undefined;
   private _cpuProfileDetails?: CpuProfileDetails = undefined;
   private _numQueriesQueued = 0;
   private _bufferUsage?: number = undefined;
@@ -213,6 +221,7 @@ class Globals {
   private _hasFtrace?: boolean = undefined;
   private _jobStatus?: Map<ConversionJobName, ConversionJobStatus> = undefined;
   private _router?: Router = undefined;
+  private _sourceFileStorage?: SourceFileStorage = undefined;
 
   // TODO(hjd): Remove once we no longer need to update UUID on redraw.
   private _publishRedraw?: () => void = undefined;
@@ -258,7 +267,9 @@ class Globals {
     this._counterDetails = {};
     this._threadStateDetails = {};
     this._flamegraphDetails = {};
+    this._functionProfileDetails = [];
     this._cpuProfileDetails = {};
+    this._sourceFileStorage = {};
     this.engines.clear();
   }
 
@@ -383,6 +394,14 @@ class Globals {
     this._flamegraphDetails = assertExists(click);
   }
 
+  get functionProfileDetails() {
+    return assertExists(this._functionProfileDetails);
+  }
+
+  set functionProfileDetails(click: FunctionProfileDetails[]) {
+    this._functionProfileDetails = assertExists(click);
+  }
+
   get traceErrors() {
     return this._traceErrors;
   }
@@ -413,6 +432,14 @@ class Globals {
 
   set cpuProfileDetails(click: CpuProfileDetails) {
     this._cpuProfileDetails = assertExists(click);
+  }
+
+  get sourceFileStorage() {
+    return assertExists(this._sourceFileStorage);
+  }
+
+  set sourceFileStorage(value: any) {
+    this._sourceFileStorage = value;
   }
 
   set numQueuedQueries(value: number) {

@@ -58,6 +58,8 @@ export function maybeOpenTraceFromRoute(route: Route) {
     maybeOpenCachedTrace(route.args.local_cache_key);
     return;
   }
+
+  openTraceFromVizTracer();
 }
 
 
@@ -236,4 +238,40 @@ function openTraceFromAndroidBugTool() {
       .catch(e => {
         console.error(e);
       });
+}
+
+function openTraceFromVizTracer() {
+  // This is for VizTracer use only!
+  fetch("http://127.0.0.1:9001/vizviewer_info")
+  .then(data => {
+    return data.json();
+  })
+  .then(res => {
+    if (res.is_flamegraph) {
+      fetch("http://127.0.0.1:9001/flamegraph")
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        globals.functionProfileDetails = res;
+        Router.navigate("#!/profile")
+      })
+    } else {
+      // Try to load the function map
+      fetch("http://127.0.0.1:9001/file_info")
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        globals.sourceFileStorage = res;
+        // To make it auto-load the trace, we try to load localtrace
+        globals.dispatch(Actions.openTraceFromUrl({
+          url: 'http://127.0.0.1:9001/localtrace',
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+  })
 }
