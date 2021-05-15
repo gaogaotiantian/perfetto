@@ -1,0 +1,34 @@
+.details-source {
+    max-width: 50%;
+    width: 100%;
+    padding: 0px 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.details-table table.half-width {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.details-panel .details-panel-heading.heap-profile .function-profile-selected {
+  width: 400px;
+}
+
+.topbar-button {
+  color: white;
+  position: absolute;
+  z-index: 5;
+  background-color: #262f3c;
+  height: var(--topbar-height);
+  right: 0px;
+  border-radius: 5px 0 0 5px;
+  border-bottom: inherit;
+  visibility: visible;  // So stays visible when the sidebar is hidden.
+  transition: left var(--anim-easing) var(--sidebar-timing);
+  width: 48px;
+  overflow: hidden;
+  >button {
+    vertical-align: middle;
+  }
+}

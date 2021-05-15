@@ -473,6 +473,16 @@ async function getTraceInfo(
     traceSource.type === 'FILE' ||
     traceSource.type === 'URL';
 
+
+  // Load VizTracer source info if available
+  let vizTracerSourceStorage = undefined;
+  if (traceSource.type === 'URL' && traceSource.url.endsWith('localtrace')) {
+    const resp = await fetch(traceSource.url.replace('localtrace', 'file_info'));
+    if (resp.ok) {
+      vizTracerSourceStorage = await resp.json();
+    }
+  }
+
   return {
     ...traceTime,
     traceTitle,
@@ -486,6 +496,7 @@ async function getTraceInfo(
     hasFtrace,
     uuid,
     cached,
+    vizTracerSourceStorage,
     downloadable,
   };
 }

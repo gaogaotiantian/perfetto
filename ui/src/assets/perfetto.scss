@@ -26,6 +26,9 @@
 @import "help_modal";
 @import "theme_provider";
 @import "timeline_toolbar";
+@import 'viztracer';
+@import 'prism-default';
+@import 'prism-line-numbers';
 
 // Widgets/components - keep these sorted alphabetically
 @import "components/aggregation_adapter";

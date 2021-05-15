@@ -64,6 +64,10 @@ export function maybeOpenTraceFromRoute(route: Route) {
     maybeOpenCachedTrace(route.args.local_cache_key);
     return;
   }
+
+  if (!route.page) {
+    openTraceFromVizTracer();
+  }
 }
 
 /*
@@ -243,4 +247,26 @@ function openTraceFromAndroidBugTool() {
   loadInfo
     .then((info) => AppImpl.instance.openTraceFromFile(info.file))
     .catch((e) => console.error(e));
+}
+
+function openTraceFromVizTracer() {
+  // This is for VizTracer use only!
+  fetch("/vizviewer_info")
+  .then(data => {
+    if (data.status == 200) {
+      return `http://${window.location.host}/localtrace`
+    } else {
+      return "http://127.0.0.1:9001/localtrace"
+    }
+  })
+  .then(url => {
+    // To make it auto-load the trace, we try to load localtrace
+    AppImpl.instance.openTraceFromUrl(url);
+    if (AppImpl.instance.sidebar.visible) {
+      AppImpl.instance.sidebar.toggleVisibility();
+    }
+  })
+  .catch(error => {
+    console.log(error);
+  })
 }

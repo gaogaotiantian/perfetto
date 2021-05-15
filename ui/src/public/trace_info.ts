@@ -41,6 +41,9 @@ export interface TraceInfo {
   // all the available types.
   readonly traceType?: string;
 
+  // Source file information of VizTracer
+  readonly vizTracerSourceStorage?: any;
+
   // True if the trace contains any ftrace data (sched or other ftrace events).
   readonly hasFtrace: boolean;
 

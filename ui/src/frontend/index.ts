@@ -129,6 +129,7 @@ function setupContentSecurityPolicy() {
       'ws://127.0.0.1:8037', // For the adb websocket server.
       'https://*.google-analytics.com',
       'https://*.googleapis.com', // For Google Cloud Storage fetches.
+      'http://127.0.0.1:*', // Allow localhost for VizTracer
       'blob:',
       'data:',
     ].concat(rpcPolicy),
