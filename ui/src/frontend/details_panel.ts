@@ -35,6 +35,7 @@ import {
 } from './flow_events_panel';
 import {FtracePanel} from './ftrace_panel';
 import {globals} from './globals';
+import {FunctionProfileDetailsPanel} from './function_profile_panel';
 import {LogPanel} from './logs_panel';
 import {NotesEditorTab} from './notes_panel';
 import {AnyAttrsVnode} from './panel_container';
@@ -328,6 +329,26 @@ export class DetailsPanel implements m.ClassComponent {
           break;
       }
     }
+
+    if (globals.functionProfileDetails.length > 0) {
+      for (const detail of globals.functionProfileDetails) {
+        let name: string = "";
+        if (detail.name === undefined) {
+          name = "unknown";
+        } else {
+          name = detail.name;
+        }
+        detailsPanels.push({
+          key: name,
+          name: name,
+          vnode: m(FunctionProfileDetailsPanel, {key: 'function_profile', data: detail})
+        });
+      }
+      if (!globals.state.currentTab) {
+        globals.state.currentTab = globals.functionProfileDetails[0].name;
+      }
+    }
+
     if (hasLogs()) {
       detailsPanels.push({
         key: 'android_logs',

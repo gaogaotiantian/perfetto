@@ -20,7 +20,8 @@ const kMinTimeBetweenDialogsMs = 10000;
 const changedPaths = new Set<string>();
 
 export function initLiveReloadIfLocalhost() {
-  if (!location.origin.startsWith('http://localhost:')) return;
+  if (!location.origin.startsWith('http://localhost:') ||
+      location.origin.endsWith('9001')) return;
   if (globals.embeddedMode) return;
 
   const monitor = new EventSource('/live_reload');
