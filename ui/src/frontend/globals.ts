@@ -107,6 +107,13 @@ export interface HeapProfileDetails {
   expandedId?: number;
 }
 
+export interface FunctionProfileDetails {
+  name?: string;
+  flamegraph?: CallsiteInfo[];
+  expandedCallsite?: CallsiteInfo;
+  expandedId?: number;
+}
+
 export interface CpuProfileDetails {
   id?: number;
   ts?: number;
@@ -168,6 +175,7 @@ class Globals {
   private _visibleFlowCategories?: Map<string, boolean> = undefined;
   private _counterDetails?: CounterDetails = undefined;
   private _heapProfileDetails?: HeapProfileDetails = undefined;
+  private _functionProfileDetails?: FunctionProfileDetails[] = undefined;
   private _cpuProfileDetails?: CpuProfileDetails = undefined;
   private _numQueriesQueued = 0;
   private _bufferUsage?: number = undefined;
@@ -215,6 +223,7 @@ class Globals {
     this._counterDetails = {};
     this._threadStateDetails = {};
     this._heapProfileDetails = {};
+    this._functionProfileDetails = [];
     this._cpuProfileDetails = {};
     this._sourceFileStorage = {};
   }
@@ -322,6 +331,14 @@ class Globals {
 
   set heapProfileDetails(click: HeapProfileDetails) {
     this._heapProfileDetails = assertExists(click);
+  }
+
+  get functionProfileDetails() {
+    return assertExists(this._functionProfileDetails);
+  }
+
+  set functionProfileDetails(click: FunctionProfileDetails[]) {
+    this._functionProfileDetails = assertExists(click);
   }
 
   get traceErrors() {

@@ -28,6 +28,7 @@ import {
 } from './flow_events_panel';
 import {globals} from './globals';
 import {HeapProfileDetailsPanel} from './heap_profile_panel';
+import {FunctionProfileDetailsPanel} from './function_profile_panel';
 import {LogPanel} from './logs_panel';
 import {NotesEditorPanel} from './notes_panel';
 import {AnyAttrsVnode, PanelContainer} from './panel_container';
@@ -266,6 +267,26 @@ export class DetailsPanel implements m.ClassComponent {
           break;
       }
     }
+
+    if (globals.functionProfileDetails.length > 0) {
+      for (const detail of globals.functionProfileDetails) {
+        let name: string = "";
+        if (detail.name === undefined) {
+          name = "unknown";
+        } else {
+          name = detail.name;
+        }
+        detailsPanels.push({
+          key: name,
+          name: name,
+          vnode: m(FunctionProfileDetailsPanel, {key: 'function_profile', data: detail})
+        });
+      }
+      if (!globals.frontendLocalState.currentTab) {
+        globals.frontendLocalState.currentTab = globals.functionProfileDetails[0].name;
+      }
+    }
+
     if (hasLogs()) {
       detailsPanels.push({
         key: 'android_logs',
@@ -325,7 +346,7 @@ export class DetailsPanel implements m.ClassComponent {
         '.details-content',
         {
           style: {
-            height: `${this.detailsHeight}px`,
+            height: globals.functionProfileDetails.length == 0 ? `${this.detailsHeight}px`: "100%",
             display: this.showDetailsPanel ? null : 'none'
           }
         },

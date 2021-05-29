@@ -203,6 +203,11 @@ export interface HeapProfileSelection {
   type: string;
 }
 
+export interface FunctionProfileSelection {
+  kind: 'FUNCTION_PROFILE';
+  id: number;
+}
+
 export interface HeapProfileFlamegraph {
   kind: 'HEAP_PROFILE_FLAMEGRAPH';
   id: number;
@@ -235,7 +240,7 @@ export interface ThreadStateSelection {
 type Selection =
     (NoteSelection|SliceSelection|CounterSelection|HeapProfileSelection|
      CpuProfileSampleSelection|ChromeSliceSelection|ThreadStateSelection|
-     AreaSelection)&{trackId?: string};
+     AreaSelection|FunctionProfileSelection)&{trackId?: string};
 
 export interface LogsPagination {
   offset: number;

@@ -63,6 +63,7 @@ import {CheckHttpRpcConnection} from './rpc_http_dialog';
 import {taskTracker} from './task_tracker';
 import {TraceInfoPage} from './trace_info_page';
 import {ViewerPage} from './viewer_page';
+import {ProfilePage} from './profile_page'
 
 const EXTENSION_ID = 'lfmkphfpdbjijhpomgecfikhfohaoine';
 
@@ -407,18 +408,6 @@ function main() {
   globals.initialize(dispatch, controller);
   globals.serviceWorkerController.install();
 
-  // Try to load the function map
-  fetch("http://127.0.0.1:9001/file_info")
-  .then(data => {
-    return data.json();
-  })
-  .then(res => {
-    globals.sourceFileStorage = res;
-  })
-  .catch(error => {
-    console.log(error);
-  })
-
   const router = new Router(
       '/',
       {
@@ -428,6 +417,7 @@ function main() {
         '/query': AnalyzePage,
         '/metrics': MetricsPage,
         '/info': TraceInfoPage,
+        '/profile': ProfilePage,
       },
       dispatch,
       globals.logging);
@@ -527,10 +517,42 @@ function onCssLoaded(router: Router) {
         });
   } else {
     // This is for VizTracer use only!
-    // To make it auto-load the trace, we try to load localtrace
-    globals.dispatch(Actions.openTraceFromUrl({
-      url: 'http://127.0.0.1:9001/localtrace',
-    }));
+    fetch("http://127.0.0.1:9001/vizviewer_info")
+    .then(data => {
+      return data.json();
+    })
+    .then(res => {
+      if (res.is_flamegraph) {
+        fetch("http://127.0.0.1:9001/flamegraph")
+        .then(data => {
+          return data.json();
+        })
+        .then(res => {
+          globals.functionProfileDetails = res;
+          globals.dispatch(Actions.navigate({route: "/profile"}))
+        })
+      } else {
+        // Try to load the function map
+        fetch("http://127.0.0.1:9001/file_info")
+        .then(data => {
+          return data.json();
+        })
+        .then(res => {
+          globals.sourceFileStorage = res;
+          globals.state.currentSelection = {
+            kind: 'FUNCTION_PROFILE',
+            id: 1234567
+          };
+          // To make it auto-load the trace, we try to load localtrace
+          globals.dispatch(Actions.openTraceFromUrl({
+            url: 'http://127.0.0.1:9001/localtrace',
+          }));
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    })
   }
 
   // Add support for opening traces from postMessage().
