@@ -64,13 +64,14 @@ export class FunctionProfileDetailsPanel extends
       const height = heapDumpInfo.flamegraph ?
           this.flamegraph.getHeight() + HEADER_HEIGHT :
           0;
+      this.changeFlamegraphData();
       return m(
           '.details-panel',
           {
             onclick: (e: PerfettoMouseEvent) => {
               if (this.flamegraph !== undefined) {
                 this.onMouseClick({y: e.layerY, x: e.layerX});
-                globals.rafScheduler.scheduleRedraw();
+                globals.rafScheduler.scheduleFullRedraw();
               }
               return false;
             },
@@ -89,9 +90,13 @@ export class FunctionProfileDetailsPanel extends
           m('.details-panel-heading.heap-profile',
             {onclick: (e: MouseEvent) => e.stopPropagation()},
             [
+              m('div.options',
+                [
+                  m('div.title', this.getTitle())
+                ]),
               m('div.details',
                 [
-                  m('div.selected',
+                  m('div.selected.function-profile-selected',
                     `Selected function: ${
                         toSelectedCallsite(heapDumpInfo.expandedCallsite)}`),
                   m('input[type=text][placeholder=Focus]', {
@@ -112,6 +117,16 @@ export class FunctionProfileDetailsPanel extends
           '.details-panel',
           m('.details-panel-heading', m('h2', `Function Profile`)));
     }
+  }
+
+  private getTitle(): string {
+    if (this.data.name !== undefined) {
+      const arr = this.data.name.match(/p([0-9]*)_t([0-9]*)/);
+      if (arr) {
+        return `Process: ${arr[1]} Thread: ${arr[2]}`;
+      }
+    }
+    return "unknown";
   }
 
   private nodeRendering(): NodeRendering {
