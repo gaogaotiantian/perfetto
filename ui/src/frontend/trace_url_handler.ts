@@ -273,25 +273,50 @@ function openTraceFromAndroidBugTool() {
 
 function openTraceFromVizTracer() {
   // This is for VizTracer use only!
-  fetch("http://127.0.0.1:9001/vizviewer_info")
+  let url_promise = fetch("/vizviewer_info")
   .then(data => {
-    return data.json();
+    if (data.status == 200) {
+      return `http://${window.location.host}`
+    } else {
+      return "http://127.0.0.1:9001"
+    }
   })
-  .then(() => {
-    // Try to load the function map
-    fetch("http://127.0.0.1:9001/file_info")
+  .catch(error => {
+    console.log(error)
+  })
+
+  url_promise.then(url => {
+    fetch(`${url}/file_info`)
     .then(data => {
       return data.json();
     })
     .then(res => {
       globals.sourceFileStorage = res;
-      // To make it auto-load the trace, we try to load localtrace
-      globals.dispatch(Actions.openTraceFromUrl({
-        url: 'http://127.0.0.1:9001/localtrace',
-      }));
     })
     .catch(error => {
       console.log(error);
+    })
+
+    fetch(`${url}/vizviewer_info`)
+    .then(data => {
+      return data.json();
+    })
+    .then(() => {
+      // Try to load the function map
+      fetch(`${url}/file_info`)
+      .then(data => {
+        return data.json();
+      })
+      .then(res => {
+        globals.sourceFileStorage = res;
+        // To make it auto-load the trace, we try to load localtrace
+        globals.dispatch(Actions.openTraceFromUrl({
+          url: `${url}/localtrace`,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+      })
     })
   })
 }

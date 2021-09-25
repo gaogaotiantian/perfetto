@@ -135,6 +135,7 @@ function setupContentSecurityPolicy() {
       'ws://127.0.0.1:8037', // For the adb websocket server.
       'https://*.google-analytics.com',
       'https://*.googleapis.com', // For Google Cloud Storage fetches.
+      'http://127.0.0.1:*',  // Allow localhost
       'blob:',
       'data:',
     ].concat(rpcPolicy),
@@ -214,18 +215,6 @@ function main() {
 
   globals.store.subscribe(scheduleRafAndRunControllersOnStateChange);
   globals.publishRedraw = () => raf.scheduleFullRedraw();
-
-  // Try to load the function map
-  fetch("http://127.0.0.1:9001/file_info")
-  .then(data => {
-    return data.json();
-  })
-  .then(res => {
-    globals.sourceFileStorage = res;
-  })
-  .catch(error => {
-    console.log(error);
-  })
 
   // We proxy messages between the extension and the controller because the
   // controller's worker can't access chrome.runtime.
