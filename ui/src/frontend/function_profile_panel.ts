@@ -87,7 +87,7 @@ export class FunctionProfileDetailsPanel extends
               }
             }
           },
-          m('.details-panel-heading.heap-profile',
+          m('.details-panel-heading.flamegraph-profile',
             {onclick: (e: MouseEvent) => e.stopPropagation()},
             [
               m('div.options',

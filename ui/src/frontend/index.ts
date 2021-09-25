@@ -146,8 +146,8 @@ function setupContentSecurityPolicy() {
     'object-src': ['none'],
     'connect-src': [
       `'self'`,
-      'http://127.0.0.1:9001',  // For trace_processor_shell --httpd.
       'ws://127.0.0.1:9001',    // Ditto, for the websocket RPC.
+      'http://127.0.0.1:*',  // Allow localhost
       'https://www.google-analytics.com',
       'https://*.googleapis.com',  // For Google Cloud Storage fetches.
       'blob:',
@@ -244,18 +244,6 @@ function main() {
 
   const frontendApi = new FrontendApi(controllerChannel.port2);
   globals.publishRedraw = () => globals.rafScheduler.scheduleFullRedraw();
-
-  // Try to load the function map
-  fetch("http://127.0.0.1:9001/file_info")
-  .then(data => {
-    return data.json();
-  })
-  .then(res => {
-    globals.sourceFileStorage = res;
-  })
-  .catch(error => {
-    console.log(error);
-  })
 
   // We proxy messages between the extension and the controller because the
   // controller's worker can't access chrome.runtime.

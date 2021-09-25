@@ -242,36 +242,62 @@ function openTraceFromAndroidBugTool() {
 
 function openTraceFromVizTracer() {
   // This is for VizTracer use only!
-  fetch("http://127.0.0.1:9001/vizviewer_info")
+  let url_promise = fetch("/vizviewer_info")
   .then(data => {
-    return data.json();
-  })
-  .then(res => {
-    if (res.is_flamegraph) {
-      fetch("http://127.0.0.1:9001/flamegraph")
-      .then(data => {
-        return data.json();
-      })
-      .then(res => {
-        globals.functionProfileDetails = res;
-        Router.navigate("#!/profile")
-      })
+    if (data.status == 200) {
+      return `http://${window.location.host}`
     } else {
-      // Try to load the function map
-      fetch("http://127.0.0.1:9001/file_info")
-      .then(data => {
-        return data.json();
-      })
-      .then(res => {
-        globals.sourceFileStorage = res;
-        // To make it auto-load the trace, we try to load localtrace
-        globals.dispatch(Actions.openTraceFromUrl({
-          url: 'http://127.0.0.1:9001/localtrace',
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      return "http://127.0.0.1:9001"
     }
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+  url_promise.then(url => {
+    console.log(`url -> ${url}`)
+    fetch(`${url}/file_info`)
+    .then(data => {
+      return data.json();
+    })
+    .then(res => {
+      globals.sourceFileStorage = res;
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+    fetch(`${url}/vizviewer_info`)
+    .then(data => {
+      return data.json();
+    })
+    .then(res => {
+      if (res.is_flamegraph) {
+        fetch(`${url}/flamegraph`)
+        .then(data => {
+          return data.json();
+        })
+        .then(res => {
+          globals.functionProfileDetails = res;
+          Router.navigate("#!/profile")
+        })
+      } else {
+        // Try to load the function map
+        fetch(`${url}/file_info`)
+        .then(data => {
+          return data.json();
+        })
+        .then(res => {
+          globals.sourceFileStorage = res;
+          // To make it auto-load the trace, we try to load localtrace
+          globals.dispatch(Actions.openTraceFromUrl({
+            url: `${url}/localtrace`,
+          }));
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    })
   })
 }
