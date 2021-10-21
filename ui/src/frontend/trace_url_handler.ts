@@ -68,7 +68,10 @@ export function maybeOpenTraceFromRoute(route: Route) {
     return;
   }
 
-  openTraceFromVizTracer();
+  if (!route.page) {
+    openTraceFromVizTracer();
+    return;
+  }
 }
 
 /*
