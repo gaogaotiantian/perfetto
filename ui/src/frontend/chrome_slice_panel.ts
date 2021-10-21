@@ -214,6 +214,7 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
         this.fillDescription(sliceInfo.description, builder);
       }
       this.fillArgs(sliceInfo, builder);
+      const obj_str: string = this.getObjStr(sliceInfo);
 
       // Find source code
       const funcName = sliceInfo.name;
@@ -238,6 +239,22 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
               )
           );
         }
+      }
+
+      if (obj_str) {
+        return m(
+            '.details-panel',
+            m(
+              '.details-panel-heading',
+              m('h2', `Slice Details`)
+            ),
+            m(
+              '.details-table',
+              this.renderTable(builder),
+              m('.details-source .half-width', this.renderObjStr(obj_str))
+            )
+        )
+
       }
 
       return m(
@@ -281,6 +298,19 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
         builder.add(key, value);
       }
     }
+  }
+
+  getObjStr(slice: SliceDetails): string {
+    if (slice.argsTree && slice.args) {
+      // Parsed arguments are available, need only to iterate over them to get
+      // slice references
+      for (const [key, value] of slice.args) {
+        if (key == "args.object" && typeof value === 'string') {
+          return value;
+        }
+      }
+    }
+    return "";
   }
 
   renderTable(builder: TableBuilder): m.Vnode {
@@ -378,6 +408,38 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
     )
   }
 
+  renderObjStr(obj_str: string): m.Vnode {
+    var el_pre = document.createElement("pre");
+    var el_code = document.createElement("code");
+    el_pre.className = "language-py"
+    el_code.className = "language-py"
+    el_pre.appendChild(el_code)
+    el_code.innerHTML = Prism.highlight(obj_str, Prism.languages.python, "python");
+    var env = {
+      element: el_code,
+      language: "python",
+      grammar: Prism.languages.python,
+      code: obj_str
+    }
+    Prism.hooks.run("complete", env);
+
+    return m(
+      'pre.language-py',
+      {
+        style: {
+          height: `${this.pre_height}px`
+        },
+        oncreate: () => {
+          this.resize(-1, -1);
+        },
+        onupdate: () => {
+          this.resize(-1, -1);
+        }
+      },
+      m.trust(el_pre.innerHTML)
+    )
+  }
+
   resize(lineno: number, total_lineno: number) {
     var contents_height = document.getElementsByClassName("details-content")[0].clientHeight;
     var handle_height = document.getElementsByClassName("handle")[0].clientHeight;
@@ -387,7 +449,7 @@ export class ChromeSliceDetailsPanel extends SlicePanel {
     const pre_el: HTMLElement | null = document.querySelector("pre.language-py");
     const code_el: HTMLElement | null = document.querySelector("code.language-py");
 
-    if (pre_el !== null && code_el !== null) {
+    if (lineno != -1 && pre_el !== null && code_el !== null) {
       pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
     }
   }
