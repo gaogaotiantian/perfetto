@@ -1053,7 +1053,10 @@ struct std::hash<perfetto::base::Optional<T>> {
 #include <stddef.h>
 #include <stdint.h>
 #include <type_traits>
+<<<<<<< HEAD
 #include <utility>
+=======
+>>>>>>> Amalgamated source for v23.0
 
 namespace perfetto {
 namespace base {
@@ -1075,23 +1078,30 @@ class Hash {
     Update(reinterpret_cast<const char*>(&data), sizeof(data));
   }
 
+<<<<<<< HEAD
   // Using the loop instead of "Update(str, strlen(str))" to avoid looping twice
   void Update(const char* str) {
     for (const auto* p = str; *p; ++p)
       Update(*p);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // Hashes a byte array.
   void Update(const char* data, size_t size) {
     for (size_t i = 0; i < size; i++) {
       result_ ^= static_cast<uint8_t>(data[i]);
+<<<<<<< HEAD
       // Note: Arithmetic overflow of unsigned integers is well defined in C++
       // standard unlike signed integers.
       // https://stackoverflow.com/a/41280273
+=======
+>>>>>>> Amalgamated source for v23.0
       result_ *= kFnv1a64Prime;
     }
   }
 
+<<<<<<< HEAD
   uint64_t digest() const { return result_; }
 
   // Usage:
@@ -1112,6 +1122,9 @@ class Hash {
     Update(arg);
     UpdateAll(std::forward<Ts>(args)...);
   }
+=======
+  uint64_t digest() { return result_; }
+>>>>>>> Amalgamated source for v23.0
 
  private:
   static constexpr uint64_t kFnv1a64OffsetBasis = 0xcbf29ce484222325;
@@ -1325,6 +1338,7 @@ struct std::hash<::perfetto::base::StringView> {
 
 #endif  // INCLUDE_PERFETTO_EXT_BASE_STRING_VIEW_H_
 // gen_amalgamated begin header: include/perfetto/ext/base/utils.h
+<<<<<<< HEAD
 // gen_amalgamated begin header: include/perfetto/ext/base/sys_types.h
 /*
  * Copyright (C) 2022 The Android Open Source Project
@@ -1378,6 +1392,8 @@ constexpr pid_t kInvalidPid = static_cast<pid_t>(-1);
 }  // namespace perfetto
 
 #endif  // INCLUDE_PERFETTO_EXT_BASE_SYS_TYPES_H_
+=======
+>>>>>>> Amalgamated source for v23.0
 /*
  * Copyright (C) 2017 The Android Open Source Project
  *
@@ -1397,20 +1413,33 @@ constexpr pid_t kInvalidPid = static_cast<pid_t>(-1);
 #ifndef INCLUDE_PERFETTO_EXT_BASE_UTILS_H_
 #define INCLUDE_PERFETTO_EXT_BASE_UTILS_H_
 
+<<<<<<< HEAD
+=======
+// gen_amalgamated expanded: #include "perfetto/base/build_config.h"
+// gen_amalgamated expanded: #include "perfetto/base/compiler.h"
+
+>>>>>>> Amalgamated source for v23.0
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+<<<<<<< HEAD
+=======
+#include <sys/types.h>
+>>>>>>> Amalgamated source for v23.0
 
 #include <atomic>
 #include <functional>
 #include <memory>
 #include <string>
 
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/base/build_config.h"
 // gen_amalgamated expanded: #include "perfetto/base/compiler.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/sys_types.h"
 
+=======
+>>>>>>> Amalgamated source for v23.0
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
 // Even if Windows has errno.h, the all syscall-restart behavior does not apply.
 // Trying to handle EINTR can cause more harm than good if errno is left stale.
@@ -1427,9 +1456,30 @@ constexpr pid_t kInvalidPid = static_cast<pid_t>(-1);
   }())
 #endif
 
+<<<<<<< HEAD
 namespace perfetto {
 namespace base {
 
+=======
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
+using uid_t = unsigned int;
+#if !PERFETTO_BUILDFLAG(PERFETTO_COMPILER_GCC)
+using pid_t = unsigned int;
+#endif
+#if defined(_WIN64)
+using ssize_t = int64_t;
+#else
+using ssize_t = long;
+#endif
+#endif
+
+namespace perfetto {
+namespace base {
+
+constexpr uid_t kInvalidUid = static_cast<uid_t>(-1);
+constexpr pid_t kInvalidPid = static_cast<pid_t>(-1);
+
+>>>>>>> Amalgamated source for v23.0
 // Do not add new usages of kPageSize, consider using GetSysPageSize() below.
 // TODO(primiano): over time the semantic of kPageSize became too ambiguous.
 // Strictly speaking, this constant is incorrect on some new devices where the
@@ -2073,6 +2123,10 @@ std::string Uint64ToHexStringNoPrefix(uint64_t number);
 std::string ReplaceAll(std::string str,
                        const std::string& to_replace,
                        const std::string& replacement);
+<<<<<<< HEAD
+=======
+std::string TrimLeading(const std::string& str);
+>>>>>>> Amalgamated source for v23.0
 
 // A BSD-style strlcpy without the return value.
 // Copies at most |dst_size|-1 characters. Unlike strncpy, it always \0
@@ -2738,8 +2792,12 @@ void EventFd::Notify() {
 
 void EventFd::Clear() {
   uint64_t value;
+<<<<<<< HEAD
   ssize_t ret =
       PERFETTO_EINTR(read(event_handle_.get(), &value, sizeof(value)));
+=======
+  ssize_t ret = read(event_handle_.get(), &value, sizeof(value));
+>>>>>>> Amalgamated source for v23.0
   if (ret <= 0 && errno != EAGAIN)
     PERFETTO_DFATAL("EventFd::Clear()");
 }
@@ -2765,8 +2823,12 @@ void EventFd::Clear() {
   // Drain the byte(s) written to the wake-up pipe. We can potentially read
   // more than one byte if several wake-ups have been scheduled.
   char buffer[16];
+<<<<<<< HEAD
   ssize_t ret =
       PERFETTO_EINTR(read(event_handle_.get(), &buffer[0], sizeof(buffer)));
+=======
+  ssize_t ret = read(event_handle_.get(), &buffer[0], sizeof(buffer));
+>>>>>>> Amalgamated source for v23.0
   if (ret <= 0 && errno != EAGAIN)
     PERFETTO_DFATAL("EventFd::Clear()");
 }
@@ -3000,7 +3062,11 @@ constexpr size_t kBufSize = 2048;
 // Wrap FindClose to: (1) make the return unix-style; (2) deal with stdcall.
 int CloseFindHandle(HANDLE h) {
   return FindClose(h) ? 0 : -1;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> Amalgamated source for v23.0
 #endif
 
 }  // namespace
@@ -5939,6 +6005,14 @@ std::string ReplaceAll(std::string str,
   return str;
 }
 
+<<<<<<< HEAD
+=======
+std::string TrimLeading(const std::string& str) {
+  size_t idx = str.find_first_not_of(' ');
+  return idx == std::string::npos ? str : str.substr(idx);
+}
+
+>>>>>>> Amalgamated source for v23.0
 size_t SprintfTrunc(char* dst, size_t dst_size, const char* fmt, ...) {
   if (PERFETTO_UNLIKELY(dst_size) == 0)
     return 0;
@@ -6483,9 +6557,15 @@ void PERFETTO_EXPORT __attribute__((constructor)) CheckCpuOptimizations() {
   const bool have_sse4_2 = ecx & (1u << 20);
   const bool have_avx =
       // Does the OS save/restore XMM and YMM state?
+<<<<<<< HEAD
       (ecx & (1u << 27)) &&  // OS support XGETBV.
       (ecx & (1u << 28)) &&  // AVX supported in hardware
       ((GetXCR0EAX() & xcr0_avx_mask) == xcr0_avx_mask);
+=======
+      ((GetXCR0EAX() & xcr0_avx_mask) == xcr0_avx_mask) &&
+      (ecx & (1u << 27)) &&  // OS support XGETBV.
+      (ecx & (1u << 28));    // AVX supported in hardware
+>>>>>>> Amalgamated source for v23.0
 
   if (!have_sse4_2 || !have_popcnt || !have_avx) {
     fprintf(
@@ -6868,8 +6948,13 @@ const char* GetVersionString();
 #ifndef GEN_PERFETTO_VERSION_GEN_H_
 #define GEN_PERFETTO_VERSION_GEN_H_
 
+<<<<<<< HEAD
 #define PERFETTO_VERSION_STRING() "v25.0-213beea35"
 #define PERFETTO_VERSION_SCM_REVISION() "213beea357b2f1e03a6ec97adf2671ce42be363e"
+=======
+#define PERFETTO_VERSION_STRING() "v23.0-0deccebd2"
+#define PERFETTO_VERSION_SCM_REVISION() "0deccebd207311471f785152e0057b18b336cd94"
+>>>>>>> Amalgamated source for v23.0
 
 #endif  // GEN_PERFETTO_VERSION_GEN_H_
 /*
@@ -7222,6 +7307,13 @@ constexpr uint32_t kDefaultPollingInterval = 30 * 1000;
 
 base::CrashKey g_crash_key_reason("wdog_reason");
 
+<<<<<<< HEAD
+=======
+// TODO(primiano): for debugging b/191600928. Remove in Jan 2022.
+base::CrashKey g_crash_key_mono("wdog_mono");
+base::CrashKey g_crash_key_boot("wdog_boot");
+
+>>>>>>> Amalgamated source for v23.0
 bool IsMultipleOf(uint32_t number, uint32_t divisor) {
   return number >= divisor && number % divisor == 0;
 }
@@ -7385,6 +7477,11 @@ void Watchdog::SetCpuLimit(uint32_t percentage, uint32_t window_ms) {
 void Watchdog::ThreadMain() {
   // Register crash keys explicitly to avoid running out of slots at crash time.
   g_crash_key_reason.Register();
+<<<<<<< HEAD
+=======
+  g_crash_key_boot.Register();
+  g_crash_key_mono.Register();
+>>>>>>> Amalgamated source for v23.0
 
   base::ScopedFile stat_fd(base::OpenFile("/proc/self/stat", O_RDONLY));
   if (!stat_fd) {
@@ -7469,6 +7566,11 @@ void Watchdog::ThreadMain() {
 void Watchdog::SerializeLogsAndKillThread(int tid,
                                           WatchdogCrashReason crash_reason) {
   g_crash_key_reason.Set(static_cast<int>(crash_reason));
+<<<<<<< HEAD
+=======
+  g_crash_key_boot.Set(base::GetBootTimeS().count());
+  g_crash_key_mono.Set(base::GetWallTimeS().count());
+>>>>>>> Amalgamated source for v23.0
 
   // We are about to die. Serialize the logs into the crash buffer so the
   // debuggerd crash handler picks them up and attaches to the bugreport.
@@ -8464,18 +8566,27 @@ class Subprocess {
                       // This includes crashes or other signals on UNIX.
   };
 
+<<<<<<< HEAD
   enum class OutputMode {
     kInherit = 0,  // Inherit's the caller process stdout/stderr.
     kDevNull,      // dup() onto /dev/null.
+=======
+  enum OutputMode {
+    kInherit = 0,  // Inherit's the caller process stdout/stderr.
+    kDevNull,      // dup() onto /dev/null
+>>>>>>> Amalgamated source for v23.0
     kBuffer,       // dup() onto a pipe and move it into the output() buffer.
     kFd,           // dup() onto the passed args.fd.
   };
 
+<<<<<<< HEAD
   enum class InputMode {
     kBuffer = 0,  // dup() onto a pipe and write args.input on it.
     kDevNull,     // dup() onto /dev/null.
   };
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // Input arguments for configuring the subprocess behavior.
   struct Args {
     Args(std::initializer_list<std::string> _cmd = {}) : exec_cmd(_cmd) {}
@@ -8512,6 +8623,7 @@ class Subprocess {
     // The file descriptors in this list will not be closed.
     std::vector<int> preserve_fds;
 
+<<<<<<< HEAD
     // The data to push in the child process stdin, if input_mode ==
     // InputMode::kBuffer.
     std::string input;
@@ -8519,6 +8631,13 @@ class Subprocess {
     InputMode stdin_mode = InputMode::kBuffer;
     OutputMode stdout_mode = OutputMode::kInherit;
     OutputMode stderr_mode = OutputMode::kInherit;
+=======
+    // The data to push in the child process stdin.
+    std::string input;
+
+    OutputMode stdout_mode = kInherit;
+    OutputMode stderr_mode = kInherit;
+>>>>>>> Amalgamated source for v23.0
 
     base::ScopedPlatformHandle out_fd;
 
@@ -8578,7 +8697,11 @@ class Subprocess {
   bool timed_out() const { return s_->timed_out; }
 
   // This contains both stdout and stderr (if the corresponding _mode ==
+<<<<<<< HEAD
   // OutputMode::kBuffer). It's non-const so the caller can std::move() it.
+=======
+  // kBuffer). It's non-const so the caller can std::move() it.
+>>>>>>> Amalgamated source for v23.0
   std::string& output() { return s_->output; }
   const std::string& output() const { return s_->output; }
 
@@ -8601,7 +8724,11 @@ class Subprocess {
     PlatformProcessId pid;
     Status status = kNotStarted;
     int returncode = -1;
+<<<<<<< HEAD
     std::string output;  // Stdin+stderr. Only when OutputMode::kBuffer.
+=======
+    std::string output;  // Stdin+stderr. Only when kBuffer.
+>>>>>>> Amalgamated source for v23.0
     std::unique_ptr<ResourceUsage> rusage{new ResourceUsage()};
     bool timed_out = false;
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
@@ -8821,6 +8948,7 @@ void __attribute__((noreturn)) ChildProcess(ChildProcessArgs* args) {
   if (getppid() == 1)
     die("terminating because parent process died");
 
+<<<<<<< HEAD
   switch (args->create_args->stdin_mode) {
     case Subprocess::InputMode::kBuffer:
       if (dup2(args->stdin_pipe_rd, STDIN_FILENO) == -1)
@@ -8837,33 +8965,65 @@ void __attribute__((noreturn)) ChildProcess(ChildProcessArgs* args) {
     case Subprocess::OutputMode::kInherit:
       break;
     case Subprocess::OutputMode::kDevNull: {
+=======
+  if (dup2(args->stdin_pipe_rd, STDIN_FILENO) == -1)
+    die("Failed to dup2(STDIN)");
+  close(args->stdin_pipe_rd);
+
+  switch (args->create_args->stdout_mode) {
+    case Subprocess::kInherit:
+      break;
+    case Subprocess::kDevNull: {
+>>>>>>> Amalgamated source for v23.0
       if (dup2(open("/dev/null", O_RDWR), STDOUT_FILENO) == -1)
         die("Failed to dup2(STDOUT)");
       break;
     }
+<<<<<<< HEAD
     case Subprocess::OutputMode::kBuffer:
       if (dup2(args->stdouterr_pipe_wr, STDOUT_FILENO) == -1)
         die("Failed to dup2(STDOUT)");
       break;
     case Subprocess::OutputMode::kFd:
+=======
+    case Subprocess::kBuffer:
+      if (dup2(args->stdouterr_pipe_wr, STDOUT_FILENO) == -1)
+        die("Failed to dup2(STDOUT)");
+      break;
+    case Subprocess::kFd:
+>>>>>>> Amalgamated source for v23.0
       if (dup2(*args->create_args->out_fd, STDOUT_FILENO) == -1)
         die("Failed to dup2(STDOUT)");
       break;
   }
 
   switch (args->create_args->stderr_mode) {
+<<<<<<< HEAD
     case Subprocess::OutputMode::kInherit:
       break;
     case Subprocess::OutputMode::kDevNull: {
+=======
+    case Subprocess::kInherit:
+      break;
+    case Subprocess::kDevNull: {
+>>>>>>> Amalgamated source for v23.0
       if (dup2(open("/dev/null", O_RDWR), STDERR_FILENO) == -1)
         die("Failed to dup2(STDERR)");
       break;
     }
+<<<<<<< HEAD
     case Subprocess::OutputMode::kBuffer:
       if (dup2(args->stdouterr_pipe_wr, STDERR_FILENO) == -1)
         die("Failed to dup2(STDERR)");
       break;
     case Subprocess::OutputMode::kFd:
+=======
+    case Subprocess::kBuffer:
+      if (dup2(args->stdouterr_pipe_wr, STDERR_FILENO) == -1)
+        die("Failed to dup2(STDERR)");
+      break;
+    case Subprocess::kFd:
+>>>>>>> Amalgamated source for v23.0
       if (dup2(*args->create_args->out_fd, STDERR_FILENO) == -1)
         die("Failed to dup2(STDERR)");
       break;
@@ -8949,10 +9109,15 @@ void Subprocess::Start() {
   }
 
   // Setup the pipes for stdin/err redirection.
+<<<<<<< HEAD
   if (args.stdin_mode == InputMode::kBuffer) {
     s_->stdin_pipe = base::Pipe::Create(base::Pipe::kWrNonBlock);
     proc_args.stdin_pipe_rd = *s_->stdin_pipe.rd;
   }
+=======
+  s_->stdin_pipe = base::Pipe::Create(base::Pipe::kWrNonBlock);
+  proc_args.stdin_pipe_rd = *s_->stdin_pipe.rd;
+>>>>>>> Amalgamated source for v23.0
   s_->stdouterr_pipe = base::Pipe::Create(base::Pipe::kRdNonBlock);
   proc_args.stdouterr_pipe_wr = *s_->stdouterr_pipe.wr;
 
@@ -9236,6 +9401,7 @@ void Subprocess::Start() {
   if (!cmd.empty())
     cmd.resize(cmd.size() - 1);
 
+<<<<<<< HEAD
   if (args.stdin_mode == InputMode::kBuffer) {
     s_->stdin_pipe = Pipe::Create();
     // Allow the child process to inherit the other end of the pipe.
@@ -9245,17 +9411,32 @@ void Subprocess::Start() {
 
   if (args.stderr_mode == OutputMode::kBuffer ||
       args.stdout_mode == OutputMode::kBuffer) {
+=======
+  s_->stdin_pipe = Pipe::Create();
+  // Allow the child process to inherit the other end of the pipe.
+  PERFETTO_CHECK(
+      ::SetHandleInformation(*s_->stdin_pipe.rd, HANDLE_FLAG_INHERIT, 1));
+
+  if (args.stderr_mode == kBuffer || args.stdout_mode == kBuffer) {
+>>>>>>> Amalgamated source for v23.0
     s_->stdouterr_pipe = Pipe::Create();
     PERFETTO_CHECK(
         ::SetHandleInformation(*s_->stdouterr_pipe.wr, HANDLE_FLAG_INHERIT, 1));
   }
 
   ScopedPlatformHandle nul_handle;
+<<<<<<< HEAD
   if (args.stderr_mode == OutputMode::kDevNull ||
       args.stdout_mode == OutputMode::kDevNull) {
     nul_handle.reset(::CreateFileA(
         "NUL", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
         nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr));
+=======
+  if (args.stderr_mode == kDevNull || args.stdout_mode == kDevNull) {
+    nul_handle.reset(::CreateFileA("NUL", GENERIC_WRITE, FILE_SHARE_WRITE,
+                                   nullptr, OPEN_EXISTING,
+                                   FILE_ATTRIBUTE_NORMAL, nullptr));
+>>>>>>> Amalgamated source for v23.0
     PERFETTO_CHECK(::SetHandleInformation(*nul_handle, HANDLE_FLAG_INHERIT, 1));
   }
 
@@ -9263,6 +9444,7 @@ void Subprocess::Start() {
   STARTUPINFOA start_info{};
   start_info.cb = sizeof(STARTUPINFOA);
 
+<<<<<<< HEAD
   if (args.stderr_mode == OutputMode::kInherit) {
     start_info.hStdError = ::GetStdHandle(STD_ERROR_HANDLE);
   } else if (args.stderr_mode == OutputMode::kBuffer) {
@@ -9270,6 +9452,15 @@ void Subprocess::Start() {
   } else if (args.stderr_mode == OutputMode::kDevNull) {
     start_info.hStdError = *nul_handle;
   } else if (args.stderr_mode == OutputMode::kFd) {
+=======
+  if (args.stderr_mode == kInherit) {
+    start_info.hStdError = ::GetStdHandle(STD_ERROR_HANDLE);
+  } else if (args.stderr_mode == kBuffer) {
+    start_info.hStdError = *s_->stdouterr_pipe.wr;
+  } else if (args.stderr_mode == kDevNull) {
+    start_info.hStdError = *nul_handle;
+  } else if (args.stderr_mode == kFd) {
+>>>>>>> Amalgamated source for v23.0
     PERFETTO_CHECK(
         ::SetHandleInformation(*args.out_fd, HANDLE_FLAG_INHERIT, 1));
     start_info.hStdError = *args.out_fd;
@@ -9277,6 +9468,7 @@ void Subprocess::Start() {
     PERFETTO_CHECK(false);
   }
 
+<<<<<<< HEAD
   if (args.stdout_mode == OutputMode::kInherit) {
     start_info.hStdOutput = ::GetStdHandle(STD_OUTPUT_HANDLE);
   } else if (args.stdout_mode == OutputMode::kBuffer) {
@@ -9284,6 +9476,15 @@ void Subprocess::Start() {
   } else if (args.stdout_mode == OutputMode::kDevNull) {
     start_info.hStdOutput = *nul_handle;
   } else if (args.stdout_mode == OutputMode::kFd) {
+=======
+  if (args.stdout_mode == kInherit) {
+    start_info.hStdOutput = ::GetStdHandle(STD_OUTPUT_HANDLE);
+  } else if (args.stdout_mode == kBuffer) {
+    start_info.hStdOutput = *s_->stdouterr_pipe.wr;
+  } else if (args.stdout_mode == kDevNull) {
+    start_info.hStdOutput = *nul_handle;
+  } else if (args.stdout_mode == kFd) {
+>>>>>>> Amalgamated source for v23.0
     PERFETTO_CHECK(
         ::SetHandleInformation(*args.out_fd, HANDLE_FLAG_INHERIT, 1));
     start_info.hStdOutput = *args.out_fd;
@@ -9291,12 +9492,16 @@ void Subprocess::Start() {
     PERFETTO_CHECK(false);
   }
 
+<<<<<<< HEAD
   if (args.stdin_mode == InputMode::kBuffer) {
     start_info.hStdInput = *s_->stdin_pipe.rd;
   } else if (args.stdin_mode == InputMode::kDevNull) {
     start_info.hStdInput = *nul_handle;
   }
 
+=======
+  start_info.hStdInput = *s_->stdin_pipe.rd;
+>>>>>>> Amalgamated source for v23.0
   start_info.dwFlags |= STARTF_USESTDHANDLES;
 
   // Create the child process.
@@ -9333,12 +9538,18 @@ void Subprocess::Start() {
   s_->status = kRunning;
 
   MovableState* s = s_.get();
+<<<<<<< HEAD
   if (args.stdin_mode == InputMode::kBuffer) {
     s_->stdin_thread = std::thread(&Subprocess::StdinThread, s, args.input);
   }
 
   if (args.stderr_mode == OutputMode::kBuffer ||
       args.stdout_mode == OutputMode::kBuffer) {
+=======
+  s_->stdin_thread = std::thread(&Subprocess::StdinThread, s, args.input);
+
+  if (args.stderr_mode == kBuffer || args.stdout_mode == kBuffer) {
+>>>>>>> Amalgamated source for v23.0
     PERFETTO_DCHECK(s_->stdouterr_pipe.rd);
     s_->stdouterr_thread = std::thread(&Subprocess::StdoutErrThread, s);
   }
@@ -9409,14 +9620,23 @@ bool Subprocess::Wait(int timeout_ms) {
   const int64_t wait_start_ms = base::GetWallTimeMs().count();
 
   // Break out of the loop only after both conditions are satisfied:
+<<<<<<< HEAD
   // - All stdout/stderr data has been read (if OutputMode::kBuffer).
+=======
+  // - All stdout/stderr data has been read (if kBuffer).
+>>>>>>> Amalgamated source for v23.0
   // - The process exited.
   // Note that the two events can happen arbitrary order. After the process
   // exits, there might be still data in the pipe buffer, which we want to
   // read fully.
   // Note also that stdout/err might be "complete" before starting, if neither
+<<<<<<< HEAD
   // is operating in OutputMode::kBuffer mode. In that case we just want to wait
   // for the process termination.
+=======
+  // is operating in kBuffer mode. In that case we just want to wait for the
+  // process termination.
+>>>>>>> Amalgamated source for v23.0
   //
   // Instead, don't wait on the stdin to be fully written. The child process
   // might exit prematurely (or crash). If that happens, we can end up in a
@@ -11715,8 +11935,12 @@ bool DataSourceDescriptor::operator==(const DataSourceDescriptor& other) const {
    && will_notify_on_start_ == other.will_notify_on_start_
    && handles_incremental_state_clear_ == other.handles_incremental_state_clear_
    && gpu_counter_descriptor_ == other.gpu_counter_descriptor_
+<<<<<<< HEAD
    && track_event_descriptor_ == other.track_event_descriptor_
    && ftrace_descriptor_ == other.ftrace_descriptor_;
+=======
+   && track_event_descriptor_ == other.track_event_descriptor_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool DataSourceDescriptor::ParseFromArray(const void* raw, size_t size) {
@@ -11750,9 +11974,12 @@ bool DataSourceDescriptor::ParseFromArray(const void* raw, size_t size) {
       case 6 /* track_event_descriptor */:
         track_event_descriptor_ = field.as_std_string();
         break;
+<<<<<<< HEAD
       case 8 /* ftrace_descriptor */:
         ftrace_descriptor_ = field.as_std_string();
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -11809,11 +12036,14 @@ void DataSourceDescriptor::Serialize(::protozero::Message* msg) const {
     msg->AppendString(6, track_event_descriptor_);
   }
 
+<<<<<<< HEAD
   // Field 8: ftrace_descriptor
   if (_has_field_[8]) {
     msg->AppendString(8, ftrace_descriptor_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -13229,6 +13459,7 @@ void FileDescriptorSet::Serialize(::protozero::Message* msg) const {
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/common/ftrace_descriptor.gen.cc
 // gen_amalgamated begin header: gen/protos/perfetto/common/ftrace_descriptor.gen.h
 // DO NOT EDIT. Autogenerated by Perfetto cppgen_plugin
@@ -13489,6 +13720,8 @@ void FtraceDescriptor_AtraceCategory::Serialize(::protozero::Message* msg) const
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/common/gpu_counter_descriptor.gen.cc
 // gen_amalgamated begin header: gen/protos/perfetto/common/gpu_counter_descriptor.gen.h
 // DO NOT EDIT. Autogenerated by Perfetto cppgen_plugin
@@ -14699,6 +14932,7 @@ enum PerfEvents_Counter : int {
   PerfEvents_Counter_UNKNOWN_COUNTER = 0,
   PerfEvents_Counter_SW_CPU_CLOCK = 1,
   PerfEvents_Counter_SW_PAGE_FAULTS = 2,
+<<<<<<< HEAD
   PerfEvents_Counter_SW_TASK_CLOCK = 3,
   PerfEvents_Counter_SW_CONTEXT_SWITCHES = 4,
   PerfEvents_Counter_SW_CPU_MIGRATIONS = 5,
@@ -14717,6 +14951,10 @@ enum PerfEvents_Counter : int {
   PerfEvents_Counter_HW_STALLED_CYCLES_FRONTEND = 17,
   PerfEvents_Counter_HW_STALLED_CYCLES_BACKEND = 18,
   PerfEvents_Counter_HW_REF_CPU_CYCLES = 19,
+=======
+  PerfEvents_Counter_HW_CPU_CYCLES = 10,
+  PerfEvents_Counter_HW_INSTRUCTIONS = 11,
+>>>>>>> Amalgamated source for v23.0
 };
 enum PerfEvents_PerfClock : int {
   PerfEvents_PerfClock_UNKNOWN_PERF_CLOCK = 0,
@@ -14735,6 +14973,7 @@ class PERFETTO_EXPORT PerfEvents : public ::protozero::CppMessageObj {
   static constexpr auto UNKNOWN_COUNTER = PerfEvents_Counter_UNKNOWN_COUNTER;
   static constexpr auto SW_CPU_CLOCK = PerfEvents_Counter_SW_CPU_CLOCK;
   static constexpr auto SW_PAGE_FAULTS = PerfEvents_Counter_SW_PAGE_FAULTS;
+<<<<<<< HEAD
   static constexpr auto SW_TASK_CLOCK = PerfEvents_Counter_SW_TASK_CLOCK;
   static constexpr auto SW_CONTEXT_SWITCHES = PerfEvents_Counter_SW_CONTEXT_SWITCHES;
   static constexpr auto SW_CPU_MIGRATIONS = PerfEvents_Counter_SW_CPU_MIGRATIONS;
@@ -14755,6 +14994,12 @@ class PERFETTO_EXPORT PerfEvents : public ::protozero::CppMessageObj {
   static constexpr auto HW_REF_CPU_CYCLES = PerfEvents_Counter_HW_REF_CPU_CYCLES;
   static constexpr auto Counter_MIN = PerfEvents_Counter_UNKNOWN_COUNTER;
   static constexpr auto Counter_MAX = PerfEvents_Counter_SW_DUMMY;
+=======
+  static constexpr auto HW_CPU_CYCLES = PerfEvents_Counter_HW_CPU_CYCLES;
+  static constexpr auto HW_INSTRUCTIONS = PerfEvents_Counter_HW_INSTRUCTIONS;
+  static constexpr auto Counter_MIN = PerfEvents_Counter_UNKNOWN_COUNTER;
+  static constexpr auto Counter_MAX = PerfEvents_Counter_HW_INSTRUCTIONS;
+>>>>>>> Amalgamated source for v23.0
   using PerfClock = PerfEvents_PerfClock;
   static constexpr auto UNKNOWN_PERF_CLOCK = PerfEvents_PerfClock_UNKNOWN_PERF_CLOCK;
   static constexpr auto PERF_CLOCK_REALTIME = PerfEvents_PerfClock_PERF_CLOCK_REALTIME;
@@ -15526,7 +15771,10 @@ namespace gen {
 class TraceStats;
 class TraceStats_FilterStats;
 class TraceStats_BufferStats;
+<<<<<<< HEAD
 enum TraceStats_FinalFlushOutcome : int;
+=======
+>>>>>>> Amalgamated source for v23.0
 }  // namespace perfetto
 }  // namespace protos
 }  // namespace gen
@@ -15538,22 +15786,28 @@ class Message;
 namespace perfetto {
 namespace protos {
 namespace gen {
+<<<<<<< HEAD
 enum TraceStats_FinalFlushOutcome : int {
   TraceStats_FinalFlushOutcome_FINAL_FLUSH_UNSPECIFIED = 0,
   TraceStats_FinalFlushOutcome_FINAL_FLUSH_SUCCEEDED = 1,
   TraceStats_FinalFlushOutcome_FINAL_FLUSH_FAILED = 2,
 };
+=======
+>>>>>>> Amalgamated source for v23.0
 
 class PERFETTO_EXPORT TraceStats : public ::protozero::CppMessageObj {
  public:
   using BufferStats = TraceStats_BufferStats;
   using FilterStats = TraceStats_FilterStats;
+<<<<<<< HEAD
   using FinalFlushOutcome = TraceStats_FinalFlushOutcome;
   static constexpr auto FINAL_FLUSH_UNSPECIFIED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_UNSPECIFIED;
   static constexpr auto FINAL_FLUSH_SUCCEEDED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_SUCCEEDED;
   static constexpr auto FINAL_FLUSH_FAILED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_FAILED;
   static constexpr auto FinalFlushOutcome_MIN = TraceStats_FinalFlushOutcome_FINAL_FLUSH_UNSPECIFIED;
   static constexpr auto FinalFlushOutcome_MAX = TraceStats_FinalFlushOutcome_FINAL_FLUSH_FAILED;
+=======
+>>>>>>> Amalgamated source for v23.0
   enum FieldNumbers {
     kBufferStatsFieldNumber = 1,
     kProducersConnectedFieldNumber = 2,
@@ -15566,10 +15820,13 @@ class PERFETTO_EXPORT TraceStats : public ::protozero::CppMessageObj {
     kPatchesDiscardedFieldNumber = 9,
     kInvalidPacketsFieldNumber = 10,
     kFilterStatsFieldNumber = 11,
+<<<<<<< HEAD
     kFlushesRequestedFieldNumber = 12,
     kFlushesSucceededFieldNumber = 13,
     kFlushesFailedFieldNumber = 14,
     kFinalFlushOutcomeFieldNumber = 15,
+=======
+>>>>>>> Amalgamated source for v23.0
   };
 
   TraceStats();
@@ -15632,6 +15889,7 @@ class PERFETTO_EXPORT TraceStats : public ::protozero::CppMessageObj {
   const TraceStats_FilterStats& filter_stats() const { return *filter_stats_; }
   TraceStats_FilterStats* mutable_filter_stats() { _has_field_.set(11); return filter_stats_.get(); }
 
+<<<<<<< HEAD
   bool has_flushes_requested() const { return _has_field_[12]; }
   uint64_t flushes_requested() const { return flushes_requested_; }
   void set_flushes_requested(uint64_t value) { flushes_requested_ = value; _has_field_.set(12); }
@@ -15648,6 +15906,8 @@ class PERFETTO_EXPORT TraceStats : public ::protozero::CppMessageObj {
   TraceStats_FinalFlushOutcome final_flush_outcome() const { return final_flush_outcome_; }
   void set_final_flush_outcome(TraceStats_FinalFlushOutcome value) { final_flush_outcome_ = value; _has_field_.set(15); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
  private:
   std::vector<TraceStats_BufferStats> buffer_stats_;
   uint32_t producers_connected_{};
@@ -15660,16 +15920,23 @@ class PERFETTO_EXPORT TraceStats : public ::protozero::CppMessageObj {
   uint64_t patches_discarded_{};
   uint64_t invalid_packets_{};
   ::protozero::CopyablePtr<TraceStats_FilterStats> filter_stats_;
+<<<<<<< HEAD
   uint64_t flushes_requested_{};
   uint64_t flushes_succeeded_{};
   uint64_t flushes_failed_{};
   TraceStats_FinalFlushOutcome final_flush_outcome_{};
+=======
+>>>>>>> Amalgamated source for v23.0
 
   // Allows to preserve unknown protobuf fields for compatibility
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<16> _has_field_{};
+=======
+  std::bitset<12> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 
@@ -15907,11 +16174,15 @@ bool TraceStats::operator==(const TraceStats& other) const {
    && chunks_discarded_ == other.chunks_discarded_
    && patches_discarded_ == other.patches_discarded_
    && invalid_packets_ == other.invalid_packets_
+<<<<<<< HEAD
    && filter_stats_ == other.filter_stats_
    && flushes_requested_ == other.flushes_requested_
    && flushes_succeeded_ == other.flushes_succeeded_
    && flushes_failed_ == other.flushes_failed_
    && final_flush_outcome_ == other.final_flush_outcome_;
+=======
+   && filter_stats_ == other.filter_stats_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 int TraceStats::buffer_stats_size() const { return static_cast<int>(buffer_stats_.size()); }
@@ -15962,6 +16233,7 @@ bool TraceStats::ParseFromArray(const void* raw, size_t size) {
       case 11 /* filter_stats */:
         (*filter_stats_).ParseFromArray(field.data(), field.size());
         break;
+<<<<<<< HEAD
       case 12 /* flushes_requested */:
         field.get(&flushes_requested_);
         break;
@@ -15974,6 +16246,8 @@ bool TraceStats::ParseFromArray(const void* raw, size_t size) {
       case 15 /* final_flush_outcome */:
         field.get(&final_flush_outcome_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -16050,6 +16324,7 @@ void TraceStats::Serialize(::protozero::Message* msg) const {
     (*filter_stats_).Serialize(msg->BeginNestedMessage<::protozero::Message>(11));
   }
 
+<<<<<<< HEAD
   // Field 12: flushes_requested
   if (_has_field_[12]) {
     msg->AppendVarInt(12, flushes_requested_);
@@ -16070,6 +16345,8 @@ void TraceStats::Serialize(::protozero::Message* msg) const {
     msg->AppendVarInt(15, final_flush_outcome_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -16581,7 +16858,10 @@ namespace perfetto {
 namespace protos {
 namespace gen {
 class TracingServiceState;
+<<<<<<< HEAD
 class TracingServiceState_TracingSession;
+=======
+>>>>>>> Amalgamated source for v23.0
 class TracingServiceState_DataSource;
 class DataSourceDescriptor;
 class TracingServiceState_Producer;
@@ -16601,12 +16881,18 @@ class PERFETTO_EXPORT TracingServiceState : public ::protozero::CppMessageObj {
  public:
   using Producer = TracingServiceState_Producer;
   using DataSource = TracingServiceState_DataSource;
+<<<<<<< HEAD
   using TracingSession = TracingServiceState_TracingSession;
   enum FieldNumbers {
     kProducersFieldNumber = 1,
     kDataSourcesFieldNumber = 2,
     kTracingSessionsFieldNumber = 6,
     kSupportsTracingSessionsFieldNumber = 7,
+=======
+  enum FieldNumbers {
+    kProducersFieldNumber = 1,
+    kDataSourcesFieldNumber = 2,
+>>>>>>> Amalgamated source for v23.0
     kNumSessionsFieldNumber = 3,
     kNumSessionsStartedFieldNumber = 4,
     kTracingServiceVersionFieldNumber = 5,
@@ -16638,6 +16924,7 @@ class PERFETTO_EXPORT TracingServiceState : public ::protozero::CppMessageObj {
   void clear_data_sources();
   TracingServiceState_DataSource* add_data_sources();
 
+<<<<<<< HEAD
   const std::vector<TracingServiceState_TracingSession>& tracing_sessions() const { return tracing_sessions_; }
   std::vector<TracingServiceState_TracingSession>* mutable_tracing_sessions() { return &tracing_sessions_; }
   int tracing_sessions_size() const;
@@ -16648,6 +16935,8 @@ class PERFETTO_EXPORT TracingServiceState : public ::protozero::CppMessageObj {
   bool supports_tracing_sessions() const { return supports_tracing_sessions_; }
   void set_supports_tracing_sessions(bool value) { supports_tracing_sessions_ = value; _has_field_.set(7); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   bool has_num_sessions() const { return _has_field_[3]; }
   int32_t num_sessions() const { return num_sessions_; }
   void set_num_sessions(int32_t value) { num_sessions_ = value; _has_field_.set(3); }
@@ -16663,8 +16952,11 @@ class PERFETTO_EXPORT TracingServiceState : public ::protozero::CppMessageObj {
  private:
   std::vector<TracingServiceState_Producer> producers_;
   std::vector<TracingServiceState_DataSource> data_sources_;
+<<<<<<< HEAD
   std::vector<TracingServiceState_TracingSession> tracing_sessions_;
   bool supports_tracing_sessions_{};
+=======
+>>>>>>> Amalgamated source for v23.0
   int32_t num_sessions_{};
   int32_t num_sessions_started_{};
   std::string tracing_service_version_{};
@@ -16673,6 +16965,7 @@ class PERFETTO_EXPORT TracingServiceState : public ::protozero::CppMessageObj {
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<8> _has_field_{};
 };
 
@@ -16754,6 +17047,9 @@ class PERFETTO_EXPORT TracingServiceState_TracingSession : public ::protozero::C
   std::string unknown_fields_;
 
   std::bitset<9> _has_field_{};
+=======
+  std::bitset<6> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 
@@ -16803,7 +17099,10 @@ class PERFETTO_EXPORT TracingServiceState_Producer : public ::protozero::CppMess
   enum FieldNumbers {
     kIdFieldNumber = 1,
     kNameFieldNumber = 2,
+<<<<<<< HEAD
     kPidFieldNumber = 5,
+=======
+>>>>>>> Amalgamated source for v23.0
     kUidFieldNumber = 3,
     kSdkVersionFieldNumber = 4,
   };
@@ -16830,10 +17129,13 @@ class PERFETTO_EXPORT TracingServiceState_Producer : public ::protozero::CppMess
   const std::string& name() const { return name_; }
   void set_name(const std::string& value) { name_ = value; _has_field_.set(2); }
 
+<<<<<<< HEAD
   bool has_pid() const { return _has_field_[5]; }
   int32_t pid() const { return pid_; }
   void set_pid(int32_t value) { pid_ = value; _has_field_.set(5); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   bool has_uid() const { return _has_field_[3]; }
   int32_t uid() const { return uid_; }
   void set_uid(int32_t value) { uid_ = value; _has_field_.set(3); }
@@ -16845,7 +17147,10 @@ class PERFETTO_EXPORT TracingServiceState_Producer : public ::protozero::CppMess
  private:
   int32_t id_{};
   std::string name_{};
+<<<<<<< HEAD
   int32_t pid_{};
+=======
+>>>>>>> Amalgamated source for v23.0
   int32_t uid_{};
   std::string sdk_version_{};
 
@@ -16853,7 +17158,11 @@ class PERFETTO_EXPORT TracingServiceState_Producer : public ::protozero::CppMess
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<6> _has_field_{};
+=======
+  std::bitset<5> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 }  // namespace perfetto
@@ -16997,7 +17306,10 @@ class PERFETTO_EXPORT TrackEventCategory : public ::protozero::CppMessageObj {
 // gen_amalgamated expanded: #include "protos/perfetto/common/data_source_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/track_event_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/gpu_counter_descriptor.gen.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "protos/perfetto/common/ftrace_descriptor.gen.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 
 namespace perfetto {
 namespace protos {
@@ -17014,8 +17326,11 @@ bool TracingServiceState::operator==(const TracingServiceState& other) const {
   return unknown_fields_ == other.unknown_fields_
    && producers_ == other.producers_
    && data_sources_ == other.data_sources_
+<<<<<<< HEAD
    && tracing_sessions_ == other.tracing_sessions_
    && supports_tracing_sessions_ == other.supports_tracing_sessions_
+=======
+>>>>>>> Amalgamated source for v23.0
    && num_sessions_ == other.num_sessions_
    && num_sessions_started_ == other.num_sessions_started_
    && tracing_service_version_ == other.tracing_service_version_;
@@ -17027,6 +17342,7 @@ TracingServiceState_Producer* TracingServiceState::add_producers() { producers_.
 int TracingServiceState::data_sources_size() const { return static_cast<int>(data_sources_.size()); }
 void TracingServiceState::clear_data_sources() { data_sources_.clear(); }
 TracingServiceState_DataSource* TracingServiceState::add_data_sources() { data_sources_.emplace_back(); return &data_sources_.back(); }
+<<<<<<< HEAD
 int TracingServiceState::tracing_sessions_size() const { return static_cast<int>(tracing_sessions_.size()); }
 void TracingServiceState::clear_tracing_sessions() { tracing_sessions_.clear(); }
 TracingServiceState_TracingSession* TracingServiceState::add_tracing_sessions() { tracing_sessions_.emplace_back(); return &tracing_sessions_.back(); }
@@ -17034,6 +17350,11 @@ bool TracingServiceState::ParseFromArray(const void* raw, size_t size) {
   producers_.clear();
   data_sources_.clear();
   tracing_sessions_.clear();
+=======
+bool TracingServiceState::ParseFromArray(const void* raw, size_t size) {
+  producers_.clear();
+  data_sources_.clear();
+>>>>>>> Amalgamated source for v23.0
   unknown_fields_.clear();
   bool packed_error = false;
 
@@ -17051,6 +17372,7 @@ bool TracingServiceState::ParseFromArray(const void* raw, size_t size) {
         data_sources_.emplace_back();
         data_sources_.back().ParseFromArray(field.data(), field.size());
         break;
+<<<<<<< HEAD
       case 6 /* tracing_sessions */:
         tracing_sessions_.emplace_back();
         tracing_sessions_.back().ParseFromArray(field.data(), field.size());
@@ -17058,6 +17380,8 @@ bool TracingServiceState::ParseFromArray(const void* raw, size_t size) {
       case 7 /* supports_tracing_sessions */:
         field.get(&supports_tracing_sessions_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       case 3 /* num_sessions */:
         field.get(&num_sessions_);
         break;
@@ -17098,6 +17422,7 @@ void TracingServiceState::Serialize(::protozero::Message* msg) const {
     it.Serialize(msg->BeginNestedMessage<::protozero::Message>(2));
   }
 
+<<<<<<< HEAD
   // Field 6: tracing_sessions
   for (auto& it : tracing_sessions_) {
     it.Serialize(msg->BeginNestedMessage<::protozero::Message>(6));
@@ -17108,6 +17433,8 @@ void TracingServiceState::Serialize(::protozero::Message* msg) const {
     msg->AppendTinyVarInt(7, supports_tracing_sessions_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // Field 3: num_sessions
   if (_has_field_[3]) {
     msg->AppendVarInt(3, num_sessions_);
@@ -17127,6 +17454,7 @@ void TracingServiceState::Serialize(::protozero::Message* msg) const {
 }
 
 
+<<<<<<< HEAD
 TracingServiceState_TracingSession::TracingServiceState_TracingSession() = default;
 TracingServiceState_TracingSession::~TracingServiceState_TracingSession() = default;
 TracingServiceState_TracingSession::TracingServiceState_TracingSession(const TracingServiceState_TracingSession&) = default;
@@ -17247,6 +17575,8 @@ void TracingServiceState_TracingSession::Serialize(::protozero::Message* msg) co
 }
 
 
+=======
+>>>>>>> Amalgamated source for v23.0
 TracingServiceState_DataSource::TracingServiceState_DataSource() = default;
 TracingServiceState_DataSource::~TracingServiceState_DataSource() = default;
 TracingServiceState_DataSource::TracingServiceState_DataSource(const TracingServiceState_DataSource&) = default;
@@ -17322,7 +17652,10 @@ bool TracingServiceState_Producer::operator==(const TracingServiceState_Producer
   return unknown_fields_ == other.unknown_fields_
    && id_ == other.id_
    && name_ == other.name_
+<<<<<<< HEAD
    && pid_ == other.pid_
+=======
+>>>>>>> Amalgamated source for v23.0
    && uid_ == other.uid_
    && sdk_version_ == other.sdk_version_;
 }
@@ -17343,9 +17676,12 @@ bool TracingServiceState_Producer::ParseFromArray(const void* raw, size_t size) 
       case 2 /* name */:
         field.get(&name_);
         break;
+<<<<<<< HEAD
       case 5 /* pid */:
         field.get(&pid_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       case 3 /* uid */:
         field.get(&uid_);
         break;
@@ -17383,11 +17719,14 @@ void TracingServiceState_Producer::Serialize(::protozero::Message* msg) const {
     msg->AppendString(2, name_);
   }
 
+<<<<<<< HEAD
   // Field 5: pid
   if (_has_field_[5]) {
     msg->AppendVarInt(5, pid_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // Field 3: uid
   if (_has_field_[3]) {
     msg->AppendVarInt(3, uid_);
@@ -18095,7 +18434,10 @@ class PERFETTO_EXPORT FtraceConfig : public ::protozero::CppMessageObj {
     kSymbolizeKsymsFieldNumber = 13,
     kInitializeKsymsSynchronouslyForTestingFieldNumber = 14,
     kThrottleRssStatFieldNumber = 15,
+<<<<<<< HEAD
     kDisableGenericEventsFieldNumber = 16,
+=======
+>>>>>>> Amalgamated source for v23.0
   };
 
   FtraceConfig();
@@ -18157,10 +18499,13 @@ class PERFETTO_EXPORT FtraceConfig : public ::protozero::CppMessageObj {
   bool throttle_rss_stat() const { return throttle_rss_stat_; }
   void set_throttle_rss_stat(bool value) { throttle_rss_stat_ = value; _has_field_.set(15); }
 
+<<<<<<< HEAD
   bool has_disable_generic_events() const { return _has_field_[16]; }
   bool disable_generic_events() const { return disable_generic_events_; }
   void set_disable_generic_events(bool value) { disable_generic_events_ = value; _has_field_.set(16); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
  private:
   std::vector<std::string> ftrace_events_;
   std::vector<std::string> atrace_categories_;
@@ -18171,13 +18516,20 @@ class PERFETTO_EXPORT FtraceConfig : public ::protozero::CppMessageObj {
   bool symbolize_ksyms_{};
   bool initialize_ksyms_synchronously_for_testing_{};
   bool throttle_rss_stat_{};
+<<<<<<< HEAD
   bool disable_generic_events_{};
+=======
+>>>>>>> Amalgamated source for v23.0
 
   // Allows to preserve unknown protobuf fields for compatibility
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<17> _has_field_{};
+=======
+  std::bitset<16> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 
@@ -18252,8 +18604,12 @@ bool FtraceConfig::operator==(const FtraceConfig& other) const {
    && compact_sched_ == other.compact_sched_
    && symbolize_ksyms_ == other.symbolize_ksyms_
    && initialize_ksyms_synchronously_for_testing_ == other.initialize_ksyms_synchronously_for_testing_
+<<<<<<< HEAD
    && throttle_rss_stat_ == other.throttle_rss_stat_
    && disable_generic_events_ == other.disable_generic_events_;
+=======
+   && throttle_rss_stat_ == other.throttle_rss_stat_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool FtraceConfig::ParseFromArray(const void* raw, size_t size) {
@@ -18299,9 +18655,12 @@ bool FtraceConfig::ParseFromArray(const void* raw, size_t size) {
       case 15 /* throttle_rss_stat */:
         field.get(&throttle_rss_stat_);
         break;
+<<<<<<< HEAD
       case 16 /* disable_generic_events */:
         field.get(&disable_generic_events_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -18368,11 +18727,14 @@ void FtraceConfig::Serialize(::protozero::Message* msg) const {
     msg->AppendTinyVarInt(15, throttle_rss_stat_);
   }
 
+<<<<<<< HEAD
   // Field 16: disable_generic_events
   if (_has_field_[16]) {
     msg->AppendTinyVarInt(16, disable_generic_events_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -21559,7 +21921,10 @@ class PERFETTO_EXPORT SysStatsConfig : public ::protozero::CppMessageObj {
     kStatPeriodMsFieldNumber = 5,
     kStatCountersFieldNumber = 6,
     kDevfreqPeriodMsFieldNumber = 7,
+<<<<<<< HEAD
     kCpufreqPeriodMsFieldNumber = 8,
+=======
+>>>>>>> Amalgamated source for v23.0
   };
 
   SysStatsConfig();
@@ -21613,10 +21978,13 @@ class PERFETTO_EXPORT SysStatsConfig : public ::protozero::CppMessageObj {
   uint32_t devfreq_period_ms() const { return devfreq_period_ms_; }
   void set_devfreq_period_ms(uint32_t value) { devfreq_period_ms_ = value; _has_field_.set(7); }
 
+<<<<<<< HEAD
   bool has_cpufreq_period_ms() const { return _has_field_[8]; }
   uint32_t cpufreq_period_ms() const { return cpufreq_period_ms_; }
   void set_cpufreq_period_ms(uint32_t value) { cpufreq_period_ms_ = value; _has_field_.set(8); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
  private:
   uint32_t meminfo_period_ms_{};
   std::vector<MeminfoCounters> meminfo_counters_;
@@ -21625,13 +21993,20 @@ class PERFETTO_EXPORT SysStatsConfig : public ::protozero::CppMessageObj {
   uint32_t stat_period_ms_{};
   std::vector<SysStatsConfig_StatCounters> stat_counters_;
   uint32_t devfreq_period_ms_{};
+<<<<<<< HEAD
   uint32_t cpufreq_period_ms_{};
+=======
+>>>>>>> Amalgamated source for v23.0
 
   // Allows to preserve unknown protobuf fields for compatibility
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<9> _has_field_{};
+=======
+  std::bitset<8> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 }  // namespace perfetto
@@ -21670,8 +22045,12 @@ bool SysStatsConfig::operator==(const SysStatsConfig& other) const {
    && vmstat_counters_ == other.vmstat_counters_
    && stat_period_ms_ == other.stat_period_ms_
    && stat_counters_ == other.stat_counters_
+<<<<<<< HEAD
    && devfreq_period_ms_ == other.devfreq_period_ms_
    && cpufreq_period_ms_ == other.cpufreq_period_ms_;
+=======
+   && devfreq_period_ms_ == other.devfreq_period_ms_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool SysStatsConfig::ParseFromArray(const void* raw, size_t size) {
@@ -21711,9 +22090,12 @@ bool SysStatsConfig::ParseFromArray(const void* raw, size_t size) {
       case 7 /* devfreq_period_ms */:
         field.get(&devfreq_period_ms_);
         break;
+<<<<<<< HEAD
       case 8 /* cpufreq_period_ms */:
         field.get(&cpufreq_period_ms_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -21770,11 +22152,14 @@ void SysStatsConfig::Serialize(::protozero::Message* msg) const {
     msg->AppendVarInt(7, devfreq_period_ms_);
   }
 
+<<<<<<< HEAD
   // Field 8: cpufreq_period_ms
   if (_has_field_[8]) {
     msg->AppendVarInt(8, cpufreq_period_ms_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -21812,9 +22197,13 @@ bool TrackEventConfig::operator==(const TrackEventConfig& other) const {
    && disabled_categories_ == other.disabled_categories_
    && enabled_categories_ == other.enabled_categories_
    && disabled_tags_ == other.disabled_tags_
+<<<<<<< HEAD
    && enabled_tags_ == other.enabled_tags_
    && disable_incremental_timestamps_ == other.disable_incremental_timestamps_
    && timestamp_unit_multipler_ == other.timestamp_unit_multipler_;
+=======
+   && enabled_tags_ == other.enabled_tags_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool TrackEventConfig::ParseFromArray(const void* raw, size_t size) {
@@ -21847,12 +22236,15 @@ bool TrackEventConfig::ParseFromArray(const void* raw, size_t size) {
         enabled_tags_.emplace_back();
         field.get(&enabled_tags_.back());
         break;
+<<<<<<< HEAD
       case 5 /* disable_incremental_timestamps */:
         field.get(&disable_incremental_timestamps_);
         break;
       case 6 /* timestamp_unit_multipler */:
         field.get(&timestamp_unit_multipler_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -21894,6 +22286,7 @@ void TrackEventConfig::Serialize(::protozero::Message* msg) const {
     msg->AppendString(4, it);
   }
 
+<<<<<<< HEAD
   // Field 5: disable_incremental_timestamps
   if (_has_field_[5]) {
     msg->AppendTinyVarInt(5, disable_incremental_timestamps_);
@@ -21904,6 +22297,8 @@ void TrackEventConfig::Serialize(::protozero::Message* msg) const {
     msg->AppendVarInt(6, timestamp_unit_multipler_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -22825,8 +23220,11 @@ namespace gen {
 class StressTestConfig;
 class StressTestConfig_WriterTiming;
 class TraceConfig;
+<<<<<<< HEAD
 class TraceConfig_CmdTraceStartDelay;
 class TraceConfig_AndroidReportConfig;
+=======
+>>>>>>> Amalgamated source for v23.0
 class TraceConfig_TraceFilter;
 class TraceConfig_IncidentReportConfig;
 class TraceConfig_IncrementalStateConfig;
@@ -23672,9 +24070,13 @@ bool TraceConfig::operator==(const TraceConfig& other) const {
    && statsd_logging_ == other.statsd_logging_
    && trace_uuid_msb_ == other.trace_uuid_msb_
    && trace_uuid_lsb_ == other.trace_uuid_lsb_
+<<<<<<< HEAD
    && trace_filter_ == other.trace_filter_
    && android_report_config_ == other.android_report_config_
    && cmd_trace_start_delay_ == other.cmd_trace_start_delay_;
+=======
+   && trace_filter_ == other.trace_filter_;
+>>>>>>> Amalgamated source for v23.0
 }
 
 int TraceConfig::buffers_size() const { return static_cast<int>(buffers_.size()); }
@@ -23794,12 +24196,15 @@ bool TraceConfig::ParseFromArray(const void* raw, size_t size) {
       case 33 /* trace_filter */:
         (*trace_filter_).ParseFromArray(field.data(), field.size());
         break;
+<<<<<<< HEAD
       case 34 /* android_report_config */:
         (*android_report_config_).ParseFromArray(field.data(), field.size());
         break;
       case 35 /* cmd_trace_start_delay */:
         (*cmd_trace_start_delay_).ParseFromArray(field.data(), field.size());
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       default:
         field.SerializeAndAppendTo(&unknown_fields_);
         break;
@@ -23971,6 +24376,7 @@ void TraceConfig::Serialize(::protozero::Message* msg) const {
     (*trace_filter_).Serialize(msg->BeginNestedMessage<::protozero::Message>(33));
   }
 
+<<<<<<< HEAD
   // Field 34: android_report_config
   if (_has_field_[34]) {
     (*android_report_config_).Serialize(msg->BeginNestedMessage<::protozero::Message>(34));
@@ -24127,6 +24533,8 @@ void TraceConfig_AndroidReportConfig::Serialize(::protozero::Message* msg) const
     msg->AppendTinyVarInt(4, use_pipe_in_framework_for_testing_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   msg->AppendRawProtoBytes(unknown_fields_.data(), unknown_fields_.size());
 }
 
@@ -24978,8 +25386,11 @@ void TraceConfig_BufferConfig::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/common/descriptor.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/common/ftrace_descriptor.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/common/gpu_counter_descriptor.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/common/interceptor_descriptor.pbzero.cc
@@ -31124,7 +31535,10 @@ void CounterDescriptor::Serialize(::protozero::Message* msg) const {
 namespace perfetto {
 namespace protos {
 namespace gen {
+<<<<<<< HEAD
 class DebugAnnotationValueTypeName;
+=======
+>>>>>>> Amalgamated source for v23.0
 class DebugAnnotationName;
 class DebugAnnotation;
 class DebugAnnotation_NestedValue;
@@ -31146,6 +31560,7 @@ enum DebugAnnotation_NestedValue_NestedType : int {
   DebugAnnotation_NestedValue_NestedType_ARRAY = 2,
 };
 
+<<<<<<< HEAD
 class PERFETTO_EXPORT DebugAnnotationValueTypeName : public ::protozero::CppMessageObj {
  public:
   enum FieldNumbers {
@@ -31187,6 +31602,8 @@ class PERFETTO_EXPORT DebugAnnotationValueTypeName : public ::protozero::CppMess
 };
 
 
+=======
+>>>>>>> Amalgamated source for v23.0
 class PERFETTO_EXPORT DebugAnnotationName : public ::protozero::CppMessageObj {
  public:
   enum FieldNumbers {
@@ -31242,9 +31659,12 @@ class PERFETTO_EXPORT DebugAnnotation : public ::protozero::CppMessageObj {
     kPointerValueFieldNumber = 7,
     kNestedValueFieldNumber = 8,
     kLegacyJsonValueFieldNumber = 9,
+<<<<<<< HEAD
     kProtoTypeNameFieldNumber = 16,
     kProtoTypeNameIidFieldNumber = 13,
     kProtoValueFieldNumber = 14,
+=======
+>>>>>>> Amalgamated source for v23.0
     kDictEntriesFieldNumber = 11,
     kArrayValuesFieldNumber = 12,
   };
@@ -31303,6 +31723,7 @@ class PERFETTO_EXPORT DebugAnnotation : public ::protozero::CppMessageObj {
   const std::string& legacy_json_value() const { return legacy_json_value_; }
   void set_legacy_json_value(const std::string& value) { legacy_json_value_ = value; _has_field_.set(9); }
 
+<<<<<<< HEAD
   bool has_proto_type_name() const { return _has_field_[16]; }
   const std::string& proto_type_name() const { return proto_type_name_; }
   void set_proto_type_name(const std::string& value) { proto_type_name_ = value; _has_field_.set(16); }
@@ -31316,6 +31737,8 @@ class PERFETTO_EXPORT DebugAnnotation : public ::protozero::CppMessageObj {
   void set_proto_value(const std::string& value) { proto_value_ = value; _has_field_.set(14); }
   void set_proto_value(const void* p, size_t s) { proto_value_.assign(reinterpret_cast<const char*>(p), s); _has_field_.set(14); }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   const std::vector<DebugAnnotation>& dict_entries() const { return dict_entries_; }
   std::vector<DebugAnnotation>* mutable_dict_entries() { return &dict_entries_; }
   int dict_entries_size() const;
@@ -31339,9 +31762,12 @@ class PERFETTO_EXPORT DebugAnnotation : public ::protozero::CppMessageObj {
   uint64_t pointer_value_{};
   ::protozero::CopyablePtr<DebugAnnotation_NestedValue> nested_value_;
   std::string legacy_json_value_{};
+<<<<<<< HEAD
   std::string proto_type_name_{};
   uint64_t proto_type_name_iid_{};
   std::string proto_value_{};
+=======
+>>>>>>> Amalgamated source for v23.0
   std::vector<DebugAnnotation> dict_entries_;
   std::vector<DebugAnnotation> array_values_;
 
@@ -31349,7 +31775,11 @@ class PERFETTO_EXPORT DebugAnnotation : public ::protozero::CppMessageObj {
   // with future versions of .proto files.
   std::string unknown_fields_;
 
+<<<<<<< HEAD
   std::bitset<17> _has_field_{};
+=======
+  std::bitset<13> _has_field_{};
+>>>>>>> Amalgamated source for v23.0
 };
 
 
@@ -31462,6 +31892,7 @@ namespace perfetto {
 namespace protos {
 namespace gen {
 
+<<<<<<< HEAD
 DebugAnnotationValueTypeName::DebugAnnotationValueTypeName() = default;
 DebugAnnotationValueTypeName::~DebugAnnotationValueTypeName() = default;
 DebugAnnotationValueTypeName::DebugAnnotationValueTypeName(const DebugAnnotationValueTypeName&) = default;
@@ -31526,6 +31957,8 @@ void DebugAnnotationValueTypeName::Serialize(::protozero::Message* msg) const {
 }
 
 
+=======
+>>>>>>> Amalgamated source for v23.0
 DebugAnnotationName::DebugAnnotationName() = default;
 DebugAnnotationName::~DebugAnnotationName() = default;
 DebugAnnotationName::DebugAnnotationName(const DebugAnnotationName&) = default;
@@ -31609,9 +32042,12 @@ bool DebugAnnotation::operator==(const DebugAnnotation& other) const {
    && pointer_value_ == other.pointer_value_
    && nested_value_ == other.nested_value_
    && legacy_json_value_ == other.legacy_json_value_
+<<<<<<< HEAD
    && proto_type_name_ == other.proto_type_name_
    && proto_type_name_iid_ == other.proto_type_name_iid_
    && proto_value_ == other.proto_value_
+=======
+>>>>>>> Amalgamated source for v23.0
    && dict_entries_ == other.dict_entries_
    && array_values_ == other.array_values_;
 }
@@ -31664,6 +32100,7 @@ bool DebugAnnotation::ParseFromArray(const void* raw, size_t size) {
       case 9 /* legacy_json_value */:
         field.get(&legacy_json_value_);
         break;
+<<<<<<< HEAD
       case 16 /* proto_type_name */:
         field.get(&proto_type_name_);
         break;
@@ -31673,6 +32110,8 @@ bool DebugAnnotation::ParseFromArray(const void* raw, size_t size) {
       case 14 /* proto_value */:
         field.get(&proto_value_);
         break;
+=======
+>>>>>>> Amalgamated source for v23.0
       case 11 /* dict_entries */:
         dict_entries_.emplace_back();
         dict_entries_.back().ParseFromArray(field.data(), field.size());
@@ -31752,6 +32191,7 @@ void DebugAnnotation::Serialize(::protozero::Message* msg) const {
     msg->AppendString(9, legacy_json_value_);
   }
 
+<<<<<<< HEAD
   // Field 16: proto_type_name
   if (_has_field_[16]) {
     msg->AppendString(16, proto_type_name_);
@@ -31767,6 +32207,8 @@ void DebugAnnotation::Serialize(::protozero::Message* msg) const {
     msg->AppendString(14, proto_value_);
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // Field 11: dict_entries
   for (auto& it : dict_entries_) {
     it.Serialize(msg->BeginNestedMessage<::protozero::Message>(11));
@@ -34727,8 +35169,11 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/android/android_log.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/android/camera_event.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/android/frame_timeline_event.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/android/gpu_mem_event.pbzero.cc
@@ -34769,8 +35214,11 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/cpuhp.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/cros_ec.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/dmabuf_heap.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/dpu.pbzero.cc
@@ -34801,8 +35249,11 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/kmem.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/kvm.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/lowmemorykiller.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/mali.pbzero.cc
@@ -34817,8 +35268,11 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/power.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/printk.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/raw_syscalls.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/regulator.pbzero.cc
@@ -34831,10 +35285,13 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/signal.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/skb.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/sock.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/sync.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/synthetic.pbzero.cc
@@ -34843,12 +35300,17 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/task.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/tcp.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/thermal.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/ufs.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+// gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/thermal.pbzero.cc
+// Intentionally empty (crbug.com/998165)
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/vmscan.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/ftrace/workqueue.pbzero.cc
@@ -34871,8 +35333,11 @@ void TrackEvent_LegacyEvent::Serialize(::protozero::Message* msg) const {
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/system_info/cpu_info.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+<<<<<<< HEAD
 // gen_amalgamated begin source: gen/protos/perfetto/trace/translation/translation_table.pbzero.cc
 // Intentionally empty (crbug.com/998165)
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin source: gen/protos/perfetto/trace/trace_packet_defaults.pbzero.cc
 // Intentionally empty (crbug.com/998165)
 // gen_amalgamated begin source: gen/protos/perfetto/trace/test_event.pbzero.cc
@@ -35078,10 +35543,22 @@ bool IdAllocatorGeneric::IsEmpty() const {
 #ifndef INCLUDE_PERFETTO_EXT_TRACING_CORE_BASIC_TYPES_H_
 #define INCLUDE_PERFETTO_EXT_TRACING_CORE_BASIC_TYPES_H_
 
+<<<<<<< HEAD
 #include <stddef.h>
 #include <stdint.h>
 
 // gen_amalgamated expanded: #include "perfetto/ext/base/sys_types.h"
+=======
+// gen_amalgamated expanded: #include "perfetto/base/build_config.h"
+
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
+using uid_t = unsigned int;
+#endif
+>>>>>>> Amalgamated source for v23.0
 
 namespace perfetto {
 
@@ -35132,7 +35609,11 @@ static constexpr PacketSequenceID kServicePacketSequenceID = 1;
 static constexpr PacketSequenceID kMaxPacketSequenceID =
     static_cast<PacketSequenceID>(-1);
 
+<<<<<<< HEAD
 constexpr uid_t kInvalidUid = ::perfetto::base::kInvalidUid;
+=======
+constexpr uid_t kInvalidUid = static_cast<uid_t>(-1);
+>>>>>>> Amalgamated source for v23.0
 
 constexpr uint32_t kDefaultFlushTimeoutMs = 5000;
 
@@ -36374,7 +36855,10 @@ class PERFETTO_EXPORT SharedMemory {
 
 // gen_amalgamated expanded: #include "perfetto/base/export.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/scoped_file.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/ext/base/sys_types.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "perfetto/ext/tracing/core/basic_types.h"
 // gen_amalgamated expanded: #include "perfetto/ext/tracing/core/shared_memory.h"
 // gen_amalgamated expanded: #include "perfetto/tracing/buffer_exhausted_policy.h"
@@ -36671,7 +37155,10 @@ class PERFETTO_EXPORT TracingService {
   virtual std::unique_ptr<ProducerEndpoint> ConnectProducer(
       Producer*,
       uid_t uid,
+<<<<<<< HEAD
       pid_t pid,
+=======
+>>>>>>> Amalgamated source for v23.0
       const std::string& name,
       size_t shared_memory_size_hint_bytes = 0,
       bool in_process = false,
@@ -37604,7 +38091,11 @@ Chunk SharedMemoryArbiterImpl::GetNewChunk(
   static const unsigned kMaxStallIntervalUs = 100000;
   static const int kLogAfterNStalls = 3;
   static const int kFlushCommitsAfterEveryNStalls = 2;
+<<<<<<< HEAD
   static const int kAssertAtNStalls = 200;
+=======
+  static const int kAssertAtNStalls = 100;
+>>>>>>> Amalgamated source for v23.0
 
   for (;;) {
     // TODO(primiano): Probably this lock is not really required and this code
@@ -39370,8 +39861,11 @@ class ConsoleConfig : public ::protozero::Message {
     kOutputFieldNumber = 1,
     kEnableColorsFieldNumber = 2,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.ConsoleConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using Output = ::perfetto::protos::pbzero::ConsoleConfig_Output;
   static const Output OUTPUT_UNSPECIFIED = ConsoleConfig_Output_OUTPUT_UNSPECIFIED;
   static const Output OUTPUT_STDOUT = ConsoleConfig_Output_OUTPUT_STDOUT;
@@ -39391,7 +39885,11 @@ class ConsoleConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Output kOutput() { return {}; }
   void set_output(::perfetto::protos::pbzero::ConsoleConfig_Output value) {
     static constexpr uint32_t field_id = FieldMetadata_Output::kFieldId;
@@ -39416,7 +39914,11 @@ class ConsoleConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_EnableColors kEnableColors() { return {}; }
   void set_enable_colors(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_EnableColors::kFieldId;
@@ -39475,8 +39977,11 @@ class TracePacketDefaults : public ::protozero::Message {
     kTrackEventDefaultsFieldNumber = 11,
     kPerfSampleDefaultsFieldNumber = 12,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TracePacketDefaults"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_TimestampClockId =
     ::protozero::proto_utils::FieldMetadata<
@@ -39492,7 +39997,11 @@ class TracePacketDefaults : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TimestampClockId kTimestampClockId() { return {}; }
   void set_timestamp_clock_id(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TimestampClockId::kFieldId;
@@ -39517,7 +40026,11 @@ class TracePacketDefaults : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TrackEventDefaults kTrackEventDefaults() { return {}; }
   template <typename T = TrackEventDefaults> T* set_track_event_defaults() {
     return BeginNestedMessage<T>(11);
@@ -39538,7 +40051,11 @@ class TracePacketDefaults : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PerfSampleDefaults kPerfSampleDefaults() { return {}; }
   template <typename T = PerfSampleDefaults> T* set_perf_sample_defaults() {
     return BeginNestedMessage<T>(12);
@@ -39622,8 +40139,11 @@ class ProcessDescriptor : public ::protozero::Message {
     kLegacySortIndexFieldNumber = 3,
     kProcessLabelsFieldNumber = 8,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.ProcessDescriptor"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using ChromeProcessType = ::perfetto::protos::pbzero::ProcessDescriptor_ChromeProcessType;
   static const ChromeProcessType PROCESS_UNSPECIFIED = ProcessDescriptor_ChromeProcessType_PROCESS_UNSPECIFIED;
   static const ChromeProcessType PROCESS_BROWSER = ProcessDescriptor_ChromeProcessType_PROCESS_BROWSER;
@@ -39649,7 +40169,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Pid kPid() { return {}; }
   void set_pid(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_Pid::kFieldId;
@@ -39674,7 +40198,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Cmdline kCmdline() { return {}; }
   void add_cmdline(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Cmdline::kFieldId, data, size);
@@ -39702,7 +40230,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProcessName kProcessName() { return {}; }
   void set_process_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProcessName::kFieldId, data, size);
@@ -39730,7 +40262,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProcessPriority kProcessPriority() { return {}; }
   void set_process_priority(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ProcessPriority::kFieldId;
@@ -39755,7 +40291,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_StartTimestampNs kStartTimestampNs() { return {}; }
   void set_start_timestamp_ns(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_StartTimestampNs::kFieldId;
@@ -39780,7 +40320,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChromeProcessType kChromeProcessType() { return {}; }
   void set_chrome_process_type(::perfetto::protos::pbzero::ProcessDescriptor_ChromeProcessType value) {
     static constexpr uint32_t field_id = FieldMetadata_ChromeProcessType::kFieldId;
@@ -39805,7 +40349,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_LegacySortIndex kLegacySortIndex() { return {}; }
   void set_legacy_sort_index(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_LegacySortIndex::kFieldId;
@@ -39830,7 +40378,11 @@ class ProcessDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProcessLabels kProcessLabels() { return {}; }
   void add_process_labels(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProcessLabels::kFieldId, data, size);
@@ -39926,8 +40478,11 @@ class ThreadDescriptor : public ::protozero::Message {
     kReferenceThreadInstructionCountFieldNumber = 8,
     kLegacySortIndexFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.ThreadDescriptor"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using ChromeThreadType = ::perfetto::protos::pbzero::ThreadDescriptor_ChromeThreadType;
   static const ChromeThreadType CHROME_THREAD_UNSPECIFIED = ThreadDescriptor_ChromeThreadType_CHROME_THREAD_UNSPECIFIED;
   static const ChromeThreadType CHROME_THREAD_MAIN = ThreadDescriptor_ChromeThreadType_CHROME_THREAD_MAIN;
@@ -39958,7 +40513,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Pid kPid() { return {}; }
   void set_pid(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_Pid::kFieldId;
@@ -39983,7 +40542,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Tid kTid() { return {}; }
   void set_tid(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_Tid::kFieldId;
@@ -40008,7 +40571,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ThreadName kThreadName() { return {}; }
   void set_thread_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ThreadName::kFieldId, data, size);
@@ -40036,7 +40603,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChromeThreadType kChromeThreadType() { return {}; }
   void set_chrome_thread_type(::perfetto::protos::pbzero::ThreadDescriptor_ChromeThreadType value) {
     static constexpr uint32_t field_id = FieldMetadata_ChromeThreadType::kFieldId;
@@ -40061,7 +40632,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReferenceTimestampUs kReferenceTimestampUs() { return {}; }
   void set_reference_timestamp_us(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ReferenceTimestampUs::kFieldId;
@@ -40086,7 +40661,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReferenceThreadTimeUs kReferenceThreadTimeUs() { return {}; }
   void set_reference_thread_time_us(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ReferenceThreadTimeUs::kFieldId;
@@ -40111,7 +40690,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReferenceThreadInstructionCount kReferenceThreadInstructionCount() { return {}; }
   void set_reference_thread_instruction_count(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ReferenceThreadInstructionCount::kFieldId;
@@ -40136,7 +40719,11 @@ class ThreadDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_LegacySortIndex kLegacySortIndex() { return {}; }
   void set_legacy_sort_index(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_LegacySortIndex::kFieldId;
@@ -40675,7 +41262,11 @@ namespace perfetto {
 DebugAnnotation::~DebugAnnotation() = default;
 
 void DebugAnnotation::WriteIntoTracedValue(TracedValue context) const {
+<<<<<<< HEAD
   Add(context.annotation_);
+=======
+  Add(context.context_);
+>>>>>>> Amalgamated source for v23.0
 }
 
 }  // namespace perfetto
@@ -40751,6 +41342,7 @@ struct PERFETTO_EXPORT InternedDebugAnnotationName
                   const char* value);
 };
 
+<<<<<<< HEAD
 struct PERFETTO_EXPORT InternedDebugAnnotationValueTypeName
     : public TrackEventInternedDataIndex<
           InternedDebugAnnotationValueTypeName,
@@ -40765,6 +41357,8 @@ struct PERFETTO_EXPORT InternedDebugAnnotationValueTypeName
                   const char* value);
 };
 
+=======
+>>>>>>> Amalgamated source for v23.0
 }  // namespace internal
 }  // namespace perfetto
 
@@ -43790,8 +44384,11 @@ class TrackEventDescriptor : public ::protozero::Message {
   enum : int32_t {
     kAvailableCategoriesFieldNumber = 1,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TrackEventDescriptor"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_AvailableCategories =
     ::protozero::proto_utils::FieldMetadata<
@@ -43807,7 +44404,11 @@ class TrackEventDescriptor : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AvailableCategories kAvailableCategories() { return {}; }
   template <typename T = TrackEventCategory> T* add_available_categories() {
     return BeginNestedMessage<T>(1);
@@ -43836,8 +44437,11 @@ class TrackEventCategory : public ::protozero::Message {
     kDescriptionFieldNumber = 2,
     kTagsFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TrackEventCategory"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Name =
     ::protozero::proto_utils::FieldMetadata<
@@ -43853,7 +44457,11 @@ class TrackEventCategory : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Name kName() { return {}; }
   void set_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Name::kFieldId, data, size);
@@ -43881,7 +44489,11 @@ class TrackEventCategory : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Description kDescription() { return {}; }
   void set_description(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Description::kFieldId, data, size);
@@ -43909,7 +44521,11 @@ class TrackEventCategory : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Tags kTags() { return {}; }
   void add_tags(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Tags::kFieldId, data, size);
@@ -43928,6 +44544,7 @@ class TrackEventCategory : public ::protozero::Message {
 } // Namespace.
 } // Namespace.
 #endif  // Include guard.
+<<<<<<< HEAD
 // gen_amalgamated begin header: gen/protos/perfetto/trace/clock_snapshot.pbzero.h
 // Autogenerated by the ProtoZero compiler plugin. DO NOT EDIT.
 
@@ -44174,6 +44791,8 @@ class ClockSnapshot_Clock : public ::protozero::Message {
 } // Namespace.
 } // Namespace.
 #endif  // Include guard.
+=======
+>>>>>>> Amalgamated source for v23.0
 /*
  * Copyright (C) 2019 The Android Open Source Project
  *
@@ -44202,14 +44821,20 @@ class ClockSnapshot_Clock : public ::protozero::Message {
 // gen_amalgamated expanded: #include "perfetto/tracing/track_event_interned_data_index.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/data_source_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/track_event_descriptor.pbzero.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "protos/perfetto/trace/clock_snapshot.pbzero.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "protos/perfetto/trace/interned_data/interned_data.pbzero.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/trace_packet_defaults.pbzero.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/track_event/debug_annotation.pbzero.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/track_event/track_descriptor.pbzero.h"
 
+<<<<<<< HEAD
 using perfetto::protos::pbzero::ClockSnapshot;
 
+=======
+>>>>>>> Amalgamated source for v23.0
 namespace perfetto {
 
 TrackEventSessionObserver::~TrackEventSessionObserver() = default;
@@ -44227,6 +44852,7 @@ std::atomic<perfetto::base::PlatformThreadId> g_main_thread;
 static constexpr const char kLegacySlowPrefix[] = "disabled-by-default-";
 static constexpr const char kSlowTag[] = "slow";
 static constexpr const char kDebugTag[] = "debug";
+<<<<<<< HEAD
 // Allows to specify a custom unit different than the default (ns) for
 // the incremental clock.
 // A multiplier of 1000 means that a timestamp = 3 should be
@@ -44237,6 +44863,8 @@ static_assert(kIncrementalTimestampUnitMultiplier >= 1, "");
 
 constexpr auto kClockIdIncremental =
     TrackEventIncrementalState::kClockIdIncremental;
+=======
+>>>>>>> Amalgamated source for v23.0
 
 void ForEachObserver(
     std::function<bool(TrackEventSessionObserver*&)> callback) {
@@ -44492,16 +45120,20 @@ uint64_t TrackEventInternal::GetTimeNs() {
 }
 
 // static
+<<<<<<< HEAD
 TraceTimestamp TrackEventInternal::GetTraceTime() {
   return {kClockIdIncremental, GetTimeNs()};
 }
 
 // static
+=======
+>>>>>>> Amalgamated source for v23.0
 int TrackEventInternal::GetSessionCount() {
   return session_count_.load();
 }
 
 // static
+<<<<<<< HEAD
 void TrackEventInternal::ResetIncrementalState(
     TraceWriterBase* trace_writer,
     TrackEventIncrementalState* incr_state,
@@ -44514,18 +45146,30 @@ void TrackEventInternal::ResetIncrementalState(
   }
 
   incr_state->last_timestamp_ns = sequence_timestamp.value;
+=======
+void TrackEventInternal::ResetIncrementalState(TraceWriterBase* trace_writer,
+                                               TraceTimestamp timestamp) {
+>>>>>>> Amalgamated source for v23.0
   auto default_track = ThreadTrack::Current();
   {
     // Mark any incremental state before this point invalid. Also set up
     // defaults so that we don't need to repeat constant data for each packet.
     auto packet = NewTracePacket(
+<<<<<<< HEAD
         trace_writer, incr_state, tls_state, timestamp,
         protos::pbzero::TracePacket::SEQ_INCREMENTAL_STATE_CLEARED);
     auto defaults = packet->set_trace_packet_defaults();
+=======
+        trace_writer, timestamp,
+        protos::pbzero::TracePacket::SEQ_INCREMENTAL_STATE_CLEARED);
+    auto defaults = packet->set_trace_packet_defaults();
+    defaults->set_timestamp_clock_id(GetClockId());
+>>>>>>> Amalgamated source for v23.0
 
     // Establish the default track for this event sequence.
     auto track_defaults = defaults->set_track_event_defaults();
     track_defaults->set_track_uuid(default_track.uuid);
+<<<<<<< HEAD
 
     if (PERFETTO_LIKELY(!tls_state.disable_incremental_timestamps)) {
       defaults->set_timestamp_clock_id(kClockIdIncremental);
@@ -44547,22 +45191,30 @@ void TrackEventInternal::ResetIncrementalState(
     } else {
       defaults->set_timestamp_clock_id(GetClockId());
     }
+=======
+>>>>>>> Amalgamated source for v23.0
   }
 
   // Every thread should write a descriptor for its default track, because most
   // trace points won't explicitly reference it. We also write the process
   // descriptor from every thread that writes trace events to ensure it gets
   // emitted at least once.
+<<<<<<< HEAD
   WriteTrackDescriptor(default_track, trace_writer, incr_state, tls_state,
                        sequence_timestamp);
 
   WriteTrackDescriptor(ProcessTrack::Current(), trace_writer, incr_state,
                        tls_state, sequence_timestamp);
+=======
+  WriteTrackDescriptor(default_track, trace_writer);
+  WriteTrackDescriptor(ProcessTrack::Current(), trace_writer);
+>>>>>>> Amalgamated source for v23.0
 }
 
 // static
 protozero::MessageHandle<protos::pbzero::TracePacket>
 TrackEventInternal::NewTracePacket(TraceWriterBase* trace_writer,
+<<<<<<< HEAD
                                    TrackEventIncrementalState* incr_state,
                                    const TrackEventTlsState& tls_state,
                                    TraceTimestamp timestamp,
@@ -44592,6 +45244,19 @@ TrackEventInternal::NewTracePacket(TraceWriterBase* trace_writer,
                              : kClockIdIncremental;
     if (PERFETTO_UNLIKELY(timestamp.clock_id != default_clock))
       packet->set_timestamp_clock_id(timestamp.clock_id);
+=======
+                                   TraceTimestamp timestamp,
+                                   uint32_t seq_flags) {
+  auto packet = trace_writer->NewTracePacket();
+  packet->set_timestamp(timestamp.nanoseconds);
+  if (timestamp.clock_id != GetClockId()) {
+    packet->set_timestamp_clock_id(static_cast<uint32_t>(timestamp.clock_id));
+  } else if (GetClockId() != protos::pbzero::BUILTIN_CLOCK_BOOTTIME) {
+    // TODO(skyostil): Stop emitting the clock id for the default trace clock
+    // for every event once the trace processor understands trace packet
+    // defaults.
+    packet->set_timestamp_clock_id(GetClockId());
+>>>>>>> Amalgamated source for v23.0
   }
   packet->set_sequence_flags(seq_flags);
   return packet;
@@ -44601,6 +45266,7 @@ TrackEventInternal::NewTracePacket(TraceWriterBase* trace_writer,
 EventContext TrackEventInternal::WriteEvent(
     TraceWriterBase* trace_writer,
     TrackEventIncrementalState* incr_state,
+<<<<<<< HEAD
     const TrackEventTlsState& tls_state,
     const Category* category,
     const char* name,
@@ -44609,6 +45275,16 @@ EventContext TrackEventInternal::WriteEvent(
   PERFETTO_DCHECK(g_main_thread);
   PERFETTO_DCHECK(!incr_state->was_cleared);
   auto packet = NewTracePacket(trace_writer, incr_state, tls_state, timestamp);
+=======
+    const Category* category,
+    const char* name,
+    perfetto::protos::pbzero::TrackEvent::Type type,
+    TraceTimestamp timestamp) {
+  PERFETTO_DCHECK(g_main_thread);
+  PERFETTO_DCHECK(!incr_state->was_cleared);
+
+  auto packet = NewTracePacket(trace_writer, timestamp);
+>>>>>>> Amalgamated source for v23.0
   EventContext ctx(std::move(packet), incr_state);
 
   auto track_event = ctx.event();
@@ -44703,6 +45379,7 @@ void InternedDebugAnnotationName::Add(
   name->set_name(value);
 }
 
+<<<<<<< HEAD
 InternedDebugAnnotationValueTypeName::~InternedDebugAnnotationValueTypeName() =
     default;
 
@@ -44716,6 +45393,8 @@ void InternedDebugAnnotationValueTypeName::Add(
   name->set_name(value);
 }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 }  // namespace internal
 }  // namespace perfetto
 // gen_amalgamated begin source: src/tracing/platform.cc
@@ -44750,9 +45429,12 @@ PlatformThreadLocalObject::CreateInstance() {
   return std::unique_ptr<PlatformThreadLocalObject>(new internal::TracingTLS());
 }
 
+<<<<<<< HEAD
 // static
 base::PlatformProcessId Platform::process_id_ = 0;
 
+=======
+>>>>>>> Amalgamated source for v23.0
 }  // namespace perfetto
 // gen_amalgamated begin source: src/tracing/traced_value.cc
 /*
@@ -44775,7 +45457,10 @@ base::PlatformProcessId Platform::process_id_ = 0;
 
 // gen_amalgamated expanded: #include "perfetto/base/logging.h"
 // gen_amalgamated expanded: #include "perfetto/tracing/debug_annotation.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_interned_fields.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "protos/perfetto/trace/track_event/debug_annotation.pbzero.h"
 
 namespace perfetto {
@@ -44783,15 +45468,21 @@ namespace perfetto {
 namespace internal {
 
 TracedValue CreateTracedValueFromProto(
+<<<<<<< HEAD
     protos::pbzero::DebugAnnotation* annotation,
     EventContext* event_context) {
   return TracedValue::CreateFromProto(annotation, event_context);
+=======
+    protos::pbzero::DebugAnnotation* context) {
+  return TracedValue::CreateFromProto(context);
+>>>>>>> Amalgamated source for v23.0
 }
 
 }  // namespace internal
 
 // static
 TracedValue TracedValue::CreateFromProto(
+<<<<<<< HEAD
     protos::pbzero::DebugAnnotation* annotation,
     EventContext* event_context) {
   return TracedValue(annotation, event_context, nullptr);
@@ -44803,41 +45494,78 @@ TracedValue::~TracedValue() = default;
 void TracedValue::WriteInt64(int64_t value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
   annotation_->set_int_value(value);
+=======
+    protos::pbzero::DebugAnnotation* context) {
+  return TracedValue(context, nullptr);
+}
+
+void TracedValue::WriteInt64(int64_t value) && {
+  PERFETTO_DCHECK(checked_scope_.is_active());
+  context_->set_int_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteUInt64(uint64_t value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_uint_value(value);
+=======
+  context_->set_uint_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteDouble(double value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_double_value(value);
+=======
+  context_->set_double_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteBoolean(bool value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_bool_value(value);
+=======
+  context_->set_bool_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteString(const char* value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_string_value(value);
+=======
+  context_->set_string_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteString(const char* value, size_t len) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_string_value(value, len);
+=======
+  context_->set_string_value(value, len);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WriteString(const std::string& value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_string_value(value);
+=======
+  context_->set_string_value(value);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracedValue::WritePointer(const void* value) && {
   PERFETTO_DCHECK(checked_scope_.is_active());
+<<<<<<< HEAD
   annotation_->set_pointer_value(reinterpret_cast<uint64_t>(value));
+=======
+  context_->set_pointer_value(reinterpret_cast<uint64_t>(value));
+>>>>>>> Amalgamated source for v23.0
 }
 
 TracedDictionary TracedValue::WriteDictionary() && {
@@ -44846,10 +45574,17 @@ TracedDictionary TracedValue::WriteDictionary() && {
   PERFETTO_DCHECK(checked_scope_.is_active());
   checked_scope_.Reset();
 
+<<<<<<< HEAD
   PERFETTO_DCHECK(!annotation_->is_finalized());
   return TracedDictionary(annotation_,
                           protos::pbzero::DebugAnnotation::kDictEntries,
                           event_context_, checked_scope_.parent_scope());
+=======
+  PERFETTO_DCHECK(!context_->is_finalized());
+  return TracedDictionary(context_,
+                          protos::pbzero::DebugAnnotation::kDictEntries,
+                          checked_scope_.parent_scope());
+>>>>>>> Amalgamated source for v23.0
 }
 
 TracedArray TracedValue::WriteArray() && {
@@ -44858,6 +45593,7 @@ TracedArray TracedValue::WriteArray() && {
   PERFETTO_DCHECK(checked_scope_.is_active());
   checked_scope_.Reset();
 
+<<<<<<< HEAD
   PERFETTO_DCHECK(!annotation_->is_finalized());
   return TracedArray(annotation_, event_context_,
                      checked_scope_.parent_scope());
@@ -44882,6 +45618,15 @@ TracedValue TracedArray::AppendItem() {
   PERFETTO_DCHECK(checked_scope_.is_active());
   return TracedValue(annotation_->add_array_values(), event_context_,
                      &checked_scope_);
+=======
+  PERFETTO_DCHECK(!context_->is_finalized());
+  return TracedArray(context_, checked_scope_.parent_scope());
+}
+
+TracedValue TracedArray::AppendItem() {
+  PERFETTO_DCHECK(checked_scope_.is_active());
+  return TracedValue(context_->add_array_values(), &checked_scope_);
+>>>>>>> Amalgamated source for v23.0
 }
 
 TracedDictionary TracedArray::AppendDictionary() {
@@ -44894,15 +45639,22 @@ TracedArray TracedArray::AppendArray() {
   return AppendItem().WriteArray();
 }
 
+<<<<<<< HEAD
 TracedDictionary::TracedDictionary(TracedValue annotation)
     : TracedDictionary(std::move(annotation).WriteDictionary()) {}
 
+=======
+>>>>>>> Amalgamated source for v23.0
 TracedValue TracedDictionary::AddItem(StaticString key) {
   PERFETTO_DCHECK(checked_scope_.is_active());
   protos::pbzero::DebugAnnotation* item =
       message_->BeginNestedMessage<protos::pbzero::DebugAnnotation>(field_id_);
   item->set_name(key.value);
+<<<<<<< HEAD
   return TracedValue(item, event_context_, &checked_scope_);
+=======
+  return TracedValue(item, &checked_scope_);
+>>>>>>> Amalgamated source for v23.0
 }
 
 TracedValue TracedDictionary::AddItem(DynamicString key) {
@@ -44910,7 +45662,11 @@ TracedValue TracedDictionary::AddItem(DynamicString key) {
   protos::pbzero::DebugAnnotation* item =
       message_->BeginNestedMessage<protos::pbzero::DebugAnnotation>(field_id_);
   item->set_name(key.value);
+<<<<<<< HEAD
   return TracedValue(item, event_context_, &checked_scope_);
+=======
+  return TracedValue(item, &checked_scope_);
+>>>>>>> Amalgamated source for v23.0
 }
 
 TracedDictionary TracedDictionary::AddDictionary(StaticString key) {
@@ -44935,6 +45691,7 @@ TracedArray TracedDictionary::AddArray(DynamicString key) {
 
 }  // namespace perfetto
 // gen_amalgamated begin source: src/tracing/tracing.cc
+<<<<<<< HEAD
 // gen_amalgamated begin header: include/perfetto/ext/base/no_destructor.h
 /*
  * Copyright (C) 2019 The Android Open Source Project
@@ -45014,6 +45771,8 @@ class NoDestructor {
 }  // namespace perfetto
 
 #endif  // INCLUDE_PERFETTO_EXT_BASE_NO_DESTRUCTOR_H_
+=======
+>>>>>>> Amalgamated source for v23.0
 /*
  * Copyright (C) 2019 The Android Open Source Project
  *
@@ -45036,7 +45795,10 @@ class NoDestructor {
 #include <condition_variable>
 #include <mutex>
 
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/ext/base/no_destructor.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "perfetto/ext/base/waitable_event.h"
 // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_internal.h"
 // gen_amalgamated expanded: #include "src/tracing/internal/tracing_muxer_impl.h"
@@ -45044,17 +45806,23 @@ class NoDestructor {
 namespace perfetto {
 namespace {
 bool g_was_initialized = false;
+<<<<<<< HEAD
 
 // Wrapped in a function to avoid global constructor
 std::mutex& InitializedMutex() {
   static base::NoDestructor<std::mutex> initialized_mutex;
   return initialized_mutex.ref();
 }
+=======
+>>>>>>> Amalgamated source for v23.0
 }
 
 // static
 void Tracing::InitializeInternal(const TracingInitArgs& args) {
+<<<<<<< HEAD
   std::unique_lock<std::mutex> lock(InitializedMutex());
+=======
+>>>>>>> Amalgamated source for v23.0
   static TracingInitArgs init_args;
   if (g_was_initialized) {
     if (!(init_args == args)) {
@@ -45079,13 +45847,19 @@ void Tracing::InitializeInternal(const TracingInitArgs& args) {
 
 // static
 bool Tracing::IsInitialized() {
+<<<<<<< HEAD
   std::unique_lock<std::mutex> lock(InitializedMutex());
+=======
+>>>>>>> Amalgamated source for v23.0
   return g_was_initialized;
 }
 
 // static
 void Tracing::ResetForTesting() {
+<<<<<<< HEAD
   std::unique_lock<std::mutex> lock(InitializedMutex());
+=======
+>>>>>>> Amalgamated source for v23.0
   if (!g_was_initialized)
     return;
   base::SetLogMessageCallback(nullptr);
@@ -45378,7 +46152,11 @@ void TrackRegistry::InitializeInstance() {
   if (uint64_t start_time = GetProcessStartTime()) {
     base::Hash hash;
     hash.Update(start_time);
+<<<<<<< HEAD
     hash.Update(Platform::GetCurrentProcessId());
+=======
+    hash.Update(base::GetProcessId());
+>>>>>>> Amalgamated source for v23.0
     Track::process_uuid = hash.digest();
   } else {
     // Fall back to a randomly generated identifier.
@@ -45508,7 +46286,10 @@ void TrackEventCategoryRegistry::DisableCategoryForInstance(
  */
 
 // gen_amalgamated expanded: #include "perfetto/tracing/track_event_legacy.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/ext/base/hash.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 
 // gen_amalgamated expanded: #include "perfetto/tracing/track.h"
 
@@ -45545,6 +46326,7 @@ void LegacyTraceId::Write(protos::pbzero::TrackEvent::LegacyEvent* event,
   uint32_t scope_flags = id_flags_ & (legacy::kTraceEventFlagHasId |
                                       legacy::kTraceEventFlagHasLocalId |
                                       legacy::kTraceEventFlagHasGlobalId);
+<<<<<<< HEAD
   uint64_t id = raw_id_;
   if (scope_ && scope_flags != legacy::kTraceEventFlagHasGlobalId) {
     id = base::Hash::Combine(id, scope_);
@@ -45559,6 +46341,17 @@ void LegacyTraceId::Write(protos::pbzero::TrackEvent::LegacyEvent* event,
       break;
     case legacy::kTraceEventFlagHasGlobalId:
       event->set_global_id(id);
+=======
+  switch (scope_flags) {
+    case legacy::kTraceEventFlagHasId:
+      event->set_unscoped_id(raw_id_);
+      break;
+    case legacy::kTraceEventFlagHasLocalId:
+      event->set_local_id(raw_id_);
+      break;
+    case legacy::kTraceEventFlagHasGlobalId:
+      event->set_global_id(raw_id_);
+>>>>>>> Amalgamated source for v23.0
       break;
   }
   if (scope_)
@@ -45587,10 +46380,15 @@ void LegacyTraceId::Write(protos::pbzero::TrackEvent::LegacyEvent* event,
 // gen_amalgamated expanded: #include "perfetto/tracing/track_event_state_tracker.h"
 
 // gen_amalgamated expanded: #include "perfetto/ext/base/hash.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_internal.h"
 
 // gen_amalgamated expanded: #include "protos/perfetto/common/interceptor_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/clock_snapshot.pbzero.h"
+=======
+
+// gen_amalgamated expanded: #include "protos/perfetto/common/interceptor_descriptor.gen.h"
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "protos/perfetto/trace/interned_data/interned_data.pbzero.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/trace_packet.pbzero.h"
 // gen_amalgamated expanded: #include "protos/perfetto/trace/trace_packet_defaults.pbzero.h"
@@ -45602,8 +46400,11 @@ void LegacyTraceId::Write(protos::pbzero::TrackEvent::LegacyEvent* event,
 
 namespace perfetto {
 
+<<<<<<< HEAD
 using internal::TrackEventIncrementalState;
 
+=======
+>>>>>>> Amalgamated source for v23.0
 TrackEventStateTracker::~TrackEventStateTracker() = default;
 TrackEventStateTracker::Delegate::~Delegate() = default;
 
@@ -45619,6 +46420,7 @@ void TrackEventStateTracker::ProcessTracePacket(
   perfetto::protos::pbzero::TrackEvent::Decoder track_event(
       packet.track_event());
 
+<<<<<<< HEAD
   auto clock_id = packet.timestamp_clock_id();
   if (!packet.has_timestamp_clock_id())
     clock_id = sequence_state.default_clock_id;
@@ -45628,6 +46430,10 @@ void TrackEventStateTracker::ProcessTracePacket(
     timestamp += sequence_state.most_recent_absolute_time_ns;
     sequence_state.most_recent_absolute_time_ns = timestamp;
   }
+=======
+  // TODO(skyostil): Support incremental timestamps.
+  uint64_t timestamp = packet.timestamp();
+>>>>>>> Amalgamated source for v23.0
 
   Track* track = &sequence_state.track;
   if (track_event.has_track_uuid()) {
@@ -45744,6 +46550,7 @@ void TrackEventStateTracker::UpdateIncrementalState(
   }
 #endif
 
+<<<<<<< HEAD
   perfetto::protos::pbzero::ClockSnapshot::Decoder snapshot(
       packet.clock_snapshot());
   for (auto it = snapshot.clocks(); it; ++it) {
@@ -45757,6 +46564,8 @@ void TrackEventStateTracker::UpdateIncrementalState(
     }
   }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   if (packet.sequence_flags() &
       perfetto::protos::pbzero::TracePacket::SEQ_INCREMENTAL_STATE_CLEARED) {
     // Convert any existing event names and categories on the stack to
@@ -45802,8 +46611,11 @@ void TrackEventStateTracker::UpdateIncrementalState(
       perfetto::protos::pbzero::TrackEventDefaults::Decoder
           track_event_defaults(defaults.track_event_defaults());
       sequence_state.track.uuid = track_event_defaults.track_uuid();
+<<<<<<< HEAD
       if (defaults.has_timestamp_clock_id())
         sequence_state.default_clock_id = defaults.timestamp_clock_id();
+=======
+>>>>>>> Amalgamated source for v23.0
     }
   }
   if (packet.has_track_descriptor()) {
@@ -45982,6 +46794,7 @@ enum class PerfettoStatsdAtom {
 
   // Checkpoints inside perfetto_cmd after tracing has finished.
   kOnTracingDisabled = 4,
+<<<<<<< HEAD
   kFinalizeTraceAndExit = 11,
   kCmdFwReportBegin = 49,
   // Will be removed once incidentd is no longer used.
@@ -46009,6 +46822,30 @@ enum class PerfettoStatsdAtom {
   // Contained that a guardrail in perfetto_cmd was hit. Replaced with
   // kCmd* guardrails.
   // reserved 15;
+=======
+  kUploadIncidentBegin = 8,
+  kFinalizeTraceAndExit = 11,
+  kNotUploadingEmptyTrace = 17,
+
+  // Guardrails inside perfetto_cmd after tracing has finished.
+  kUploadIncidentFailure = 10,
+
+  // Deprecated as "success" is misleading; it simply means we were
+  // able to communicate with incidentd. Will be removed once
+  // incidentd is properly instrumented.
+  kUploadIncidentSuccess = 9,
+
+  // Deprecated as has the potential to be too spammy. Will be
+  // replaced with a whole new atom proto which uses a count metric
+  // instead of the event metric used for this proto.
+  kTriggerBegin = 12,
+  kTriggerSuccess = 13,
+  kTriggerFailure = 14,
+
+  // Deprecated as too coarse grained to be useful. Will be replaced
+  // with better broken down atoms as we do with traced.
+  kHitGuardrails = 15,
+>>>>>>> Amalgamated source for v23.0
 
   // Contained status of Dropbox uploads. Removed as Perfetto no
   // longer supports uploading traces using Dropbox.
@@ -47418,8 +48255,11 @@ class PerfettoMetatrace : public ::protozero::Message {
     kHasOverrunsFieldNumber = 6,
     kArgsFieldNumber = 7,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.PerfettoMetatrace"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using Arg = ::perfetto::protos::pbzero::PerfettoMetatrace_Arg;
 
   using FieldMetadata_EventId =
@@ -47436,7 +48276,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_EventId kEventId() { return {}; }
   void set_event_id(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_EventId::kFieldId;
@@ -47461,7 +48305,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_CounterId kCounterId() { return {}; }
   void set_counter_id(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_CounterId::kFieldId;
@@ -47486,7 +48334,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_EventName kEventName() { return {}; }
   void set_event_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_EventName::kFieldId, data, size);
@@ -47514,7 +48366,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_CounterName kCounterName() { return {}; }
   void set_counter_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_CounterName::kFieldId, data, size);
@@ -47542,7 +48398,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_EventDurationNs kEventDurationNs() { return {}; }
   void set_event_duration_ns(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_EventDurationNs::kFieldId;
@@ -47567,7 +48427,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_CounterValue kCounterValue() { return {}; }
   void set_counter_value(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_CounterValue::kFieldId;
@@ -47592,7 +48456,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ThreadId kThreadId() { return {}; }
   void set_thread_id(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ThreadId::kFieldId;
@@ -47617,7 +48485,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_HasOverruns kHasOverruns() { return {}; }
   void set_has_overruns(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_HasOverruns::kFieldId;
@@ -47642,7 +48514,11 @@ class PerfettoMetatrace : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Args kArgs() { return {}; }
   template <typename T = PerfettoMetatrace_Arg> T* add_args() {
     return BeginNestedMessage<T>(7);
@@ -47668,8 +48544,11 @@ class PerfettoMetatrace_Arg : public ::protozero::Message {
     kKeyFieldNumber = 1,
     kValueFieldNumber = 2,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.PerfettoMetatrace.Arg"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Key =
     ::protozero::proto_utils::FieldMetadata<
@@ -47685,7 +48564,11 @@ class PerfettoMetatrace_Arg : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Key kKey() { return {}; }
   void set_key(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Key::kFieldId, data, size);
@@ -47713,7 +48596,11 @@ class PerfettoMetatrace_Arg : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Value kValue() { return {}; }
   void set_value(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Value::kFieldId, data, size);
@@ -47926,7 +48813,10 @@ const uint32_t kReservedFieldIds[] = {
     protos::pbzero::TracePacket::kTraceStatsFieldNumber,
     protos::pbzero::TracePacket::kCompressedPacketsFieldNumber,
     protos::pbzero::TracePacket::kSynchronizationMarkerFieldNumber,
+<<<<<<< HEAD
     protos::pbzero::TracePacket::kTrustedPidFieldNumber,
+=======
+>>>>>>> Amalgamated source for v23.0
 };
 
 // This translation unit is quite subtle and perf-sensitive. Remember to check
@@ -48242,7 +49132,10 @@ class TraceBuffer {
   struct PacketSequenceProperties {
     ProducerID producer_id_trusted;
     uid_t producer_uid_trusted;
+<<<<<<< HEAD
     pid_t producer_pid_trusted;
+=======
+>>>>>>> Amalgamated source for v23.0
     WriterID writer_id;
   };
 
@@ -48275,7 +49168,10 @@ class TraceBuffer {
   // TODO(eseckler): Pass in a PacketStreamProperties instead of individual IDs.
   void CopyChunkUntrusted(ProducerID producer_id_trusted,
                           uid_t producer_uid_trusted,
+<<<<<<< HEAD
                           pid_t producer_pid_trusted,
+=======
+>>>>>>> Amalgamated source for v23.0
                           WriterID writer_id,
                           ChunkID chunk_id,
                           uint16_t num_fragments,
@@ -48463,6 +49359,7 @@ class TraceBuffer {
       kLastReadPacketSkipped = 1 << 1
     };
 
+<<<<<<< HEAD
     ChunkMeta(ChunkRecord* r,
               uint16_t p,
               bool complete,
@@ -48474,6 +49371,10 @@ class TraceBuffer {
           trusted_pid(pid),
           flags{f},
           num_fragments{p} {
+=======
+    ChunkMeta(ChunkRecord* r, uint16_t p, bool complete, uint8_t f, uid_t u)
+        : chunk_record{r}, trusted_uid{u}, flags{f}, num_fragments{p} {
+>>>>>>> Amalgamated source for v23.0
       if (complete)
         index_flags = kComplete;
     }
@@ -48502,7 +49403,10 @@ class TraceBuffer {
 
     ChunkRecord* const chunk_record;  // Addr of ChunkRecord within |data_|.
     const uid_t trusted_uid;          // uid of the producer.
+<<<<<<< HEAD
     const pid_t trusted_pid;          // pid of the producer.
+=======
+>>>>>>> Amalgamated source for v23.0
 
     // Flags set by TraceBuffer to track the state of the chunk in the index.
     uint8_t index_flags = 0;
@@ -48849,7 +49753,10 @@ bool TraceBuffer::Initialize(size_t size) {
 // while we execute here. Don't do any processing on it other than memcpy().
 void TraceBuffer::CopyChunkUntrusted(ProducerID producer_id_trusted,
                                      uid_t producer_uid_trusted,
+<<<<<<< HEAD
                                      pid_t producer_pid_trusted,
+=======
+>>>>>>> Amalgamated source for v23.0
                                      WriterID writer_id,
                                      ChunkID chunk_id,
                                      uint16_t num_fragments,
@@ -49020,7 +49927,11 @@ void TraceBuffer::CopyChunkUntrusted(ProducerID producer_id_trusted,
   stats_.set_bytes_written(stats_.bytes_written() + record_size);
   auto it_and_inserted = index_.emplace(
       key, ChunkMeta(GetChunkRecordAt(wptr_), num_fragments, chunk_complete,
+<<<<<<< HEAD
                      chunk_flags, producer_uid_trusted, producer_pid_trusted));
+=======
+                     chunk_flags, producer_uid_trusted));
+>>>>>>> Amalgamated source for v23.0
   PERFETTO_DCHECK(it_and_inserted.second);
   TRACE_BUFFER_DLOG("  copying @ [%lu - %lu] %zu", wptr_ - begin(),
                     uintptr_t(wptr_ - begin()) + record_size, record_size);
@@ -49297,7 +50208,11 @@ bool TraceBuffer::ReadNextTracePacket(
   TRACE_BUFFER_DLOG("ReadNextTracePacket()");
 
   // Just in case we forget to initialize these below.
+<<<<<<< HEAD
   *sequence_properties = {0, kInvalidUid, base::kInvalidPid, 0};
+=======
+  *sequence_properties = {0, kInvalidUid, 0};
+>>>>>>> Amalgamated source for v23.0
   *previous_packet_on_sequence_dropped = false;
 
   // At the start of each sequence iteration, we consider the last read packet
@@ -49337,7 +50252,10 @@ bool TraceBuffer::ReadNextTracePacket(
     const ProducerID trusted_producer_id = read_iter_.producer_id();
     const WriterID writer_id = read_iter_.writer_id();
     const uid_t trusted_uid = chunk_meta->trusted_uid;
+<<<<<<< HEAD
     const pid_t trusted_pid = chunk_meta->trusted_pid;
+=======
+>>>>>>> Amalgamated source for v23.0
 
     // At this point we have a chunk in |chunk_meta| that has not been fully
     // read. We don't know yet whether we have enough data to read the full
@@ -49411,8 +50329,12 @@ bool TraceBuffer::ReadNextTracePacket(
         ReadPacketResult result = ReadNextPacketInChunk(chunk_meta, packet);
 
         if (PERFETTO_LIKELY(result == ReadPacketResult::kSucceeded)) {
+<<<<<<< HEAD
           *sequence_properties = {trusted_producer_id, trusted_uid, trusted_pid,
                                   writer_id};
+=======
+          *sequence_properties = {trusted_producer_id, trusted_uid, writer_id};
+>>>>>>> Amalgamated source for v23.0
           *previous_packet_on_sequence_dropped = previous_packet_dropped;
           return true;
         } else if (result == ReadPacketResult::kFailedEmptyPacket) {
@@ -49437,8 +50359,12 @@ bool TraceBuffer::ReadNextTracePacket(
       ReadAheadResult ra_res = ReadAhead(packet);
       if (ra_res == ReadAheadResult::kSucceededReturnSlices) {
         stats_.set_readaheads_succeeded(stats_.readaheads_succeeded() + 1);
+<<<<<<< HEAD
         *sequence_properties = {trusted_producer_id, trusted_uid, trusted_pid,
                                 writer_id};
+=======
+        *sequence_properties = {trusted_producer_id, trusted_uid, writer_id};
+>>>>>>> Amalgamated source for v23.0
         *previous_packet_on_sequence_dropped = previous_packet_dropped;
         return true;
       }
@@ -50018,12 +50944,15 @@ namespace base {
 class TaskRunner;
 }  // namespace base
 
+<<<<<<< HEAD
 namespace protos {
 namespace gen {
 enum TraceStats_FinalFlushOutcome : int;
 }
 }  // namespace protos
 
+=======
+>>>>>>> Amalgamated source for v23.0
 class Consumer;
 class Producer;
 class SharedMemory;
@@ -50048,17 +50977,23 @@ class TracingServiceImpl : public TracingService {
       128 * 1024 - 512;  // This is ipc::kIPCBufferSize - 512, see assertion in
                          // tracing_integration_test.cc and b/195065199
 
+<<<<<<< HEAD
   // This is a rough threshold to determine how many bytes to read from the
   // buffers on each iteration when writing into a file. Since filtering
   // allocates memory, this limits the amount of memory allocated.
   static constexpr size_t kWriteIntoFileChunkSize = 1024 * 1024ul;
 
+=======
+>>>>>>> Amalgamated source for v23.0
   // The implementation behind the service endpoint exposed to each producer.
   class ProducerEndpointImpl : public TracingService::ProducerEndpoint {
    public:
     ProducerEndpointImpl(ProducerID,
                          uid_t uid,
+<<<<<<< HEAD
                          pid_t pid,
+=======
+>>>>>>> Amalgamated source for v23.0
                          TracingServiceImpl*,
                          base::TaskRunner*,
                          Producer*,
@@ -50112,7 +51047,10 @@ class TracingServiceImpl : public TracingService {
     }
 
     uid_t uid() const { return uid_; }
+<<<<<<< HEAD
     pid_t pid() const { return pid_; }
+=======
+>>>>>>> Amalgamated source for v23.0
 
    private:
     friend class TracingServiceImpl;
@@ -50123,7 +51061,10 @@ class TracingServiceImpl : public TracingService {
 
     ProducerID const id_;
     const uid_t uid_;
+<<<<<<< HEAD
     const pid_t pid_;
+=======
+>>>>>>> Amalgamated source for v23.0
     TracingServiceImpl* const service_;
     base::TaskRunner* const task_runner_;
     Producer* producer_;
@@ -50230,7 +51171,10 @@ class TracingServiceImpl : public TracingService {
   void UnregisterDataSource(ProducerID, const std::string& name);
   void CopyProducerPageIntoLogBuffer(ProducerID,
                                      uid_t,
+<<<<<<< HEAD
                                      pid_t,
+=======
+>>>>>>> Amalgamated source for v23.0
                                      WriterID,
                                      ChunkID,
                                      BufferID,
@@ -50291,7 +51235,10 @@ class TracingServiceImpl : public TracingService {
   std::unique_ptr<TracingService::ProducerEndpoint> ConnectProducer(
       Producer*,
       uid_t uid,
+<<<<<<< HEAD
       pid_t pid,
+=======
+>>>>>>> Amalgamated source for v23.0
       const std::string& producer_name,
       size_t shared_memory_size_hint_bytes = 0,
       bool in_process = false,
@@ -50525,6 +51472,7 @@ class TracingServiceImpl : public TracingService {
     // Packets that failed validation of the TrustedPacket.
     uint64_t invalid_packets = 0;
 
+<<<<<<< HEAD
     // Flush() stats. See comments in trace_stats.proto for more.
     uint64_t flushes_requested = 0;
     uint64_t flushes_succeeded = 0;
@@ -50533,6 +51481,8 @@ class TracingServiceImpl : public TracingService {
     // Outcome of the final Flush() done by FlushAndDisableTracing().
     protos::gen::TraceStats_FinalFlushOutcome final_flush_outcome{};
 
+=======
+>>>>>>> Amalgamated source for v23.0
     // Set to true on the first call to MaybeNotifyAllDataSourcesStarted().
     bool did_notify_all_data_source_started = false;
 
@@ -50662,6 +51612,7 @@ class TracingServiceImpl : public TracingService {
   void ScrapeSharedMemoryBuffers(TracingSession*, ProducerEndpointImpl*);
   void PeriodicClearIncrementalStateTask(TracingSessionID, bool post_next_only);
   TraceBuffer* GetBufferByID(BufferID);
+<<<<<<< HEAD
 
   // Returns true if `*tracing_session` is waiting for a trigger that hasn't
   // happened.
@@ -50689,6 +51640,12 @@ class TracingServiceImpl : public TracingService {
   // been an error), false otherwise.
   bool WriteIntoFile(TracingSession* tracing_session,
                      std::vector<TracePacket> packets);
+=======
+  bool ReadBuffers(TracingSessionID, TracingSession*, ConsumerEndpointImpl*);
+  // Returns true if `*tracing_session` is waiting for a trigger that hasn't
+  // happened.
+  static bool IsWaitingForTrigger(TracingSession*);
+>>>>>>> Amalgamated source for v23.0
   void OnStartTriggersTimeout(TracingSessionID tsid);
   void MaybeLogUploadEvent(const TraceConfig&,
                            PerfettoStatsdAtom atom,
@@ -50798,6 +51755,7 @@ namespace pbzero {
 
 class TraceStats_BufferStats;
 class TraceStats_FilterStats;
+<<<<<<< HEAD
 enum TraceStats_FinalFlushOutcome : int32_t;
 
 enum TraceStats_FinalFlushOutcome : int32_t {
@@ -50810,6 +51768,10 @@ const TraceStats_FinalFlushOutcome TraceStats_FinalFlushOutcome_MIN = TraceStats
 const TraceStats_FinalFlushOutcome TraceStats_FinalFlushOutcome_MAX = TraceStats_FinalFlushOutcome_FINAL_FLUSH_FAILED;
 
 class TraceStats_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/15, /*HAS_NONPACKED_REPEATED_FIELDS=*/true> {
+=======
+
+class TraceStats_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/11, /*HAS_NONPACKED_REPEATED_FIELDS=*/true> {
+>>>>>>> Amalgamated source for v23.0
  public:
   TraceStats_Decoder(const uint8_t* data, size_t len) : TypedProtoDecoder(data, len) {}
   explicit TraceStats_Decoder(const std::string& raw) : TypedProtoDecoder(reinterpret_cast<const uint8_t*>(raw.data()), raw.size()) {}
@@ -50836,6 +51798,7 @@ class TraceStats_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=
   uint64_t invalid_packets() const { return at<10>().as_uint64(); }
   bool has_filter_stats() const { return at<11>().valid(); }
   ::protozero::ConstBytes filter_stats() const { return at<11>().as_bytes(); }
+<<<<<<< HEAD
   bool has_flushes_requested() const { return at<12>().valid(); }
   uint64_t flushes_requested() const { return at<12>().as_uint64(); }
   bool has_flushes_succeeded() const { return at<13>().valid(); }
@@ -50844,6 +51807,8 @@ class TraceStats_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=
   uint64_t flushes_failed() const { return at<14>().as_uint64(); }
   bool has_final_flush_outcome() const { return at<15>().valid(); }
   int32_t final_flush_outcome() const { return at<15>().as_int32(); }
+=======
+>>>>>>> Amalgamated source for v23.0
 };
 
 class TraceStats : public ::protozero::Message {
@@ -50861,6 +51826,7 @@ class TraceStats : public ::protozero::Message {
     kPatchesDiscardedFieldNumber = 9,
     kInvalidPacketsFieldNumber = 10,
     kFilterStatsFieldNumber = 11,
+<<<<<<< HEAD
     kFlushesRequestedFieldNumber = 12,
     kFlushesSucceededFieldNumber = 13,
     kFlushesFailedFieldNumber = 14,
@@ -50874,6 +51840,11 @@ class TraceStats : public ::protozero::Message {
   static const FinalFlushOutcome FINAL_FLUSH_UNSPECIFIED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_UNSPECIFIED;
   static const FinalFlushOutcome FINAL_FLUSH_SUCCEEDED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_SUCCEEDED;
   static const FinalFlushOutcome FINAL_FLUSH_FAILED = TraceStats_FinalFlushOutcome_FINAL_FLUSH_FAILED;
+=======
+  };
+  using BufferStats = ::perfetto::protos::pbzero::TraceStats_BufferStats;
+  using FilterStats = ::perfetto::protos::pbzero::TraceStats_FilterStats;
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_BufferStats =
     ::protozero::proto_utils::FieldMetadata<
@@ -50889,7 +51860,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BufferStats kBufferStats() { return {}; }
   template <typename T = TraceStats_BufferStats> T* add_buffer_stats() {
     return BeginNestedMessage<T>(1);
@@ -50910,7 +51885,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducersConnected kProducersConnected() { return {}; }
   void set_producers_connected(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ProducersConnected::kFieldId;
@@ -50935,7 +51914,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducersSeen kProducersSeen() { return {}; }
   void set_producers_seen(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ProducersSeen::kFieldId;
@@ -50960,7 +51943,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DataSourcesRegistered kDataSourcesRegistered() { return {}; }
   void set_data_sources_registered(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_DataSourcesRegistered::kFieldId;
@@ -50985,7 +51972,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DataSourcesSeen kDataSourcesSeen() { return {}; }
   void set_data_sources_seen(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_DataSourcesSeen::kFieldId;
@@ -51010,7 +52001,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TracingSessions kTracingSessions() { return {}; }
   void set_tracing_sessions(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TracingSessions::kFieldId;
@@ -51035,7 +52030,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TotalBuffers kTotalBuffers() { return {}; }
   void set_total_buffers(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TotalBuffers::kFieldId;
@@ -51060,7 +52059,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksDiscarded kChunksDiscarded() { return {}; }
   void set_chunks_discarded(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksDiscarded::kFieldId;
@@ -51085,7 +52088,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PatchesDiscarded kPatchesDiscarded() { return {}; }
   void set_patches_discarded(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PatchesDiscarded::kFieldId;
@@ -51110,7 +52117,11 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_InvalidPackets kInvalidPackets() { return {}; }
   void set_invalid_packets(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_InvalidPackets::kFieldId;
@@ -51135,12 +52146,17 @@ class TraceStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_FilterStats kFilterStats() { return {}; }
   template <typename T = TraceStats_FilterStats> T* set_filter_stats() {
     return BeginNestedMessage<T>(11);
   }
 
+<<<<<<< HEAD
 
   using FieldMetadata_FlushesRequested =
     ::protozero::proto_utils::FieldMetadata<
@@ -51241,6 +52257,8 @@ class TraceStats : public ::protozero::Message {
       ::protozero::proto_utils::ProtoSchemaType::kEnum>
         ::Append(*this, field_id, value);
   }
+=======
+>>>>>>> Amalgamated source for v23.0
 };
 
 class TraceStats_FilterStats_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/4, /*HAS_NONPACKED_REPEATED_FIELDS=*/false> {
@@ -51267,8 +52285,11 @@ class TraceStats_FilterStats : public ::protozero::Message {
     kOutputBytesFieldNumber = 3,
     kErrorsFieldNumber = 4,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceStats.FilterStats"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_InputPackets =
     ::protozero::proto_utils::FieldMetadata<
@@ -51284,7 +52305,11 @@ class TraceStats_FilterStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_InputPackets kInputPackets() { return {}; }
   void set_input_packets(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_InputPackets::kFieldId;
@@ -51309,7 +52334,11 @@ class TraceStats_FilterStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_InputBytes kInputBytes() { return {}; }
   void set_input_bytes(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_InputBytes::kFieldId;
@@ -51334,7 +52363,11 @@ class TraceStats_FilterStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_OutputBytes kOutputBytes() { return {}; }
   void set_output_bytes(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_OutputBytes::kFieldId;
@@ -51359,7 +52392,11 @@ class TraceStats_FilterStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Errors kErrors() { return {}; }
   void set_errors(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_Errors::kFieldId;
@@ -51440,8 +52477,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
     kAbiViolationsFieldNumber = 9,
     kTraceWriterPacketLossFieldNumber = 19,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceStats.BufferStats"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_BufferSize =
     ::protozero::proto_utils::FieldMetadata<
@@ -51457,7 +52497,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BufferSize kBufferSize() { return {}; }
   void set_buffer_size(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_BufferSize::kFieldId;
@@ -51482,7 +52526,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BytesWritten kBytesWritten() { return {}; }
   void set_bytes_written(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_BytesWritten::kFieldId;
@@ -51507,7 +52555,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BytesOverwritten kBytesOverwritten() { return {}; }
   void set_bytes_overwritten(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_BytesOverwritten::kFieldId;
@@ -51532,7 +52584,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BytesRead kBytesRead() { return {}; }
   void set_bytes_read(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_BytesRead::kFieldId;
@@ -51557,7 +52613,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PaddingBytesWritten kPaddingBytesWritten() { return {}; }
   void set_padding_bytes_written(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PaddingBytesWritten::kFieldId;
@@ -51582,7 +52642,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PaddingBytesCleared kPaddingBytesCleared() { return {}; }
   void set_padding_bytes_cleared(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PaddingBytesCleared::kFieldId;
@@ -51607,7 +52671,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksWritten kChunksWritten() { return {}; }
   void set_chunks_written(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksWritten::kFieldId;
@@ -51632,7 +52700,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksRewritten kChunksRewritten() { return {}; }
   void set_chunks_rewritten(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksRewritten::kFieldId;
@@ -51657,7 +52729,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksOverwritten kChunksOverwritten() { return {}; }
   void set_chunks_overwritten(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksOverwritten::kFieldId;
@@ -51682,7 +52758,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksDiscarded kChunksDiscarded() { return {}; }
   void set_chunks_discarded(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksDiscarded::kFieldId;
@@ -51707,7 +52787,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksRead kChunksRead() { return {}; }
   void set_chunks_read(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksRead::kFieldId;
@@ -51732,7 +52816,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ChunksCommittedOutOfOrder kChunksCommittedOutOfOrder() { return {}; }
   void set_chunks_committed_out_of_order(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ChunksCommittedOutOfOrder::kFieldId;
@@ -51757,7 +52845,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_WriteWrapCount kWriteWrapCount() { return {}; }
   void set_write_wrap_count(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_WriteWrapCount::kFieldId;
@@ -51782,7 +52874,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PatchesSucceeded kPatchesSucceeded() { return {}; }
   void set_patches_succeeded(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PatchesSucceeded::kFieldId;
@@ -51807,7 +52903,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PatchesFailed kPatchesFailed() { return {}; }
   void set_patches_failed(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PatchesFailed::kFieldId;
@@ -51832,7 +52932,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReadaheadsSucceeded kReadaheadsSucceeded() { return {}; }
   void set_readaheads_succeeded(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ReadaheadsSucceeded::kFieldId;
@@ -51857,7 +52961,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReadaheadsFailed kReadaheadsFailed() { return {}; }
   void set_readaheads_failed(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ReadaheadsFailed::kFieldId;
@@ -51882,7 +52990,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AbiViolations kAbiViolations() { return {}; }
   void set_abi_violations(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_AbiViolations::kFieldId;
@@ -51907,7 +53019,11 @@ class TraceStats_BufferStats : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TraceWriterPacketLoss kTraceWriterPacketLoss() { return {}; }
   void set_trace_writer_packet_loss(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TraceWriterPacketLoss::kFieldId;
@@ -51943,10 +53059,15 @@ namespace protos {
 namespace pbzero {
 
 class DataSourceConfig;
+<<<<<<< HEAD
 class TraceConfig_AndroidReportConfig;
 class TraceConfig_BufferConfig;
 class TraceConfig_BuiltinDataSource;
 class TraceConfig_CmdTraceStartDelay;
+=======
+class TraceConfig_BufferConfig;
+class TraceConfig_BuiltinDataSource;
+>>>>>>> Amalgamated source for v23.0
 class TraceConfig_DataSource;
 class TraceConfig_GuardrailOverrides;
 class TraceConfig_IncidentReportConfig;
@@ -52007,7 +53128,11 @@ enum TraceConfig_BufferConfig_FillPolicy : int32_t {
 const TraceConfig_BufferConfig_FillPolicy TraceConfig_BufferConfig_FillPolicy_MIN = TraceConfig_BufferConfig_FillPolicy_UNSPECIFIED;
 const TraceConfig_BufferConfig_FillPolicy TraceConfig_BufferConfig_FillPolicy_MAX = TraceConfig_BufferConfig_FillPolicy_DISCARD;
 
+<<<<<<< HEAD
 class TraceConfig_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/35, /*HAS_NONPACKED_REPEATED_FIELDS=*/true> {
+=======
+class TraceConfig_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/33, /*HAS_NONPACKED_REPEATED_FIELDS=*/true> {
+>>>>>>> Amalgamated source for v23.0
  public:
   TraceConfig_Decoder(const uint8_t* data, size_t len) : TypedProtoDecoder(data, len) {}
   explicit TraceConfig_Decoder(const std::string& raw) : TypedProtoDecoder(reinterpret_cast<const uint8_t*>(raw.data()), raw.size()) {}
@@ -52072,10 +53197,13 @@ class TraceConfig_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID
   int64_t trace_uuid_lsb() const { return at<28>().as_int64(); }
   bool has_trace_filter() const { return at<33>().valid(); }
   ::protozero::ConstBytes trace_filter() const { return at<33>().as_bytes(); }
+<<<<<<< HEAD
   bool has_android_report_config() const { return at<34>().valid(); }
   ::protozero::ConstBytes android_report_config() const { return at<34>().as_bytes(); }
   bool has_cmd_trace_start_delay() const { return at<35>().valid(); }
   ::protozero::ConstBytes cmd_trace_start_delay() const { return at<35>().as_bytes(); }
+=======
+>>>>>>> Amalgamated source for v23.0
 };
 
 class TraceConfig : public ::protozero::Message {
@@ -52112,11 +53240,15 @@ class TraceConfig : public ::protozero::Message {
     kTraceUuidMsbFieldNumber = 27,
     kTraceUuidLsbFieldNumber = 28,
     kTraceFilterFieldNumber = 33,
+<<<<<<< HEAD
     kAndroidReportConfigFieldNumber = 34,
     kCmdTraceStartDelayFieldNumber = 35,
   };
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig"; }
 
+=======
+  };
+>>>>>>> Amalgamated source for v23.0
   using BufferConfig = ::perfetto::protos::pbzero::TraceConfig_BufferConfig;
   using DataSource = ::perfetto::protos::pbzero::TraceConfig_DataSource;
   using BuiltinDataSource = ::perfetto::protos::pbzero::TraceConfig_BuiltinDataSource;
@@ -52127,8 +53259,11 @@ class TraceConfig : public ::protozero::Message {
   using IncrementalStateConfig = ::perfetto::protos::pbzero::TraceConfig_IncrementalStateConfig;
   using IncidentReportConfig = ::perfetto::protos::pbzero::TraceConfig_IncidentReportConfig;
   using TraceFilter = ::perfetto::protos::pbzero::TraceConfig_TraceFilter;
+<<<<<<< HEAD
   using AndroidReportConfig = ::perfetto::protos::pbzero::TraceConfig_AndroidReportConfig;
   using CmdTraceStartDelay = ::perfetto::protos::pbzero::TraceConfig_CmdTraceStartDelay;
+=======
+>>>>>>> Amalgamated source for v23.0
   using LockdownModeOperation = ::perfetto::protos::pbzero::TraceConfig_LockdownModeOperation;
   using CompressionType = ::perfetto::protos::pbzero::TraceConfig_CompressionType;
   using StatsdLogging = ::perfetto::protos::pbzero::TraceConfig_StatsdLogging;
@@ -52155,7 +53290,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Buffers kBuffers() { return {}; }
   template <typename T = TraceConfig_BufferConfig> T* add_buffers() {
     return BeginNestedMessage<T>(1);
@@ -52176,7 +53315,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DataSources kDataSources() { return {}; }
   template <typename T = TraceConfig_DataSource> T* add_data_sources() {
     return BeginNestedMessage<T>(2);
@@ -52197,7 +53340,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BuiltinDataSources kBuiltinDataSources() { return {}; }
   template <typename T = TraceConfig_BuiltinDataSource> T* set_builtin_data_sources() {
     return BeginNestedMessage<T>(20);
@@ -52218,7 +53365,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DurationMs kDurationMs() { return {}; }
   void set_duration_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_DurationMs::kFieldId;
@@ -52243,7 +53394,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_EnableExtraGuardrails kEnableExtraGuardrails() { return {}; }
   void set_enable_extra_guardrails(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_EnableExtraGuardrails::kFieldId;
@@ -52268,7 +53423,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_LockdownMode kLockdownMode() { return {}; }
   void set_lockdown_mode(::perfetto::protos::pbzero::TraceConfig_LockdownModeOperation value) {
     static constexpr uint32_t field_id = FieldMetadata_LockdownMode::kFieldId;
@@ -52293,7 +53452,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Producers kProducers() { return {}; }
   template <typename T = TraceConfig_ProducerConfig> T* add_producers() {
     return BeginNestedMessage<T>(6);
@@ -52314,7 +53477,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_StatsdMetadata kStatsdMetadata() { return {}; }
   template <typename T = TraceConfig_StatsdMetadata> T* set_statsd_metadata() {
     return BeginNestedMessage<T>(7);
@@ -52335,7 +53502,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_WriteIntoFile kWriteIntoFile() { return {}; }
   void set_write_into_file(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_WriteIntoFile::kFieldId;
@@ -52360,7 +53531,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_OutputPath kOutputPath() { return {}; }
   void set_output_path(const char* data, size_t size) {
     AppendBytes(FieldMetadata_OutputPath::kFieldId, data, size);
@@ -52388,7 +53563,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_FileWritePeriodMs kFileWritePeriodMs() { return {}; }
   void set_file_write_period_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_FileWritePeriodMs::kFieldId;
@@ -52413,7 +53592,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_MaxFileSizeBytes kMaxFileSizeBytes() { return {}; }
   void set_max_file_size_bytes(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_MaxFileSizeBytes::kFieldId;
@@ -52438,7 +53621,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_GuardrailOverrides kGuardrailOverrides() { return {}; }
   template <typename T = TraceConfig_GuardrailOverrides> T* set_guardrail_overrides() {
     return BeginNestedMessage<T>(11);
@@ -52459,7 +53646,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DeferredStart kDeferredStart() { return {}; }
   void set_deferred_start(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_DeferredStart::kFieldId;
@@ -52484,7 +53675,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_FlushPeriodMs kFlushPeriodMs() { return {}; }
   void set_flush_period_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_FlushPeriodMs::kFieldId;
@@ -52509,7 +53704,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_FlushTimeoutMs kFlushTimeoutMs() { return {}; }
   void set_flush_timeout_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_FlushTimeoutMs::kFieldId;
@@ -52534,7 +53733,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DataSourceStopTimeoutMs kDataSourceStopTimeoutMs() { return {}; }
   void set_data_source_stop_timeout_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_DataSourceStopTimeoutMs::kFieldId;
@@ -52559,7 +53762,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_NotifyTraceur kNotifyTraceur() { return {}; }
   void set_notify_traceur(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_NotifyTraceur::kFieldId;
@@ -52584,7 +53791,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_BugreportScore kBugreportScore() { return {}; }
   void set_bugreport_score(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_BugreportScore::kFieldId;
@@ -52609,7 +53820,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggerConfig kTriggerConfig() { return {}; }
   template <typename T = TraceConfig_TriggerConfig> T* set_trigger_config() {
     return BeginNestedMessage<T>(17);
@@ -52630,7 +53845,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ActivateTriggers kActivateTriggers() { return {}; }
   void add_activate_triggers(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ActivateTriggers::kFieldId, data, size);
@@ -52658,7 +53877,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_IncrementalStateConfig kIncrementalStateConfig() { return {}; }
   template <typename T = TraceConfig_IncrementalStateConfig> T* set_incremental_state_config() {
     return BeginNestedMessage<T>(21);
@@ -52679,7 +53902,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AllowUserBuildTracing kAllowUserBuildTracing() { return {}; }
   void set_allow_user_build_tracing(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_AllowUserBuildTracing::kFieldId;
@@ -52704,7 +53931,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_UniqueSessionName kUniqueSessionName() { return {}; }
   void set_unique_session_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_UniqueSessionName::kFieldId, data, size);
@@ -52732,7 +53963,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_CompressionType kCompressionType() { return {}; }
   void set_compression_type(::perfetto::protos::pbzero::TraceConfig_CompressionType value) {
     static constexpr uint32_t field_id = FieldMetadata_CompressionType::kFieldId;
@@ -52757,7 +53992,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_IncidentReportConfig kIncidentReportConfig() { return {}; }
   template <typename T = TraceConfig_IncidentReportConfig> T* set_incident_report_config() {
     return BeginNestedMessage<T>(25);
@@ -52778,7 +54017,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_StatsdLogging kStatsdLogging() { return {}; }
   void set_statsd_logging(::perfetto::protos::pbzero::TraceConfig_StatsdLogging value) {
     static constexpr uint32_t field_id = FieldMetadata_StatsdLogging::kFieldId;
@@ -52803,7 +54046,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TraceUuidMsb kTraceUuidMsb() { return {}; }
   void set_trace_uuid_msb(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TraceUuidMsb::kFieldId;
@@ -52828,7 +54075,11 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TraceUuidLsb kTraceUuidLsb() { return {}; }
   void set_trace_uuid_lsb(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TraceUuidLsb::kFieldId;
@@ -52853,12 +54104,17 @@ class TraceConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TraceFilter kTraceFilter() { return {}; }
   template <typename T = TraceConfig_TraceFilter> T* set_trace_filter() {
     return BeginNestedMessage<T>(33);
   }
 
+<<<<<<< HEAD
 
   using FieldMetadata_AndroidReportConfig =
     ::protozero::proto_utils::FieldMetadata<
@@ -53107,6 +54363,8 @@ class TraceConfig_AndroidReportConfig : public ::protozero::Message {
       ::protozero::proto_utils::ProtoSchemaType::kBool>
         ::Append(*this, field_id, value);
   }
+=======
+>>>>>>> Amalgamated source for v23.0
 };
 
 class TraceConfig_TraceFilter_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/1, /*HAS_NONPACKED_REPEATED_FIELDS=*/false> {
@@ -53124,8 +54382,11 @@ class TraceConfig_TraceFilter : public ::protozero::Message {
   enum : int32_t {
     kBytecodeFieldNumber = 1,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.TraceFilter"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Bytecode =
     ::protozero::proto_utils::FieldMetadata<
@@ -53141,7 +54402,11 @@ class TraceConfig_TraceFilter : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Bytecode kBytecode() { return {}; }
   void set_bytecode(const uint8_t* data, size_t size) {
     AppendBytes(FieldMetadata_Bytecode::kFieldId, data, size);
@@ -53183,8 +54448,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
     kSkipIncidentdFieldNumber = 5,
     kSkipDropboxFieldNumber = 4,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.IncidentReportConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_DestinationPackage =
     ::protozero::proto_utils::FieldMetadata<
@@ -53200,7 +54468,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DestinationPackage kDestinationPackage() { return {}; }
   void set_destination_package(const char* data, size_t size) {
     AppendBytes(FieldMetadata_DestinationPackage::kFieldId, data, size);
@@ -53228,7 +54500,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DestinationClass kDestinationClass() { return {}; }
   void set_destination_class(const char* data, size_t size) {
     AppendBytes(FieldMetadata_DestinationClass::kFieldId, data, size);
@@ -53256,7 +54532,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PrivacyLevel kPrivacyLevel() { return {}; }
   void set_privacy_level(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PrivacyLevel::kFieldId;
@@ -53281,7 +54561,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SkipIncidentd kSkipIncidentd() { return {}; }
   void set_skip_incidentd(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_SkipIncidentd::kFieldId;
@@ -53306,7 +54590,11 @@ class TraceConfig_IncidentReportConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SkipDropbox kSkipDropbox() { return {}; }
   void set_skip_dropbox(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_SkipDropbox::kFieldId;
@@ -53333,8 +54621,11 @@ class TraceConfig_IncrementalStateConfig : public ::protozero::Message {
   enum : int32_t {
     kClearPeriodMsFieldNumber = 1,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.IncrementalStateConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_ClearPeriodMs =
     ::protozero::proto_utils::FieldMetadata<
@@ -53350,7 +54641,11 @@ class TraceConfig_IncrementalStateConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ClearPeriodMs kClearPeriodMs() { return {}; }
   void set_clear_period_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ClearPeriodMs::kFieldId;
@@ -53383,8 +54678,11 @@ class TraceConfig_TriggerConfig : public ::protozero::Message {
     kTriggersFieldNumber = 2,
     kTriggerTimeoutMsFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.TriggerConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using Trigger = ::perfetto::protos::pbzero::TraceConfig_TriggerConfig_Trigger;
   using TriggerMode = ::perfetto::protos::pbzero::TraceConfig_TriggerConfig_TriggerMode;
   static const TriggerMode UNSPECIFIED = TraceConfig_TriggerConfig_TriggerMode_UNSPECIFIED;
@@ -53405,7 +54703,11 @@ class TraceConfig_TriggerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggerMode kTriggerMode() { return {}; }
   void set_trigger_mode(::perfetto::protos::pbzero::TraceConfig_TriggerConfig_TriggerMode value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggerMode::kFieldId;
@@ -53430,7 +54732,11 @@ class TraceConfig_TriggerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Triggers kTriggers() { return {}; }
   template <typename T = TraceConfig_TriggerConfig_Trigger> T* add_triggers() {
     return BeginNestedMessage<T>(2);
@@ -53451,7 +54757,11 @@ class TraceConfig_TriggerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggerTimeoutMs kTriggerTimeoutMs() { return {}; }
   void set_trigger_timeout_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggerTimeoutMs::kFieldId;
@@ -53490,8 +54800,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
     kMaxPer24HFieldNumber = 4,
     kSkipProbabilityFieldNumber = 5,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.TriggerConfig.Trigger"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Name =
     ::protozero::proto_utils::FieldMetadata<
@@ -53507,7 +54820,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Name kName() { return {}; }
   void set_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Name::kFieldId, data, size);
@@ -53535,7 +54852,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducerNameRegex kProducerNameRegex() { return {}; }
   void set_producer_name_regex(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProducerNameRegex::kFieldId, data, size);
@@ -53563,7 +54884,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_StopDelayMs kStopDelayMs() { return {}; }
   void set_stop_delay_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_StopDelayMs::kFieldId;
@@ -53588,7 +54913,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_MaxPer24H kMaxPer24H() { return {}; }
   void set_max_per_24_h(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_MaxPer24H::kFieldId;
@@ -53613,7 +54942,11 @@ class TraceConfig_TriggerConfig_Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SkipProbability kSkipProbability() { return {}; }
   void set_skip_probability(double value) {
     static constexpr uint32_t field_id = FieldMetadata_SkipProbability::kFieldId;
@@ -53640,8 +54973,11 @@ class TraceConfig_GuardrailOverrides : public ::protozero::Message {
   enum : int32_t {
     kMaxUploadPerDayBytesFieldNumber = 1,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.GuardrailOverrides"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_MaxUploadPerDayBytes =
     ::protozero::proto_utils::FieldMetadata<
@@ -53657,7 +54993,11 @@ class TraceConfig_GuardrailOverrides : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_MaxUploadPerDayBytes kMaxUploadPerDayBytes() { return {}; }
   void set_max_upload_per_day_bytes(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_MaxUploadPerDayBytes::kFieldId;
@@ -53693,8 +55033,11 @@ class TraceConfig_StatsdMetadata : public ::protozero::Message {
     kTriggeringConfigIdFieldNumber = 3,
     kTriggeringSubscriptionIdFieldNumber = 4,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.StatsdMetadata"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_TriggeringAlertId =
     ::protozero::proto_utils::FieldMetadata<
@@ -53710,7 +55053,11 @@ class TraceConfig_StatsdMetadata : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggeringAlertId kTriggeringAlertId() { return {}; }
   void set_triggering_alert_id(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggeringAlertId::kFieldId;
@@ -53735,7 +55082,11 @@ class TraceConfig_StatsdMetadata : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggeringConfigUid kTriggeringConfigUid() { return {}; }
   void set_triggering_config_uid(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggeringConfigUid::kFieldId;
@@ -53760,7 +55111,11 @@ class TraceConfig_StatsdMetadata : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggeringConfigId kTriggeringConfigId() { return {}; }
   void set_triggering_config_id(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggeringConfigId::kFieldId;
@@ -53785,7 +55140,11 @@ class TraceConfig_StatsdMetadata : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggeringSubscriptionId kTriggeringSubscriptionId() { return {}; }
   void set_triggering_subscription_id(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TriggeringSubscriptionId::kFieldId;
@@ -53818,8 +55177,11 @@ class TraceConfig_ProducerConfig : public ::protozero::Message {
     kShmSizeKbFieldNumber = 2,
     kPageSizeKbFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.ProducerConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_ProducerName =
     ::protozero::proto_utils::FieldMetadata<
@@ -53835,7 +55197,11 @@ class TraceConfig_ProducerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducerName kProducerName() { return {}; }
   void set_producer_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProducerName::kFieldId, data, size);
@@ -53863,7 +55229,11 @@ class TraceConfig_ProducerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ShmSizeKb kShmSizeKb() { return {}; }
   void set_shm_size_kb(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_ShmSizeKb::kFieldId;
@@ -53888,7 +55258,11 @@ class TraceConfig_ProducerConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PageSizeKb kPageSizeKb() { return {}; }
   void set_page_size_kb(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_PageSizeKb::kFieldId;
@@ -53933,8 +55307,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
     kSnapshotIntervalMsFieldNumber = 6,
     kPreferSuspendClockForSnapshotFieldNumber = 7,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.BuiltinDataSource"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_DisableClockSnapshotting =
     ::protozero::proto_utils::FieldMetadata<
@@ -53950,7 +55327,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DisableClockSnapshotting kDisableClockSnapshotting() { return {}; }
   void set_disable_clock_snapshotting(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_DisableClockSnapshotting::kFieldId;
@@ -53975,7 +55356,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DisableTraceConfig kDisableTraceConfig() { return {}; }
   void set_disable_trace_config(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_DisableTraceConfig::kFieldId;
@@ -54000,7 +55385,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DisableSystemInfo kDisableSystemInfo() { return {}; }
   void set_disable_system_info(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_DisableSystemInfo::kFieldId;
@@ -54025,7 +55414,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_DisableServiceEvents kDisableServiceEvents() { return {}; }
   void set_disable_service_events(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_DisableServiceEvents::kFieldId;
@@ -54050,7 +55443,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PrimaryTraceClock kPrimaryTraceClock() { return {}; }
   void set_primary_trace_clock(::perfetto::protos::pbzero::BuiltinClock value) {
     static constexpr uint32_t field_id = FieldMetadata_PrimaryTraceClock::kFieldId;
@@ -54075,7 +55472,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SnapshotIntervalMs kSnapshotIntervalMs() { return {}; }
   void set_snapshot_interval_ms(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_SnapshotIntervalMs::kFieldId;
@@ -54100,7 +55501,11 @@ class TraceConfig_BuiltinDataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_PreferSuspendClockForSnapshot kPreferSuspendClockForSnapshot() { return {}; }
   void set_prefer_suspend_clock_for_snapshot(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_PreferSuspendClockForSnapshot::kFieldId;
@@ -54133,8 +55538,11 @@ class TraceConfig_DataSource : public ::protozero::Message {
     kProducerNameFilterFieldNumber = 2,
     kProducerNameRegexFilterFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.DataSource"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Config =
     ::protozero::proto_utils::FieldMetadata<
@@ -54150,7 +55558,11 @@ class TraceConfig_DataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Config kConfig() { return {}; }
   template <typename T = DataSourceConfig> T* set_config() {
     return BeginNestedMessage<T>(1);
@@ -54171,7 +55583,11 @@ class TraceConfig_DataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducerNameFilter kProducerNameFilter() { return {}; }
   void add_producer_name_filter(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProducerNameFilter::kFieldId, data, size);
@@ -54199,7 +55615,11 @@ class TraceConfig_DataSource : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducerNameRegexFilter kProducerNameRegexFilter() { return {}; }
   void add_producer_name_regex_filter(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProducerNameRegexFilter::kFieldId, data, size);
@@ -54232,8 +55652,11 @@ class TraceConfig_BufferConfig : public ::protozero::Message {
     kSizeKbFieldNumber = 1,
     kFillPolicyFieldNumber = 4,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TraceConfig.BufferConfig"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
   using FillPolicy = ::perfetto::protos::pbzero::TraceConfig_BufferConfig_FillPolicy;
   static const FillPolicy UNSPECIFIED = TraceConfig_BufferConfig_FillPolicy_UNSPECIFIED;
   static const FillPolicy RING_BUFFER = TraceConfig_BufferConfig_FillPolicy_RING_BUFFER;
@@ -54253,7 +55676,11 @@ class TraceConfig_BufferConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SizeKb kSizeKb() { return {}; }
   void set_size_kb(uint32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_SizeKb::kFieldId;
@@ -54278,7 +55705,11 @@ class TraceConfig_BufferConfig : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_FillPolicy kFillPolicy() { return {}; }
   void set_fill_policy(::perfetto::protos::pbzero::TraceConfig_BufferConfig_FillPolicy value) {
     static constexpr uint32_t field_id = FieldMetadata_FillPolicy::kFieldId;
@@ -54294,6 +55725,251 @@ class TraceConfig_BufferConfig : public ::protozero::Message {
 } // Namespace.
 } // Namespace.
 #endif  // Include guard.
+<<<<<<< HEAD
+=======
+// gen_amalgamated begin header: gen/protos/perfetto/trace/clock_snapshot.pbzero.h
+// Autogenerated by the ProtoZero compiler plugin. DO NOT EDIT.
+
+#ifndef PERFETTO_PROTOS_PROTOS_PERFETTO_TRACE_CLOCK_SNAPSHOT_PROTO_H_
+#define PERFETTO_PROTOS_PROTOS_PERFETTO_TRACE_CLOCK_SNAPSHOT_PROTO_H_
+
+#include <stddef.h>
+#include <stdint.h>
+
+// gen_amalgamated expanded: #include "perfetto/protozero/field_writer.h"
+// gen_amalgamated expanded: #include "perfetto/protozero/message.h"
+// gen_amalgamated expanded: #include "perfetto/protozero/packed_repeated_fields.h"
+// gen_amalgamated expanded: #include "perfetto/protozero/proto_decoder.h"
+// gen_amalgamated expanded: #include "perfetto/protozero/proto_utils.h"
+
+namespace perfetto {
+namespace protos {
+namespace pbzero {
+
+class ClockSnapshot_Clock;
+enum BuiltinClock : int32_t;
+
+enum ClockSnapshot_Clock_BuiltinClocks : int32_t {
+  ClockSnapshot_Clock_BuiltinClocks_UNKNOWN = 0,
+  ClockSnapshot_Clock_BuiltinClocks_REALTIME = 1,
+  ClockSnapshot_Clock_BuiltinClocks_REALTIME_COARSE = 2,
+  ClockSnapshot_Clock_BuiltinClocks_MONOTONIC = 3,
+  ClockSnapshot_Clock_BuiltinClocks_MONOTONIC_COARSE = 4,
+  ClockSnapshot_Clock_BuiltinClocks_MONOTONIC_RAW = 5,
+  ClockSnapshot_Clock_BuiltinClocks_BOOTTIME = 6,
+  ClockSnapshot_Clock_BuiltinClocks_BUILTIN_CLOCK_MAX_ID = 63,
+};
+
+const ClockSnapshot_Clock_BuiltinClocks ClockSnapshot_Clock_BuiltinClocks_MIN = ClockSnapshot_Clock_BuiltinClocks_UNKNOWN;
+const ClockSnapshot_Clock_BuiltinClocks ClockSnapshot_Clock_BuiltinClocks_MAX = ClockSnapshot_Clock_BuiltinClocks_BUILTIN_CLOCK_MAX_ID;
+
+class ClockSnapshot_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/2, /*HAS_NONPACKED_REPEATED_FIELDS=*/true> {
+ public:
+  ClockSnapshot_Decoder(const uint8_t* data, size_t len) : TypedProtoDecoder(data, len) {}
+  explicit ClockSnapshot_Decoder(const std::string& raw) : TypedProtoDecoder(reinterpret_cast<const uint8_t*>(raw.data()), raw.size()) {}
+  explicit ClockSnapshot_Decoder(const ::protozero::ConstBytes& raw) : TypedProtoDecoder(raw.data, raw.size) {}
+  bool has_clocks() const { return at<1>().valid(); }
+  ::protozero::RepeatedFieldIterator<::protozero::ConstBytes> clocks() const { return GetRepeated<::protozero::ConstBytes>(1); }
+  bool has_primary_trace_clock() const { return at<2>().valid(); }
+  int32_t primary_trace_clock() const { return at<2>().as_int32(); }
+};
+
+class ClockSnapshot : public ::protozero::Message {
+ public:
+  using Decoder = ClockSnapshot_Decoder;
+  enum : int32_t {
+    kClocksFieldNumber = 1,
+    kPrimaryTraceClockFieldNumber = 2,
+  };
+  using Clock = ::perfetto::protos::pbzero::ClockSnapshot_Clock;
+
+  using FieldMetadata_Clocks =
+    ::protozero::proto_utils::FieldMetadata<
+      1,
+      ::protozero::proto_utils::RepetitionType::kRepeatedNotPacked,
+      ::protozero::proto_utils::ProtoSchemaType::kMessage,
+      ClockSnapshot_Clock,
+      ClockSnapshot>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_Clocks kClocks() { return {}; }
+  template <typename T = ClockSnapshot_Clock> T* add_clocks() {
+    return BeginNestedMessage<T>(1);
+  }
+
+
+  using FieldMetadata_PrimaryTraceClock =
+    ::protozero::proto_utils::FieldMetadata<
+      2,
+      ::protozero::proto_utils::RepetitionType::kNotRepeated,
+      ::protozero::proto_utils::ProtoSchemaType::kEnum,
+      ::perfetto::protos::pbzero::BuiltinClock,
+      ClockSnapshot>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_PrimaryTraceClock kPrimaryTraceClock() { return {}; }
+  void set_primary_trace_clock(::perfetto::protos::pbzero::BuiltinClock value) {
+    static constexpr uint32_t field_id = FieldMetadata_PrimaryTraceClock::kFieldId;
+    // Call the appropriate protozero::Message::Append(field_id, ...)
+    // method based on the type of the field.
+    ::protozero::internal::FieldWriter<
+      ::protozero::proto_utils::ProtoSchemaType::kEnum>
+        ::Append(*this, field_id, value);
+  }
+};
+
+class ClockSnapshot_Clock_Decoder : public ::protozero::TypedProtoDecoder</*MAX_FIELD_ID=*/4, /*HAS_NONPACKED_REPEATED_FIELDS=*/false> {
+ public:
+  ClockSnapshot_Clock_Decoder(const uint8_t* data, size_t len) : TypedProtoDecoder(data, len) {}
+  explicit ClockSnapshot_Clock_Decoder(const std::string& raw) : TypedProtoDecoder(reinterpret_cast<const uint8_t*>(raw.data()), raw.size()) {}
+  explicit ClockSnapshot_Clock_Decoder(const ::protozero::ConstBytes& raw) : TypedProtoDecoder(raw.data, raw.size) {}
+  bool has_clock_id() const { return at<1>().valid(); }
+  uint32_t clock_id() const { return at<1>().as_uint32(); }
+  bool has_timestamp() const { return at<2>().valid(); }
+  uint64_t timestamp() const { return at<2>().as_uint64(); }
+  bool has_is_incremental() const { return at<3>().valid(); }
+  bool is_incremental() const { return at<3>().as_bool(); }
+  bool has_unit_multiplier_ns() const { return at<4>().valid(); }
+  uint64_t unit_multiplier_ns() const { return at<4>().as_uint64(); }
+};
+
+class ClockSnapshot_Clock : public ::protozero::Message {
+ public:
+  using Decoder = ClockSnapshot_Clock_Decoder;
+  enum : int32_t {
+    kClockIdFieldNumber = 1,
+    kTimestampFieldNumber = 2,
+    kIsIncrementalFieldNumber = 3,
+    kUnitMultiplierNsFieldNumber = 4,
+  };
+  using BuiltinClocks = ::perfetto::protos::pbzero::ClockSnapshot_Clock_BuiltinClocks;
+  static const BuiltinClocks UNKNOWN = ClockSnapshot_Clock_BuiltinClocks_UNKNOWN;
+  static const BuiltinClocks REALTIME = ClockSnapshot_Clock_BuiltinClocks_REALTIME;
+  static const BuiltinClocks REALTIME_COARSE = ClockSnapshot_Clock_BuiltinClocks_REALTIME_COARSE;
+  static const BuiltinClocks MONOTONIC = ClockSnapshot_Clock_BuiltinClocks_MONOTONIC;
+  static const BuiltinClocks MONOTONIC_COARSE = ClockSnapshot_Clock_BuiltinClocks_MONOTONIC_COARSE;
+  static const BuiltinClocks MONOTONIC_RAW = ClockSnapshot_Clock_BuiltinClocks_MONOTONIC_RAW;
+  static const BuiltinClocks BOOTTIME = ClockSnapshot_Clock_BuiltinClocks_BOOTTIME;
+  static const BuiltinClocks BUILTIN_CLOCK_MAX_ID = ClockSnapshot_Clock_BuiltinClocks_BUILTIN_CLOCK_MAX_ID;
+
+  using FieldMetadata_ClockId =
+    ::protozero::proto_utils::FieldMetadata<
+      1,
+      ::protozero::proto_utils::RepetitionType::kNotRepeated,
+      ::protozero::proto_utils::ProtoSchemaType::kUint32,
+      uint32_t,
+      ClockSnapshot_Clock>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_ClockId kClockId() { return {}; }
+  void set_clock_id(uint32_t value) {
+    static constexpr uint32_t field_id = FieldMetadata_ClockId::kFieldId;
+    // Call the appropriate protozero::Message::Append(field_id, ...)
+    // method based on the type of the field.
+    ::protozero::internal::FieldWriter<
+      ::protozero::proto_utils::ProtoSchemaType::kUint32>
+        ::Append(*this, field_id, value);
+  }
+
+  using FieldMetadata_Timestamp =
+    ::protozero::proto_utils::FieldMetadata<
+      2,
+      ::protozero::proto_utils::RepetitionType::kNotRepeated,
+      ::protozero::proto_utils::ProtoSchemaType::kUint64,
+      uint64_t,
+      ClockSnapshot_Clock>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_Timestamp kTimestamp() { return {}; }
+  void set_timestamp(uint64_t value) {
+    static constexpr uint32_t field_id = FieldMetadata_Timestamp::kFieldId;
+    // Call the appropriate protozero::Message::Append(field_id, ...)
+    // method based on the type of the field.
+    ::protozero::internal::FieldWriter<
+      ::protozero::proto_utils::ProtoSchemaType::kUint64>
+        ::Append(*this, field_id, value);
+  }
+
+  using FieldMetadata_IsIncremental =
+    ::protozero::proto_utils::FieldMetadata<
+      3,
+      ::protozero::proto_utils::RepetitionType::kNotRepeated,
+      ::protozero::proto_utils::ProtoSchemaType::kBool,
+      bool,
+      ClockSnapshot_Clock>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_IsIncremental kIsIncremental() { return {}; }
+  void set_is_incremental(bool value) {
+    static constexpr uint32_t field_id = FieldMetadata_IsIncremental::kFieldId;
+    // Call the appropriate protozero::Message::Append(field_id, ...)
+    // method based on the type of the field.
+    ::protozero::internal::FieldWriter<
+      ::protozero::proto_utils::ProtoSchemaType::kBool>
+        ::Append(*this, field_id, value);
+  }
+
+  using FieldMetadata_UnitMultiplierNs =
+    ::protozero::proto_utils::FieldMetadata<
+      4,
+      ::protozero::proto_utils::RepetitionType::kNotRepeated,
+      ::protozero::proto_utils::ProtoSchemaType::kUint64,
+      uint64_t,
+      ClockSnapshot_Clock>;
+
+  // Ceci n'est pas une pipe.
+  // This is actually a variable of FieldMetadataHelper<FieldMetadata<...>>
+  // type (and users are expected to use it as such, hence kCamelCase name).
+  // It is declared as a function to keep protozero bindings header-only as
+  // inline constexpr variables are not available until C++17 (while inline
+  // functions are).
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+  static constexpr FieldMetadata_UnitMultiplierNs kUnitMultiplierNs() { return {}; }
+  void set_unit_multiplier_ns(uint64_t value) {
+    static constexpr uint32_t field_id = FieldMetadata_UnitMultiplierNs::kFieldId;
+    // Call the appropriate protozero::Message::Append(field_id, ...)
+    // method based on the type of the field.
+    ::protozero::internal::FieldWriter<
+      ::protozero::proto_utils::ProtoSchemaType::kUint64>
+        ::Append(*this, field_id, value);
+  }
+};
+
+} // Namespace.
+} // Namespace.
+} // Namespace.
+#endif  // Include guard.
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated begin header: gen/protos/perfetto/trace/perfetto/tracing_service_event.pbzero.h
 // Autogenerated by the ProtoZero compiler plugin. DO NOT EDIT.
 
@@ -54344,8 +56020,11 @@ class TracingServiceEvent : public ::protozero::Message {
     kTracingDisabledFieldNumber = 5,
     kSeizedForBugreportFieldNumber = 6,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.TracingServiceEvent"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_TracingStarted =
     ::protozero::proto_utils::FieldMetadata<
@@ -54361,7 +56040,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TracingStarted kTracingStarted() { return {}; }
   void set_tracing_started(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_TracingStarted::kFieldId;
@@ -54386,7 +56069,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AllDataSourcesStarted kAllDataSourcesStarted() { return {}; }
   void set_all_data_sources_started(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_AllDataSourcesStarted::kFieldId;
@@ -54411,7 +56098,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AllDataSourcesFlushed kAllDataSourcesFlushed() { return {}; }
   void set_all_data_sources_flushed(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_AllDataSourcesFlushed::kFieldId;
@@ -54436,7 +56127,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ReadTracingBuffersCompleted kReadTracingBuffersCompleted() { return {}; }
   void set_read_tracing_buffers_completed(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_ReadTracingBuffersCompleted::kFieldId;
@@ -54461,7 +56156,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TracingDisabled kTracingDisabled() { return {}; }
   void set_tracing_disabled(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_TracingDisabled::kFieldId;
@@ -54486,7 +56185,11 @@ class TracingServiceEvent : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_SeizedForBugreport kSeizedForBugreport() { return {}; }
   void set_seized_for_bugreport(bool value) {
     static constexpr uint32_t field_id = FieldMetadata_SeizedForBugreport::kFieldId;
@@ -54550,8 +56253,11 @@ class SystemInfo : public ::protozero::Message {
     kTracingServiceVersionFieldNumber = 4,
     kAndroidSdkVersionFieldNumber = 5,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.SystemInfo"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Utsname =
     ::protozero::proto_utils::FieldMetadata<
@@ -54567,7 +56273,11 @@ class SystemInfo : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Utsname kUtsname() { return {}; }
   template <typename T = Utsname> T* set_utsname() {
     return BeginNestedMessage<T>(1);
@@ -54588,7 +56298,11 @@ class SystemInfo : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AndroidBuildFingerprint kAndroidBuildFingerprint() { return {}; }
   void set_android_build_fingerprint(const char* data, size_t size) {
     AppendBytes(FieldMetadata_AndroidBuildFingerprint::kFieldId, data, size);
@@ -54616,7 +56330,11 @@ class SystemInfo : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Hz kHz() { return {}; }
   void set_hz(int64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_Hz::kFieldId;
@@ -54641,7 +56359,11 @@ class SystemInfo : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TracingServiceVersion kTracingServiceVersion() { return {}; }
   void set_tracing_service_version(const char* data, size_t size) {
     AppendBytes(FieldMetadata_TracingServiceVersion::kFieldId, data, size);
@@ -54669,7 +56391,11 @@ class SystemInfo : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_AndroidSdkVersion kAndroidSdkVersion() { return {}; }
   void set_android_sdk_version(uint64_t value) {
     static constexpr uint32_t field_id = FieldMetadata_AndroidSdkVersion::kFieldId;
@@ -54705,8 +56431,11 @@ class Utsname : public ::protozero::Message {
     kReleaseFieldNumber = 3,
     kMachineFieldNumber = 4,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.Utsname"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_Sysname =
     ::protozero::proto_utils::FieldMetadata<
@@ -54722,7 +56451,11 @@ class Utsname : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Sysname kSysname() { return {}; }
   void set_sysname(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Sysname::kFieldId, data, size);
@@ -54750,7 +56483,11 @@ class Utsname : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Version kVersion() { return {}; }
   void set_version(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Version::kFieldId, data, size);
@@ -54778,7 +56515,11 @@ class Utsname : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Release kRelease() { return {}; }
   void set_release(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Release::kFieldId, data, size);
@@ -54806,7 +56547,11 @@ class Utsname : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_Machine kMachine() { return {}; }
   void set_machine(const char* data, size_t size) {
     AppendBytes(FieldMetadata_Machine::kFieldId, data, size);
@@ -54866,8 +56611,11 @@ class Trigger : public ::protozero::Message {
     kProducerNameFieldNumber = 2,
     kTrustedProducerUidFieldNumber = 3,
   };
+<<<<<<< HEAD
   static constexpr const char* GetName() { return ".perfetto.protos.Trigger"; }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 
   using FieldMetadata_TriggerName =
     ::protozero::proto_utils::FieldMetadata<
@@ -54883,7 +56631,11 @@ class Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TriggerName kTriggerName() { return {}; }
   void set_trigger_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_TriggerName::kFieldId, data, size);
@@ -54911,7 +56663,11 @@ class Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_ProducerName kProducerName() { return {}; }
   void set_producer_name(const char* data, size_t size) {
     AppendBytes(FieldMetadata_ProducerName::kFieldId, data, size);
@@ -54939,7 +56695,11 @@ class Trigger : public ::protozero::Message {
   // It is declared as a function to keep protozero bindings header-only as
   // inline constexpr variables are not available until C++17 (while inline
   // functions are).
+<<<<<<< HEAD
   // TODO(altimin): Use inline variable instead after adopting C++17.
+=======
+  // TODO(altimin): Use inline variable instead after adopting C++17.  
+>>>>>>> Amalgamated source for v23.0
   static constexpr FieldMetadata_TrustedProducerUid kTrustedProducerUid() { return {}; }
   void set_trusted_producer_uid(int32_t value) {
     static constexpr uint32_t field_id = FieldMetadata_TrustedProducerUid::kFieldId;
@@ -55010,12 +56770,19 @@ class Trigger : public ::protozero::Message {
 // gen_amalgamated expanded: #include "perfetto/base/status.h"
 // gen_amalgamated expanded: #include "perfetto/base/task_runner.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/android_utils.h"
+<<<<<<< HEAD
+=======
+// gen_amalgamated expanded: #include "perfetto/ext/base/crash_keys.h"
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "perfetto/ext/base/file_utils.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/metatrace.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/string_utils.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/temp_file.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/utils.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "perfetto/ext/base/uuid.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "perfetto/ext/base/version.h"
 // gen_amalgamated expanded: #include "perfetto/ext/base/watchdog.h"
 // gen_amalgamated expanded: #include "perfetto/ext/tracing/core/basic_types.h"
@@ -55084,6 +56851,14 @@ constexpr uint32_t kMaxTracingDurationMillis = 7 * 24 * kMillisPerHour;
 constexpr uint32_t kGuardrailsMaxTracingBufferSizeKb = 128 * 1024;
 constexpr uint32_t kGuardrailsMaxTracingDurationMillis = 24 * kMillisPerHour;
 
+<<<<<<< HEAD
+=======
+// TODO(primiano): this is to investigate b/191600928. Remove in Jan 2022.
+base::CrashKey g_crash_key_prod_name("producer_name");
+base::CrashKey g_crash_key_ds_count("ds_count");
+base::CrashKey g_crash_key_ds_clear_count("ds_clear_count");
+
+>>>>>>> Amalgamated source for v23.0
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN) || PERFETTO_BUILDFLAG(PERFETTO_OS_NACL)
 struct iovec {
   void* iov_base;  // Address
@@ -55315,7 +57090,10 @@ TracingServiceImpl::~TracingServiceImpl() {
 std::unique_ptr<TracingService::ProducerEndpoint>
 TracingServiceImpl::ConnectProducer(Producer* producer,
                                     uid_t uid,
+<<<<<<< HEAD
                                     pid_t pid,
+=======
+>>>>>>> Amalgamated source for v23.0
                                     const std::string& producer_name,
                                     size_t shared_memory_size_hint_bytes,
                                     bool in_process,
@@ -55351,7 +57129,11 @@ TracingServiceImpl::ConnectProducer(Producer* producer,
   }
 
   std::unique_ptr<ProducerEndpointImpl> endpoint(new ProducerEndpointImpl(
+<<<<<<< HEAD
       id, uid, pid, this, task_runner_, producer, producer_name, sdk_version,
+=======
+      id, uid, this, task_runner_, producer, producer_name, sdk_version,
+>>>>>>> Amalgamated source for v23.0
       in_process, smb_scraping_enabled));
   auto it_and_inserted = producers_.emplace(id, endpoint.get());
   PERFETTO_DCHECK(it_and_inserted.second);
@@ -55582,10 +57364,16 @@ base::Status TracingServiceImpl::EnableTracing(ConsumerEndpointImpl* consumer,
       cfg.write_into_file()) {
     // We don't support this usecase because there are subtle assumptions which
     // break around TracingServiceEvents and windowed sorting (i.e. if we don't
+<<<<<<< HEAD
     // drain the events in ReadBuffersIntoFile because we are waiting for
     // STOP_TRACING, we can end up queueing up a lot of TracingServiceEvents and
     // emitting them wildy out of order breaking windowed sorting in trace
     // processor).
+=======
+    // drain the events in ReadBuffers because we are waiting for STOP_TRACING,
+    // we can end up queueing up a lot of TracingServiceEvents and emitting them
+    // wildy out of order breaking windowed sorting in trace processor).
+>>>>>>> Amalgamated source for v23.0
     MaybeLogUploadEvent(
         cfg, PerfettoStatsdAtom::kTracedEnableTracingStopTracingWriteIntoFile);
     return PERFETTO_SVC_ERR(
@@ -56386,17 +58174,24 @@ void TracingServiceImpl::ActivateTriggers(
                   trigger_name.c_str());
     base::Hash hash;
     hash.Update(trigger_name.c_str(), trigger_name.size());
+<<<<<<< HEAD
     std::string triggered_session_name;
     base::Uuid triggered_session_uuid;
     TracingSessionID triggered_session_id = 0;
     int trigger_mode = 0;
+=======
+>>>>>>> Amalgamated source for v23.0
 
     uint64_t trigger_name_hash = hash.digest();
     size_t count_in_window =
         PurgeExpiredAndCountTriggerInWindow(now_ns, trigger_name_hash);
 
+<<<<<<< HEAD
     bool trigger_matched = false;
     bool trigger_activated = false;
+=======
+    bool trigger_applied = false;
+>>>>>>> Amalgamated source for v23.0
     for (auto& id_and_tracing_session : tracing_sessions_) {
       auto& tracing_session = id_and_tracing_session.second;
       TracingSessionID tsid = id_and_tracing_session.first;
@@ -56442,6 +58237,7 @@ void TracingServiceImpl::ActivateTriggers(
                              trigger_name);
         continue;
       }
+<<<<<<< HEAD
       trigger_matched = true;
       triggered_session_id = tracing_session.id;
       triggered_session_name = tracing_session.config.unique_session_name();
@@ -56450,6 +58246,9 @@ void TracingServiceImpl::ActivateTriggers(
           tracing_session.config.trace_uuid_msb());
       trigger_mode = static_cast<int>(
           tracing_session.config.trigger_config().trigger_mode());
+=======
+      trigger_applied = true;
+>>>>>>> Amalgamated source for v23.0
 
       const bool triggers_already_received =
           !tracing_session.received_triggers.empty();
@@ -56466,7 +58265,13 @@ void TracingServiceImpl::ActivateTriggers(
           if (tracing_session.state != TracingSession::CONFIGURED)
             break;
 
+<<<<<<< HEAD
           trigger_activated = true;
+=======
+          PERFETTO_DLOG("Triggering '%s' on tracing session %" PRIu64
+                        " with duration of %" PRIu32 "ms.",
+                        iter->name().c_str(), tsid, iter->stop_delay_ms());
+>>>>>>> Amalgamated source for v23.0
           MaybeLogUploadEvent(tracing_session.config,
                               PerfettoStatsdAtom::kTracedTriggerStartTracing,
                               iter->name());
@@ -56485,7 +58290,13 @@ void TracingServiceImpl::ActivateTriggers(
           if (triggers_already_received)
             break;
 
+<<<<<<< HEAD
           trigger_activated = true;
+=======
+          PERFETTO_DLOG("Triggering '%s' on tracing session %" PRIu64
+                        " with duration of %" PRIu32 "ms.",
+                        iter->name().c_str(), tsid, iter->stop_delay_ms());
+>>>>>>> Amalgamated source for v23.0
           MaybeLogUploadEvent(tracing_session.config,
                               PerfettoStatsdAtom::kTracedTriggerStopTracing,
                               iter->name());
@@ -56510,6 +58321,7 @@ void TracingServiceImpl::ActivateTriggers(
       }
     }  // for (.. : tracing_sessions_)
 
+<<<<<<< HEAD
     if (trigger_matched) {
       trigger_history_.emplace_back(TriggerHistory{now_ns, trigger_name_hash});
     }
@@ -56525,6 +58337,12 @@ void TracingServiceImpl::ActivateTriggers(
           triggered_session_id);
     }
   }  // for (trigger_name : triggers)
+=======
+    if (trigger_applied) {
+      trigger_history_.emplace_back(TriggerHistory{now_ns, trigger_name_hash});
+    }
+  }
+>>>>>>> Amalgamated source for v23.0
 }
 
 // Always invoked kDataSourceStopTimeoutMs after DisableTracing(). In nominal
@@ -56606,6 +58424,7 @@ void TracingServiceImpl::Flush(TracingSessionID tsid,
     return;
   }
 
+<<<<<<< HEAD
   if (tracing_session->state != TracingSession::STARTED) {
     PERFETTO_ELOG("Flush() called, but tracing has not been started");
     callback(false);
@@ -56613,6 +58432,8 @@ void TracingServiceImpl::Flush(TracingSessionID tsid,
   }
 
   ++tracing_session->flushes_requested;
+=======
+>>>>>>> Amalgamated source for v23.0
   FlushRequestID flush_request_id = ++last_flush_request_id_;
   PendingFlush& pending_flush =
       tracing_session->pending_flushes
@@ -56691,6 +58512,10 @@ void TracingServiceImpl::OnFlushTimeout(TracingSessionID tsid,
 
   // If there were no producers to flush, consider it a success.
   bool success = it->second.producers.empty();
+<<<<<<< HEAD
+=======
+
+>>>>>>> Amalgamated source for v23.0
   auto callback = std::move(it->second.callback);
   tracing_session->pending_flushes.erase(it);
   CompleteFlush(tsid, std::move(callback), success);
@@ -56714,9 +58539,12 @@ void TracingServiceImpl::CompleteFlush(TracingSessionID tsid,
       tracing_session,
       protos::pbzero::TracingServiceEvent::kAllDataSourcesFlushedFieldNumber,
       true /* snapshot_clocks */);
+<<<<<<< HEAD
 
   tracing_session->flushes_succeeded += success ? 1 : 0;
   tracing_session->flushes_failed += success ? 0 : 1;
+=======
+>>>>>>> Amalgamated source for v23.0
   callback(success);
 }
 
@@ -56830,9 +58658,15 @@ void TracingServiceImpl::ScrapeSharedMemoryBuffers(
           chunk.header()->chunk_id.load(std::memory_order_relaxed);
 
       CopyProducerPageIntoLogBuffer(
+<<<<<<< HEAD
           producer->id_, producer->uid_, producer->pid_, writer_id, chunk_id,
           *target_buffer_id, packet_count, flags, chunk_complete,
           chunk.payload_begin(), chunk.payload_size());
+=======
+          producer->id_, producer->uid_, writer_id, chunk_id, *target_buffer_id,
+          packet_count, flags, chunk_complete, chunk.payload_begin(),
+          chunk.payload_size());
+>>>>>>> Amalgamated source for v23.0
     }
   }
 }
@@ -56848,8 +58682,11 @@ void TracingServiceImpl::FlushAndDisableTracing(TracingSessionID tsid) {
     if (!weak_this)
       return;
     TracingSession* session = weak_this->GetTracingSession(tsid);
+<<<<<<< HEAD
     session->final_flush_outcome = success ? TraceStats::FINAL_FLUSH_SUCCEEDED
                                            : TraceStats::FINAL_FLUSH_FAILED;
+=======
+>>>>>>> Amalgamated source for v23.0
     if (session->consumer_maybe_null) {
       // If the consumer is still attached, just disable the session but give it
       // a chance to read the contents.
@@ -56920,14 +58757,27 @@ void TracingServiceImpl::PeriodicClearIncrementalStateTask(
 
   // Queue the IPCs to producers with active data sources that opted in.
   std::map<ProducerID, std::vector<DataSourceInstanceID>> clear_map;
+<<<<<<< HEAD
+=======
+  int ds_clear_count = 0;
+>>>>>>> Amalgamated source for v23.0
   for (const auto& kv : tracing_session->data_source_instances) {
     ProducerID producer_id = kv.first;
     const DataSourceInstance& data_source = kv.second;
     if (data_source.handles_incremental_state_clear) {
       clear_map[producer_id].push_back(data_source.instance_id);
+<<<<<<< HEAD
     }
   }
 
+=======
+      ++ds_clear_count;
+    }
+  }
+
+  g_crash_key_ds_clear_count.Set(ds_clear_count);
+
+>>>>>>> Amalgamated source for v23.0
   for (const auto& kv : clear_map) {
     ProducerID producer_id = kv.first;
     const std::vector<DataSourceInstanceID>& data_sources = kv.second;
@@ -56938,6 +58788,13 @@ void TracingServiceImpl::PeriodicClearIncrementalStateTask(
     }
     producer->ClearIncrementalState(data_sources);
   }
+<<<<<<< HEAD
+=======
+
+  // ClearIncrementalState internally posts a task for each data source. Clear
+  // the crash key in a task queued at the end of the tasks atove.
+  task_runner_->PostTask([] { g_crash_key_ds_clear_count.Clear(); });
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool TracingServiceImpl::ReadBuffersIntoConsumer(
@@ -56978,6 +58835,7 @@ bool TracingServiceImpl::ReadBuffersIntoConsumer(
   if (IsWaitingForTrigger(tracing_session))
     return false;
 
+<<<<<<< HEAD
   // This is a rough threshold to determine how much to read from the buffer in
   // each task. This is to avoid executing a single huge sending task for too
   // long and risk to hit the watchdog. This is *not* an upper bound: we just
@@ -57007,6 +58865,9 @@ bool TracingServiceImpl::ReadBuffersIntoConsumer(
   // Keep this as tail call, just in case the consumer re-enters.
   consumer->consumer_->OnTraceData(std::move(packets), has_more);
   return true;
+=======
+  return ReadBuffers(tsid, tracing_session, consumer);
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool TracingServiceImpl::ReadBuffersIntoFile(TracingSessionID tsid) {
@@ -57027,6 +58888,7 @@ bool TracingServiceImpl::ReadBuffersIntoFile(TracingSessionID tsid) {
       IsWaitingForTrigger(tracing_session))
     return false;
 
+<<<<<<< HEAD
   // ReadBuffers() can allocate memory internally, for filtering. By limiting
   // the data that ReadBuffers() reads to kWriteIntoChunksSize per iteration,
   // we limit the amount of memory used on each iteration.
@@ -57062,6 +58924,9 @@ bool TracingServiceImpl::ReadBuffersIntoFile(TracingSessionID tsid) {
       },
       tracing_session->delay_to_next_write_period_ms());
   return true;
+=======
+  return ReadBuffers(tsid, tracing_session, nullptr);
+>>>>>>> Amalgamated source for v23.0
 }
 
 bool TracingServiceImpl::IsWaitingForTrigger(TracingSession* tracing_session) {
@@ -57079,6 +58944,7 @@ bool TracingServiceImpl::IsWaitingForTrigger(TracingSession* tracing_session) {
   return false;
 }
 
+<<<<<<< HEAD
 std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
     TracingSession* tracing_session,
     size_t threshold,
@@ -57086,6 +58952,22 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
   PERFETTO_DCHECK_THREAD(thread_checker_);
   PERFETTO_DCHECK(tracing_session);
   *has_more = false;
+=======
+// Note: when this is called to write into a file passed when starting tracing
+// |consumer| will be == nullptr (as opposite to the case of a consumer asking
+// to send the trace data back over IPC).
+bool TracingServiceImpl::ReadBuffers(TracingSessionID tsid,
+                                     TracingSession* tracing_session,
+                                     ConsumerEndpointImpl* consumer) {
+  PERFETTO_DCHECK_THREAD(thread_checker_);
+  PERFETTO_DCHECK(tracing_session);
+
+  // Speculative fix for the memory watchdog crash in b/195145848. This function
+  // uses the heap extensively and might need a M_PURGE. window.gc() is back.
+  // TODO(primiano): if this fixes the crash we might want to coalesce the purge
+  // and throttle it.
+  auto on_ret = base::OnScopeExit([] { base::MaybeReleaseAllocatorMemToOS(); });
+>>>>>>> Amalgamated source for v23.0
 
   std::vector<TracePacket> packets;
   packets.reserve(1024);  // Just an educated guess to avoid trivial expansions.
@@ -57127,8 +59009,27 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
     packets_bytes += packet.size();
   }
 
+<<<<<<< HEAD
   bool did_hit_threshold = false;
 
+=======
+  // This is a rough threshold to determine how much to read from the buffer in
+  // each task. This is to avoid executing a single huge sending task for too
+  // long and risk to hit the watchdog. This is *not* an upper bound: we just
+  // stop accumulating new packets and PostTask *after* we cross this threshold.
+  // This constant essentially balances the PostTask and IPC overhead vs the
+  // responsiveness of the service. An extremely small value will cause one IPC
+  // and one PostTask for each slice but will keep the service extremely
+  // responsive. An extremely large value will batch the send for the full
+  // buffer in one large task, will hit the blocking send() once the socket
+  // buffers are full and hang the service for a bit (until the consumer
+  // catches up).
+  static constexpr size_t kApproxBytesPerTask = 32768;
+  bool did_hit_threshold = false;
+
+  // TODO(primiano): Extend the ReadBuffers API to allow reading only some
+  // buffers, not all of them in one go.
+>>>>>>> Amalgamated source for v23.0
   for (size_t buf_idx = 0;
        buf_idx < tracing_session->num_buffers() && !did_hit_threshold;
        buf_idx++) {
@@ -57150,9 +59051,12 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
       PERFETTO_DCHECK(sequence_properties.producer_id_trusted != 0);
       PERFETTO_DCHECK(sequence_properties.writer_id != 0);
       PERFETTO_DCHECK(sequence_properties.producer_uid_trusted != kInvalidUid);
+<<<<<<< HEAD
       // Not checking sequence_properties.producer_pid_trusted: it is
       // base::kInvalidPid if the platform doesn't support it.
 
+=======
+>>>>>>> Amalgamated source for v23.0
       PERFETTO_DCHECK(packet.size() > 0);
       if (!PacketStreamValidator::Validate(packet.slices())) {
         tracing_session->invalid_packets++;
@@ -57177,11 +59081,14 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
           tracing_session->GetPacketSequenceID(
               sequence_properties.producer_id_trusted,
               sequence_properties.writer_id));
+<<<<<<< HEAD
       if (sequence_properties.producer_pid_trusted != base::kInvalidPid) {
         // Not supported on all platforms.
         trusted_packet->set_trusted_pid(
             static_cast<int32_t>(sequence_properties.producer_pid_trusted));
       }
+=======
+>>>>>>> Amalgamated source for v23.0
       if (previous_packet_dropped)
         trusted_packet->set_previous_packet_dropped(previous_packet_dropped);
       slice.size = trusted_packet.Finalize();
@@ -57189,11 +59096,17 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
 
       // Append the packet (inclusive of the trusted uid) to |packets|.
       packets_bytes += packet.size();
+<<<<<<< HEAD
       did_hit_threshold = packets_bytes >= threshold;
+=======
+      did_hit_threshold = packets_bytes >= kApproxBytesPerTask &&
+                          !tracing_session->write_into_file;
+>>>>>>> Amalgamated source for v23.0
       packets.emplace_back(std::move(packet));
     }  // for(packets...)
   }    // for(buffers...)
 
+<<<<<<< HEAD
   *has_more = did_hit_threshold;
 
   // Only emit the "read complete" lifetime event when there is no more trace
@@ -57202,6 +59115,12 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
   // buffers are empty.
   if (!*has_more && !tracing_session->config.builtin_data_sources()
                          .disable_service_events()) {
+=======
+  const bool has_more = did_hit_threshold;
+
+  if (!tracing_session->config.builtin_data_sources()
+           .disable_service_events()) {
+>>>>>>> Amalgamated source for v23.0
     // We don't bother snapshotting clocks here because we wouldn't be able to
     // emit it and we shouldn't have significant drift from the last snapshot in
     // any case.
@@ -57217,11 +59136,16 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
   // reflected in the emitted stats. This is particularly important for use
   // cases where ReadBuffers is only ever called after the tracing session is
   // stopped.
+<<<<<<< HEAD
   if (!*has_more && tracing_session->should_emit_stats) {
+=======
+  if (!has_more && tracing_session->should_emit_stats) {
+>>>>>>> Amalgamated source for v23.0
     EmitStats(tracing_session, &packets);
     tracing_session->should_emit_stats = false;
   }
 
+<<<<<<< HEAD
   MaybeFilterPackets(tracing_session, &packets);
 
   if (!*has_more) {
@@ -57236,12 +59160,19 @@ std::vector<TracePacket> TracingServiceImpl::ReadBuffers(
 
 void TracingServiceImpl::MaybeFilterPackets(TracingSession* tracing_session,
                                             std::vector<TracePacket>* packets) {
+=======
+  // +-------------------------------------------------------------------------+
+  // | NO MORE CHANGES TO |packets| AFTER THIS POINT.                          |
+  // +-------------------------------------------------------------------------+
+
+>>>>>>> Amalgamated source for v23.0
   // If the tracing session specified a filter, run all packets through the
   // filter and replace them with the filter results.
   // The process below mantains the cardinality of input packets. Even if an
   // entire packet is filtered out, we emit a zero-sized TracePacket proto. That
   // makes debugging and reasoning about the trace stats easier.
   // This place swaps the contents of each |packets| entry in place.
+<<<<<<< HEAD
   if (!tracing_session->trace_filter) {
     return;
   }
@@ -57345,6 +59276,142 @@ bool TracingServiceImpl::WriteIntoFile(TracingSession* tracing_session,
   PERFETTO_DLOG("Draining into file, written: %" PRIu64 " KB, stop: %d",
                 (total_wr_size + 1023) / 1024, stop_writing_into_file);
   return stop_writing_into_file;
+=======
+  if (tracing_session->trace_filter) {
+    auto& trace_filter = *tracing_session->trace_filter;
+    // The filter root shoud be reset from protos.Trace to protos.TracePacket
+    // by the earlier call to SetFilterRoot() in EnableTracing().
+    PERFETTO_DCHECK(trace_filter.root_msg_index() != 0);
+    std::vector<protozero::MessageFilter::InputSlice> filter_input;
+    for (auto it = packets.begin(); it != packets.end(); ++it) {
+      const auto& packet_slices = it->slices();
+      filter_input.clear();
+      filter_input.resize(packet_slices.size());
+      ++tracing_session->filter_input_packets;
+      tracing_session->filter_input_bytes += it->size();
+      for (size_t i = 0; i < packet_slices.size(); ++i)
+        filter_input[i] = {packet_slices[i].start, packet_slices[i].size};
+      auto filtered_packet = trace_filter.FilterMessageFragments(
+          &filter_input[0], filter_input.size());
+
+      // Replace the packet in-place with the filtered one (unless failed).
+      *it = TracePacket();
+      if (filtered_packet.error) {
+        ++tracing_session->filter_errors;
+        PERFETTO_DLOG("Trace packet filtering failed @ packet %" PRIu64,
+                      tracing_session->filter_input_packets);
+        continue;
+      }
+      tracing_session->filter_output_bytes += filtered_packet.size;
+      AppendOwnedSlicesToPacket(std::move(filtered_packet.data),
+                                filtered_packet.size, kMaxTracePacketSliceSize,
+                                &*it);
+
+    }  // for (packet)
+  }    // if (trace_filter)
+
+  // If the caller asked us to write into a file by setting
+  // |write_into_file| == true in the trace config, drain the packets read
+  // (if any) into the given file descriptor.
+  if (tracing_session->write_into_file) {
+    const uint64_t max_size = tracing_session->max_file_size_bytes
+                                  ? tracing_session->max_file_size_bytes
+                                  : std::numeric_limits<size_t>::max();
+
+    size_t total_slices = 0;
+    for (const TracePacket& packet : packets) {
+      total_slices += packet.slices().size();
+    }
+    // When writing into a file, the file should look like a root trace.proto
+    // message. Each packet should be prepended with a proto preamble stating
+    // its field id (within trace.proto) and size. Hence the addition below.
+    const size_t max_iovecs = total_slices + packets.size();
+
+    size_t num_iovecs = 0;
+    bool stop_writing_into_file = false;
+    std::unique_ptr<struct iovec[]> iovecs(new struct iovec[max_iovecs]);
+    size_t num_iovecs_at_last_packet = 0;
+    uint64_t bytes_about_to_be_written = 0;
+    for (TracePacket& packet : packets) {
+      std::tie(iovecs[num_iovecs].iov_base, iovecs[num_iovecs].iov_len) =
+          packet.GetProtoPreamble();
+      bytes_about_to_be_written += iovecs[num_iovecs].iov_len;
+      num_iovecs++;
+      for (const Slice& slice : packet.slices()) {
+        // writev() doesn't change the passed pointer. However, struct iovec
+        // take a non-const ptr because it's the same struct used by readv().
+        // Hence the const_cast here.
+        char* start = static_cast<char*>(const_cast<void*>(slice.start));
+        bytes_about_to_be_written += slice.size;
+        iovecs[num_iovecs++] = {start, slice.size};
+      }
+
+      if (tracing_session->bytes_written_into_file +
+              bytes_about_to_be_written >=
+          max_size) {
+        stop_writing_into_file = true;
+        num_iovecs = num_iovecs_at_last_packet;
+        break;
+      }
+
+      num_iovecs_at_last_packet = num_iovecs;
+    }
+    PERFETTO_DCHECK(num_iovecs <= max_iovecs);
+    int fd = *tracing_session->write_into_file;
+
+    uint64_t total_wr_size = 0;
+
+    // writev() can take at most IOV_MAX entries per call. Batch them.
+    constexpr size_t kIOVMax = IOV_MAX;
+    for (size_t i = 0; i < num_iovecs; i += kIOVMax) {
+      int iov_batch_size = static_cast<int>(std::min(num_iovecs - i, kIOVMax));
+      ssize_t wr_size = PERFETTO_EINTR(writev(fd, &iovecs[i], iov_batch_size));
+      if (wr_size <= 0) {
+        PERFETTO_PLOG("writev() failed");
+        stop_writing_into_file = true;
+        break;
+      }
+      total_wr_size += static_cast<size_t>(wr_size);
+    }
+
+    tracing_session->bytes_written_into_file += total_wr_size;
+
+    PERFETTO_DLOG("Draining into file, written: %" PRIu64 " KB, stop: %d",
+                  (total_wr_size + 1023) / 1024, stop_writing_into_file);
+    if (stop_writing_into_file || tracing_session->write_period_ms == 0) {
+      // Ensure all data was written to the file before we close it.
+      base::FlushFile(fd);
+      tracing_session->write_into_file.reset();
+      tracing_session->write_period_ms = 0;
+      if (tracing_session->state == TracingSession::STARTED)
+        DisableTracing(tsid);
+      return true;
+    }
+
+    auto weak_this = weak_ptr_factory_.GetWeakPtr();
+    task_runner_->PostDelayedTask(
+        [weak_this, tsid] {
+          if (weak_this)
+            weak_this->ReadBuffersIntoFile(tsid);
+        },
+        tracing_session->delay_to_next_write_period_ms());
+    return true;
+  }  // if (tracing_session->write_into_file)
+
+  if (has_more) {
+    auto weak_consumer = consumer->weak_ptr_factory_.GetWeakPtr();
+    auto weak_this = weak_ptr_factory_.GetWeakPtr();
+    task_runner_->PostTask([weak_this, weak_consumer, tsid] {
+      if (!weak_this || !weak_consumer)
+        return;
+      weak_this->ReadBuffersIntoConsumer(tsid, weak_consumer.get());
+    });
+  }
+
+  // Keep this as tail call, just in case the consumer re-enters.
+  consumer->consumer_->OnTraceData(std::move(packets), has_more);
+  return true;
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracingServiceImpl::FreeBuffers(TracingSessionID tsid) {
@@ -57430,6 +59497,10 @@ void TracingServiceImpl::RegisterDataSource(ProducerID producer_id,
 
   auto reg_ds = data_sources_.emplace(desc.name(),
                                       RegisteredDataSource{producer_id, desc});
+<<<<<<< HEAD
+=======
+  g_crash_key_ds_count.Set(static_cast<int64_t>(data_sources_.size()));
+>>>>>>> Amalgamated source for v23.0
 
   // If there are existing tracing sessions, we need to check if the new
   // data source is enabled by any of them.
@@ -57549,6 +59620,10 @@ void TracingServiceImpl::UnregisterDataSource(ProducerID producer_id,
     if (it->second.producer_id == producer_id &&
         it->second.descriptor.name() == name) {
       data_sources_.erase(it);
+<<<<<<< HEAD
+=======
+      g_crash_key_ds_count.Set(static_cast<int64_t>(data_sources_.size()));
+>>>>>>> Amalgamated source for v23.0
       return;
     }
   }
@@ -57700,7 +59775,10 @@ TracingServiceImpl::DataSourceInstance* TracingServiceImpl::SetupDataSource(
 void TracingServiceImpl::CopyProducerPageIntoLogBuffer(
     ProducerID producer_id_trusted,
     uid_t producer_uid_trusted,
+<<<<<<< HEAD
     pid_t producer_pid_trusted,
+=======
+>>>>>>> Amalgamated source for v23.0
     WriterID writer_id,
     ChunkID chunk_id,
     BufferID buffer_id,
@@ -57755,10 +59833,16 @@ void TracingServiceImpl::CopyProducerPageIntoLogBuffer(
     return;
   }
 
+<<<<<<< HEAD
   buf->CopyChunkUntrusted(producer_id_trusted, producer_uid_trusted,
                           producer_pid_trusted, writer_id, chunk_id,
                           num_fragments, chunk_flags, chunk_complete, src,
                           size);
+=======
+  buf->CopyChunkUntrusted(producer_id_trusted, producer_uid_trusted, writer_id,
+                          chunk_id, num_fragments, chunk_flags, chunk_complete,
+                          src, size);
+>>>>>>> Amalgamated source for v23.0
 }
 
 void TracingServiceImpl::ApplyChunkPatches(
@@ -58147,10 +60231,13 @@ TraceStats TracingServiceImpl::GetTraceStats(TracingSession* tracing_session) {
   trace_stats.set_chunks_discarded(chunks_discarded_);
   trace_stats.set_patches_discarded(patches_discarded_);
   trace_stats.set_invalid_packets(tracing_session->invalid_packets);
+<<<<<<< HEAD
   trace_stats.set_flushes_requested(tracing_session->flushes_requested);
   trace_stats.set_flushes_succeeded(tracing_session->flushes_succeeded);
   trace_stats.set_flushes_failed(tracing_session->flushes_failed);
   trace_stats.set_final_flush_outcome(tracing_session->final_flush_outcome);
+=======
+>>>>>>> Amalgamated source for v23.0
 
   if (tracing_session->trace_filter) {
     auto* filt_stats = trace_stats.mutable_filter_stats();
@@ -58349,7 +60436,11 @@ bool TracingServiceImpl::MaybeSaveTraceForBugreport(
     // If we are stealing a write_into_file session, add a marker that explains
     // why the trace has been stolen rather than creating an empty file. This is
     // only for write_into_file traces. A similar code path deals with the case
+<<<<<<< HEAD
     // of reading-back a seized trace from IPC in ReadBuffersIntoConsumer().
+=======
+    // of reading-back a seized trace from IPC in ReadBuffers().
+>>>>>>> Amalgamated source for v23.0
     if (!max_session->config.builtin_data_sources().disable_service_events()) {
       std::vector<TracePacket> packets;
       EmitSeizedForBugreportLifecycleEvent(&packets);
@@ -58660,7 +60751,10 @@ void TracingServiceImpl::ConsumerEndpointImpl::QueryServiceState(
     producer->set_name(kv.second->name_);
     producer->set_sdk_version(kv.second->sdk_version_);
     producer->set_uid(static_cast<int32_t>(kv.second->uid()));
+<<<<<<< HEAD
     producer->set_pid(static_cast<int32_t>(kv.second->pid()));
+=======
+>>>>>>> Amalgamated source for v23.0
   }
 
   for (const auto& kv : service_->data_sources_) {
@@ -58670,6 +60764,7 @@ void TracingServiceImpl::ConsumerEndpointImpl::QueryServiceState(
     data_source->set_producer_id(
         static_cast<int>(registered_data_source.producer_id));
   }
+<<<<<<< HEAD
 
   svc_state.set_supports_tracing_sessions(true);
   for (const auto& kv : service_->tracing_sessions_) {
@@ -58706,6 +60801,8 @@ void TracingServiceImpl::ConsumerEndpointImpl::QueryServiceState(
         break;
     }
   }
+=======
+>>>>>>> Amalgamated source for v23.0
   callback(/*success=*/true, svc_state);
 }
 
@@ -58749,7 +60846,10 @@ void TracingServiceImpl::ConsumerEndpointImpl::SaveTraceForBugreport(
 TracingServiceImpl::ProducerEndpointImpl::ProducerEndpointImpl(
     ProducerID id,
     uid_t uid,
+<<<<<<< HEAD
     pid_t pid,
+=======
+>>>>>>> Amalgamated source for v23.0
     TracingServiceImpl* service,
     base::TaskRunner* task_runner,
     Producer* producer,
@@ -58759,7 +60859,10 @@ TracingServiceImpl::ProducerEndpointImpl::ProducerEndpointImpl(
     bool smb_scraping_enabled)
     : id_(id),
       uid_(uid),
+<<<<<<< HEAD
       pid_(pid),
+=======
+>>>>>>> Amalgamated source for v23.0
       service_(service),
       task_runner_(task_runner),
       producer_(producer),
@@ -58849,8 +60952,12 @@ void TracingServiceImpl::ProducerEndpointImpl::CommitData(
     uint8_t chunk_flags = packets.flags;
 
     service_->CopyProducerPageIntoLogBuffer(
+<<<<<<< HEAD
         id_, uid_, pid_, writer_id, chunk_id, buffer_id, num_fragments,
         chunk_flags,
+=======
+        id_, uid_, writer_id, chunk_id, buffer_id, num_fragments, chunk_flags,
+>>>>>>> Amalgamated source for v23.0
         /*chunk_complete=*/true, chunk.payload_begin(), chunk.payload_size());
 
     // This one has release-store semantics.
@@ -59029,6 +61136,10 @@ void TracingServiceImpl::ProducerEndpointImpl::ClearIncrementalState(
   task_runner_->PostTask([weak_this, data_sources] {
     if (weak_this) {
       base::StringView producer_name(weak_this->name_);
+<<<<<<< HEAD
+=======
+      auto scoped_crash_key = g_crash_key_prod_name.SetScoped(producer_name);
+>>>>>>> Amalgamated source for v23.0
       weak_this->producer_->ClearIncrementalState(data_sources.data(),
                                                   data_sources.size());
     }
@@ -59152,7 +61263,11 @@ std::unique_ptr<ProducerEndpoint> InProcessTracingBackend::ConnectProducer(
     const ConnectProducerArgs& args) {
   PERFETTO_DCHECK(args.task_runner->RunsTasksOnCurrentThread());
   return GetOrCreateService(args.task_runner)
+<<<<<<< HEAD
       ->ConnectProducer(args.producer, /*uid=*/0, /*pid=*/0, args.producer_name,
+=======
+      ->ConnectProducer(args.producer, /*uid=*/0, args.producer_name,
+>>>>>>> Amalgamated source for v23.0
                         args.shmem_size_hint_bytes,
                         /*in_process=*/true,
                         TracingService::ProducerSMBScrapingMode::kEnabled,
@@ -59203,7 +61318,10 @@ class TracingServiceCapabilities;
 class QueryCapabilitiesRequest;
 class QueryServiceStateResponse;
 class TracingServiceState;
+<<<<<<< HEAD
 class TracingServiceState_TracingSession;
+=======
+>>>>>>> Amalgamated source for v23.0
 class TracingServiceState_DataSource;
 class DataSourceDescriptor;
 class TracingServiceState_Producer;
@@ -59219,8 +61337,11 @@ class TraceStats_BufferStats;
 class GetTraceStatsRequest;
 class AttachResponse;
 class TraceConfig;
+<<<<<<< HEAD
 class TraceConfig_CmdTraceStartDelay;
 class TraceConfig_AndroidReportConfig;
+=======
+>>>>>>> Amalgamated source for v23.0
 class TraceConfig_TraceFilter;
 class TraceConfig_IncidentReportConfig;
 class TraceConfig_IncrementalStateConfig;
@@ -59257,7 +61378,10 @@ class EnableTracingResponse;
 class EnableTracingRequest;
 enum ObservableEvents_Type : int;
 enum ObservableEvents_DataSourceInstanceState : int;
+<<<<<<< HEAD
 enum TraceStats_FinalFlushOutcome : int;
+=======
+>>>>>>> Amalgamated source for v23.0
 enum TraceConfig_LockdownModeOperation : int;
 enum TraceConfig_CompressionType : int;
 enum TraceConfig_StatsdLogging : int;
@@ -60294,7 +62418,10 @@ class PERFETTO_EXPORT EnableTracingRequest : public ::protozero::CppMessageObj {
 // gen_amalgamated expanded: #include "protos/perfetto/common/data_source_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/track_event_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/gpu_counter_descriptor.gen.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "protos/perfetto/common/ftrace_descriptor.gen.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "protos/perfetto/common/observable_events.gen.h"
 
 namespace perfetto {
@@ -62992,7 +65119,10 @@ class PERFETTO_EXPORT InitializeConnectionRequest : public ::protozero::CppMessa
 // gen_amalgamated expanded: #include "protos/perfetto/common/data_source_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/track_event_descriptor.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/common/gpu_counter_descriptor.gen.h"
+<<<<<<< HEAD
 // gen_amalgamated expanded: #include "protos/perfetto/common/ftrace_descriptor.gen.h"
+=======
+>>>>>>> Amalgamated source for v23.0
 // gen_amalgamated expanded: #include "protos/perfetto/config/data_source_config.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/config/track_event/track_event_config.gen.h"
 // gen_amalgamated expanded: #include "protos/perfetto/config/test_config.gen.h"
@@ -67948,8 +70078,13 @@ namespace ipc {
 class ClientInfo {
  public:
   ClientInfo() = default;
+<<<<<<< HEAD
   ClientInfo(ClientID client_id, uid_t uid, pid_t pid)
       : client_id_(client_id), uid_(uid), pid_(pid) {}
+=======
+  ClientInfo(ClientID client_id, uid_t uid)
+      : client_id_(client_id), uid_(uid) {}
+>>>>>>> Amalgamated source for v23.0
 
   bool operator==(const ClientInfo& other) const {
     return (client_id_ == other.client_id_ && uid_ == other.uid_);
@@ -67970,6 +70105,7 @@ class ClientInfo {
   // Posix User ID. Comes from the kernel, can be trusted.
   uid_t uid() const { return uid_; }
 
+<<<<<<< HEAD
   // Posix process ID. Comes from the kernel and can be trusted.
   int32_t pid() const { return pid_; }
 
@@ -67977,6 +70113,11 @@ class ClientInfo {
   ClientID client_id_ = 0;
   uid_t uid_ = kInvalidUid;
   pid_t pid_ = base::kInvalidPid;
+=======
+ private:
+  ClientID client_id_ = 0;
+  uid_t uid_ = kInvalidUid;
+>>>>>>> Amalgamated source for v23.0
 };
 
 }  // namespace ipc
@@ -68961,6 +71102,18 @@ class HostImpl : public Host, public base::UnixSocket::EventListener {
 
 // gen_amalgamated expanded: #include "protos/perfetto/ipc/wire_protocol.gen.h"
 
+<<<<<<< HEAD
+=======
+#if (PERFETTO_BUILDFLAG(PERFETTO_STANDALONE_BUILD) || \
+     PERFETTO_BUILDFLAG(PERFETTO_ANDROID_BUILD)) &&   \
+    (PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||         \
+     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID))
+#define PERFETTO_LOG_TXBUF_FOR_B_191600928
+// TODO(primiano): temporary for investigating b/191600928. Remove in Jan 2022
+#include <sys/ioctl.h>
+#endif
+
+>>>>>>> Amalgamated source for v23.0
 // TODO(primiano): put limits on #connections/uid and req. queue (b/69093705).
 
 namespace perfetto {
@@ -68971,7 +71124,15 @@ namespace {
 constexpr base::SockFamily kHostSockFamily =
     kUseTCPSocket ? base::SockFamily::kInet : base::SockFamily::kUnix;
 
+<<<<<<< HEAD
 base::CrashKey g_crash_key_uid("ipc_uid");
+=======
+// TODO(primiano): temporary for investigating b/191600928. Remove in Jan 2022.
+base::CrashKey g_crash_key_uid("ipc_uid");
+base::CrashKey g_crash_key_tx_b("ipc_tx_boot");
+base::CrashKey g_crash_key_tx_m("ipc_tx_mono");
+base::CrashKey g_crash_key_tx_qlen("ipc_tx_qlen");
+>>>>>>> Amalgamated source for v23.0
 
 uid_t GetPosixPeerUid(base::UnixSocket* sock) {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
@@ -68983,6 +71144,7 @@ uid_t GetPosixPeerUid(base::UnixSocket* sock) {
 #endif
 }
 
+<<<<<<< HEAD
 pid_t GetLinuxPeerPid(base::UnixSocket* sock) {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
@@ -68993,6 +71155,8 @@ pid_t GetLinuxPeerPid(base::UnixSocket* sock) {
 #endif
 }
 
+=======
+>>>>>>> Amalgamated source for v23.0
 }  // namespace
 
 // static
@@ -69168,8 +71332,12 @@ void HostImpl::OnInvokeMethod(ClientConnection* client,
 
   auto peer_uid = GetPosixPeerUid(client->sock.get());
   auto scoped_key = g_crash_key_uid.SetScoped(static_cast<int64_t>(peer_uid));
+<<<<<<< HEAD
   service->client_info_ =
       ClientInfo(client->id, peer_uid, GetLinuxPeerPid(client->sock.get()));
+=======
+  service->client_info_ = ClientInfo(client->id, peer_uid);
+>>>>>>> Amalgamated source for v23.0
   service->received_fd_ = &client->received_fd;
   method.invoker(service, *decoded_req_args, std::move(deferred_reply));
   service->received_fd_ = nullptr;
@@ -69207,6 +71375,20 @@ void HostImpl::SendFrame(ClientConnection* client, const Frame& frame, int fd) {
 
   std::string buf = BufferedFrameDeserializer::Serialize(frame);
 
+<<<<<<< HEAD
+=======
+  auto crash_key_b = g_crash_key_tx_b.SetScoped(base::GetBootTimeS().count());
+  auto crash_key_w = g_crash_key_tx_m.SetScoped(base::GetWallTimeS().count());
+
+#if defined(PERFETTO_LOG_TXBUF_FOR_B_191600928)
+  int32_t tx_queue_len = 0;
+  ioctl(client->sock->fd(), TIOCOUTQ, &tx_queue_len);
+  auto crash_key_qlen = g_crash_key_tx_qlen.SetScoped(tx_queue_len);
+#else
+  base::ignore_result(g_crash_key_tx_qlen);
+#endif
+
+>>>>>>> Amalgamated source for v23.0
   // When a new Client connects in OnNewClientConnection we set a timeout on
   // Send (see call to SetTxTimeout).
   //
@@ -69225,8 +71407,12 @@ void HostImpl::OnDisconnect(base::UnixSocket* sock) {
     return;
   ClientID client_id = it->second->id;
 
+<<<<<<< HEAD
   ClientInfo client_info(client_id, GetPosixPeerUid(sock),
                          GetLinuxPeerPid(sock));
+=======
+  ClientInfo client_info(client_id, GetPosixPeerUid(sock));
+>>>>>>> Amalgamated source for v23.0
   clients_by_socket_.erase(it);
   PERFETTO_DCHECK(clients_.count(client_id));
   clients_.erase(client_id);
@@ -72944,7 +75130,11 @@ void ProducerIPCService::InitializeConnection(
 
   // ConnectProducer will call OnConnect() on the next task.
   producer->service_endpoint = core_service_->ConnectProducer(
+<<<<<<< HEAD
       producer.get(), client_info.uid(), client_info.pid(), req.producer_name(),
+=======
+      producer.get(), client_info.uid(), req.producer_name(),
+>>>>>>> Amalgamated source for v23.0
       req.shared_memory_size_hint_bytes(),
       /*in_process=*/false, smb_scraping_mode,
       req.shared_memory_page_size_hint_bytes(), std::move(shmem),
