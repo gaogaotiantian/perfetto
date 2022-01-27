@@ -145,7 +145,7 @@ export function createEmptyState(): State {
     traceConversionInProgress: false,
 
     perfDebug: false,
-    sidebarVisible: true,
+    sidebarVisible: false,
     hoveredUtid: -1,
     hoveredPid: -1,
     hoverCursorTimestamp: Time.INVALID,
