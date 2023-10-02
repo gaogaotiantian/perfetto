@@ -453,8 +453,7 @@ export class TraceController extends Controller<States> {
       end,
     };
 
-    const shownJsonWarning =
-      window.localStorage.getItem(SHOWN_JSON_WARNING_KEY) !== null;
+    const shownJsonWarning = true;
 
     // Show warning if the trace is in JSON format.
     const query = `select str_value from metadata where name = 'trace_type'`;
