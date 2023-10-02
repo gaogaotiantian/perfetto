@@ -19,7 +19,8 @@ import {
 } from '../common/state';
 import {expandCallsites} from '../common/flamegraph_util'
 
-import {PerfettoMouseEvent} from './events';
+import {findRef} from '../base/dom_utils';
+
 import {Flamegraph, NodeRendering} from './flamegraph';
 import {FunctionProfileDetails} from './globals';
 import {Panel, PanelSize} from './panel';
@@ -53,6 +54,8 @@ export class FunctionProfileDetailsPanel extends
     this.updateFocusRegex();
   }, 20);
 
+  private canvas?: HTMLCanvasElement;
+
   view({attrs}: m.CVnode<FunctionProfileDetailsPanelAttrs>) {
     //const heapDumpInfo = globals.functionProfileDetails;
     this.data = attrs.data;
@@ -68,26 +71,6 @@ export class FunctionProfileDetailsPanel extends
       this.changeFlamegraphData();
       return m(
           '.details-panel',
-          {
-            onclick: (e: PerfettoMouseEvent) => {
-              if (this.flamegraph !== undefined) {
-                this.onMouseClick({y: e.layerY, x: e.layerX});
-                raf.scheduleFullRedraw();
-              }
-              return false;
-            },
-            onmousemove: (e: PerfettoMouseEvent) => {
-              if (this.flamegraph !== undefined) {
-                this.onMouseMove({y: e.layerY, x: e.layerX});
-                raf.scheduleRedraw();
-              }
-            },
-            onmouseout: () => {
-              if (this.flamegraph !== undefined) {
-                this.onMouseOut();
-              }
-            }
-          },
           m('.details-panel-heading.flamegraph-profile',
             {onclick: (e: MouseEvent) => e.stopPropagation()},
             [
@@ -111,7 +94,20 @@ export class FunctionProfileDetailsPanel extends
                   })
                 ]),
             ]),
-          m(`div[style=height:${height}px]`),
+          m(`canvas[ref=canvas]`, {
+            style: `height:${height}px; width:100%`,
+            onmousemove: (e: MouseEvent) => {
+              const {offsetX, offsetY} = e;
+              this.onMouseMove({x: offsetX, y: offsetY});
+            },
+            onmouseout: () => {
+              this.onMouseOut();
+            },
+            onclick: (e: MouseEvent) => {
+              const {offsetX, offsetY} = e;
+              this.onMouseClick({x: offsetX, y: offsetY});
+            },
+          }),
       );
     } else {
       return m(
@@ -155,7 +151,53 @@ export class FunctionProfileDetailsPanel extends
         this.nodeRendering(), flamegraphData, data.expandedCallsite);
   }
 
-  renderCanvas(ctx: CanvasRenderingContext2D, size: PanelSize) {
+  private rafRedrawCallback = () => {
+    if (this.canvas) {
+      const canvas = this.canvas;
+      canvas.width = canvas.offsetWidth * devicePixelRatio;
+      canvas.height = canvas.offsetHeight * devicePixelRatio;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+        const {offsetWidth: width, offsetHeight: height} = canvas;
+        this.renderLocalCanvas(ctx, {width, height});
+        ctx.restore();
+      }
+    }
+  };
+
+  oncreate({dom}: m.CVnodeDOM<FunctionProfileDetailsPanelAttrs>) {
+    this.canvas = FunctionProfileDetailsPanel.findCanvasElement(dom);
+    // TODO(stevegolton): If we truely want to be standalone, then we shouldn't
+    // rely on someone else calling the rafScheduler when the window is resized,
+    // but it's good enough for now as we know the ViewerPage will do it.
+    raf.addRedrawCallback(this.rafRedrawCallback);
+  }
+
+  onupdate({dom}: m.CVnodeDOM<FunctionProfileDetailsPanelAttrs>) {
+    this.canvas = FunctionProfileDetailsPanel.findCanvasElement(dom);
+  }
+
+  onremove(_vnode: m.CVnodeDOM<FunctionProfileDetailsPanelAttrs>) {
+    raf.removeRedrawCallback(this.rafRedrawCallback);
+  }
+
+  private static findCanvasElement(dom: Element): HTMLCanvasElement|undefined {
+    const canvas = findRef(dom, 'canvas');
+    if (canvas && canvas instanceof HTMLCanvasElement) {
+      return canvas;
+    } else {
+      return undefined;
+    }
+  }
+
+  renderCanvas() {
+    // noop
+  }
+
+  renderLocalCanvas(ctx: CanvasRenderingContext2D, size: PanelSize) {
     const unit = 's';
     this.flamegraph.draw(ctx, size.width, size.height, 0, HEADER_HEIGHT, unit);
   }
@@ -164,15 +206,18 @@ export class FunctionProfileDetailsPanel extends
     const expandedCallsite = this.flamegraph.onMouseClick({x, y});
     this.data.expandedCallsite = expandedCallsite;
     this.changeFlamegraphData();
+    raf.scheduleFullRedraw();
     return true;
   }
 
   onMouseMove({x, y}: {x: number, y: number}): boolean {
     this.flamegraph.onMouseMove({x, y});
+    raf.scheduleFullRedraw();
     return true;
   }
 
   onMouseOut() {
     this.flamegraph.onMouseOut();
+    raf.scheduleFullRedraw();
   }
 }
