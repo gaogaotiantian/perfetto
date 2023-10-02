@@ -619,9 +619,63 @@ export class ChromeSliceDetailsTab extends
         )
       }
     }
+
+    // Maybe it's an object?
+    const obj_str: string = this.getObjStr(sliceInfo);
+    if (obj_str) {
+      return this.renderObjStr(obj_str);
+    }
+
     return m(
       "h1", "No source code found"
     )
+  }
+
+  renderObjStr(obj_str: string): m.Vnode {
+    var el_pre = document.createElement("pre");
+    var el_code = document.createElement("code");
+    el_pre.className = "language-py"
+    el_code.className = "language-py"
+    el_pre.appendChild(el_code)
+    el_code.innerHTML = Prism.highlight(obj_str, Prism.languages.python, "python");
+    var env = {
+      element: el_code,
+      language: "python",
+      grammar: Prism.languages.python,
+      code: obj_str
+    }
+    Prism.hooks.run("complete", env);
+
+    return m(
+      'pre.language-py',
+      {
+        style: {
+          height: `${this.pre_height}px`
+        },
+        oncreate: () => {
+          this.resize(-1, -1);
+        },
+        onupdate: () => {
+          this.resize(-1, -1);
+        }
+      },
+      m.trust(el_pre.innerHTML)
+    )
+  }
+
+  getObjStr(slice: SliceDetails): string {
+    if (slice.args) {
+      // Parsed arguments are available, need only to iterate over them to get
+      // slice references
+      for (const arg of slice.args) {
+        const key = arg.key;
+        const value = arg.value;
+        if (key == "args.object" && typeof value === 'string') {
+          return value;
+        }
+      }
+    }
+    return "";
   }
 
   private resize(lineno: number, total_lineno: number) {
@@ -633,7 +687,7 @@ export class ChromeSliceDetailsTab extends
     const pre_el: HTMLElement | null = document.querySelector("pre.language-py");
     const code_el: HTMLElement | null = document.querySelector("code.language-py");
 
-    if (pre_el !== null && code_el !== null) {
+    if (lineno != -1 && pre_el !== null && code_el !== null) {
       pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
     }
   }
