@@ -51,6 +51,10 @@ import {SqlRef} from './widgets/sql_ref';
 import {Timestamp} from './widgets/timestamp';
 import {Tree, TreeNode} from './widgets/tree';
 
+import * as Prism from 'prismjs';
+import 'prismjs/components/prism-python';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
+
 interface ContextMenuItem {
   name: string;
   shouldDisplay(slice: SliceDetails): boolean;
@@ -307,6 +311,7 @@ interface ChromeSliceDetailsTabConfig {
 export class ChromeSliceDetailsTab extends
     BottomTab<ChromeSliceDetailsTabConfig> {
   static readonly kind = 'dev.perfetto.ChromeSliceDetailsTab';
+  private pre_height=100;
 
   private sliceDetails?: SliceDetails;
 
@@ -343,9 +348,16 @@ export class ChromeSliceDetailsTab extends
           },
           m(
               GridLayout,
-              this.renderDetails(slice),
-              this.renderRhs(this.engine, slice),
+              m(
+                GridLayoutColumn,
+                this.renderDetails(slice),
+                this.renderRhs(this.engine, slice),
               ),
+              m(
+                GridLayoutColumn,
+                this.renderSourceCode(slice),
+              )
+          )
       );
     } else {
       return m(DetailsShell, {title: 'Slice', description: 'Loading...'});
@@ -563,6 +575,66 @@ export class ChromeSliceDetailsTab extends
       );
     } else {
       return undefined;
+    }
+  }
+
+  private renderSourceCode(sliceInfo: SliceDetails): m.Vnode {
+    const funcName = sliceInfo.name;
+    const sourceStorage = globals.sourceFileStorage;
+    if (sourceStorage && sourceStorage["functions"]) {
+      const file_data = sourceStorage["functions"][funcName] || null;
+      if (file_data) {
+        const file_name = file_data[0];
+        const lineno = file_data[1];
+        const code = sourceStorage["files"][file_name][0];
+        const total_lineno = sourceStorage["files"][file_name][1];
+        var el_pre = document.createElement("pre");
+        var el_code = document.createElement("code");
+        el_pre.className = "language-py line-numbers"
+        el_code.className = "language-py"
+        el_pre.appendChild(el_code)
+        el_code.innerHTML = Prism.highlight(code, Prism.languages.python, "python");
+        var env = {
+          element: el_code,
+          language: "python",
+          grammar: Prism.languages.python,
+          code: code
+        }
+        Prism.hooks.run("complete", env);
+
+        return m(
+          'pre.language-py.line-numbers',
+          {
+            style: {
+              height: `${this.pre_height}px`
+            },
+            oncreate: () => {
+              this.resize(lineno, total_lineno);
+            },
+            onupdate: () => {
+              this.resize(lineno, total_lineno)
+            }
+          },
+          m.trust(el_pre.innerHTML)
+        )
+      }
+    }
+    return m(
+      "h1", "No source code found"
+    )
+  }
+
+  private resize(lineno: number, total_lineno: number) {
+    var contents_height = document.getElementsByClassName("details-panel-container")[0].clientHeight;
+    var handle_height = document.getElementsByClassName("handle")[0].clientHeight;
+    var heading_height = document.getElementsByClassName("pf-header-bar")[0].clientHeight;
+    this.pre_height = contents_height - handle_height - heading_height;
+
+    const pre_el: HTMLElement | null = document.querySelector("pre.language-py");
+    const code_el: HTMLElement | null = document.querySelector("code.language-py");
+
+    if (pre_el !== null && code_el !== null) {
+      pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
     }
   }
 }
