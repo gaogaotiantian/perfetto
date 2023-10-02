@@ -22,6 +22,8 @@ import {taskTracker} from './task_tracker';
 import {Popup, PopupPosition} from '../widgets/popup';
 import {assertFalse} from '../base/logging';
 
+import {Router} from './router';
+
 export const DISMISSED_PANNING_HINT_KEY = 'dismissedPanningHint';
 
 class Progress implements m.ClassComponent {
@@ -125,6 +127,7 @@ class RefreshIcon implements m.ClassComponent {
         onclick: () => {
           // @ts-ignore this function is set in index.html
           window.clearAllCaches();
+          Router.navigate('#!/');
         },
       },
       m('i.material-icons',
