@@ -270,6 +270,7 @@ class Globals {
   private _ftracePanelData?: FtracePanelData = undefined;
   private _cmdManager?: CommandManager = undefined;
   private _sourceFileStorage?: SourceFileStorage = undefined;
+  private _inVscode?: boolean = undefined;
 
   // TODO(hjd): Remove once we no longer need to update UUID on redraw.
   private _publishRedraw?: () => void = undefined;
@@ -327,6 +328,7 @@ class Globals {
     this._functionProfileDetails = [];
     this._cpuProfileDetails = {};
     this._sourceFileStorage = {};
+    this._inVscode = false;
     this.engines.clear();
   }
 
@@ -501,6 +503,14 @@ class Globals {
 
   set sourceFileStorage(value: any) {
     this._sourceFileStorage = value;
+  }
+
+  get inVscode() {
+    return assertExists(this._inVscode);
+  }
+
+  set inVscode(value: boolean) {
+    this._inVscode = value;
   }
 
   set numQueuedQueries(value: number) {

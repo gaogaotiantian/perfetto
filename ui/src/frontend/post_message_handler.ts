@@ -66,6 +66,14 @@ export function postMessageHandler(messageEvent: MessageEvent) {
     return;
   }
 
+  if (messageEvent.origin.startsWith('vscode-webview://')) {
+    globals.inVscode = true;
+    messageEvent.source?.postMessage({
+      type: "viztracer"
+    }, {targetOrigin: messageEvent.origin});
+    return;
+  }
+
   if (messageEvent.origin === 'https://tagassistant.google.com') {
     // The GA debugger, does a window.open() and sends messages to the GA
     // script. Ignore them.

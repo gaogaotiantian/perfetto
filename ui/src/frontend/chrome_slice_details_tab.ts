@@ -355,6 +355,7 @@ export class ChromeSliceDetailsTab extends
               ),
               m(
                 GridLayoutColumn,
+                this.renderVsCodeButton(slice),
                 this.renderSourceCode(slice),
               )
           )
@@ -576,6 +577,50 @@ export class ChromeSliceDetailsTab extends
     } else {
       return undefined;
     }
+  }
+
+  private renderVsCodeButton(sliceInfo: SliceDetails): m.Vnode {
+    const funcName = sliceInfo.name;
+    const sourceStorage = globals.sourceFileStorage;
+    if (globals.inVscode && sourceStorage && sourceStorage["functions"]) {
+      const file_data = sourceStorage["functions"][funcName] || null;
+      if (file_data) {
+        return m('button', {
+          style: {
+            'display': 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'background-color': '#2d2d2d',
+            'padding': '4px',
+            'border-radius': '6px',
+            'color': '#fff'
+          },
+          onclick: () => {
+            window.parent.postMessage({
+              type: 'viztracer',
+              action: 'openfile',
+              file: file_data[0],
+              line: file_data[1]
+            }, '*');
+          }
+        },
+        'Open in VSCode',
+        m('img', {
+          src: `${globals.root}assets/vscode-icon.png`,
+          style: {
+            'margin-left': '6px',
+            'width': '12px'
+          }
+        }));
+      }
+    }
+
+    // return an empty node
+    return m('div', {
+      style: {
+        display: 'none'
+      }
+    });
   }
 
   private renderSourceCode(sliceInfo: SliceDetails): m.Vnode {

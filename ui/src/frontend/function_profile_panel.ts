@@ -57,7 +57,6 @@ export class FunctionProfileDetailsPanel extends
   private canvas?: HTMLCanvasElement;
 
   view({attrs}: m.CVnode<FunctionProfileDetailsPanelAttrs>) {
-    //const heapDumpInfo = globals.functionProfileDetails;
     this.data = attrs.data;
     const heapDumpInfo = this.data;
     if (heapDumpInfo) {

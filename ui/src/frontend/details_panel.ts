@@ -434,7 +434,9 @@ export class DetailsPanel implements m.ClassComponent {
       }),
       m('.details-panel-container',
         {
-          style: {height: `${this.detailsHeight}px`},
+          style: {
+            height: globals.functionProfileDetails.length > 0 ? "100%": `${this.detailsHeight}px`
+          },
         },
         panel),
     ];
