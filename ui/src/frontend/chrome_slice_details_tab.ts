@@ -319,11 +319,30 @@ export class ChromeSliceDetailsTab extends
     return new ChromeSliceDetailsTab(args);
   }
 
+  // Handle double click for VS Code
+  static lastRenderTimestamp = 0;
+  static currRenderTimestamp = 0;
+  static lastClickedSliceId = -1;
+  static doubleClickHandled = false;
+
   constructor(args: NewBottomTabArgs) {
     super(args);
 
     // Start loading the slice details
     const {id, table} = this.config;
+
+    // Handle double click
+    ChromeSliceDetailsTab.lastRenderTimestamp = ChromeSliceDetailsTab.currRenderTimestamp;
+    ChromeSliceDetailsTab.currRenderTimestamp = Date.now();
+
+    if (ChromeSliceDetailsTab.lastClickedSliceId == id) {
+      ChromeSliceDetailsTab.doubleClickHandled = false;
+    } else {
+      ChromeSliceDetailsTab.doubleClickHandled = true;
+    }
+
+    ChromeSliceDetailsTab.lastClickedSliceId = id;
+
     getSliceDetails(this.engine, id, table)
         .then((sliceDetails) => this.sliceDetails = sliceDetails);
   }
@@ -585,6 +604,16 @@ export class ChromeSliceDetailsTab extends
     if (globals.inVscode && sourceStorage && sourceStorage["functions"]) {
       const file_data = sourceStorage["functions"][funcName] || null;
       if (file_data) {
+        if (!ChromeSliceDetailsTab.doubleClickHandled &&
+            ChromeSliceDetailsTab.currRenderTimestamp - ChromeSliceDetailsTab.lastRenderTimestamp < 500) {
+          ChromeSliceDetailsTab.doubleClickHandled = true;
+          window.parent.postMessage({
+            type: 'viztracer',
+            action: 'openfile',
+            file: file_data[0],
+            line: file_data[1]
+          }, '*');
+        }
         return m('button', {
           style: {
             'display': 'flex',
