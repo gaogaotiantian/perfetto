@@ -285,6 +285,12 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
     return new ThreadSliceDetailsTab(args);
   }
 
+  // Handle double click for VS Code
+  static lastRenderTimestamp = 0;
+  static currRenderTimestamp = 0;
+  static lastClickedSliceId = -1;
+  static doubleClickHandled = false;
+
   constructor(args: NewBottomTabArgs<ThreadSliceDetailsTabConfig>) {
     super(args);
     this.load();
@@ -293,6 +299,16 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
   async load() {
     // Start loading the slice details
     const {id, table} = this.config;
+
+    ThreadSliceDetailsTab.lastRenderTimestamp = ThreadSliceDetailsTab.currRenderTimestamp;
+    ThreadSliceDetailsTab.currRenderTimestamp = Date.now();
+    if (ThreadSliceDetailsTab.lastClickedSliceId == id) {
+      ThreadSliceDetailsTab.doubleClickHandled = false;
+    } else {
+      ThreadSliceDetailsTab.doubleClickHandled = true;
+    }
+    ThreadSliceDetailsTab.lastClickedSliceId = id;
+
     const details = await getSliceDetails(this.engine, id, table);
 
     if (
@@ -336,6 +352,7 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
         ),
         m(
           GridLayoutColumn,
+          this.renderVsCodeButton(slice),
           this.renderSourceCode(slice),
         )
       ),
@@ -485,6 +502,60 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
       return undefined;
     }
   }
+
+  private renderVsCodeButton(sliceInfo: SliceDetails): m.Vnode {
+    const funcName = sliceInfo.name;
+    const sourceStorage = globals.sourceFileStorage;
+    if (globals.inVscode && sourceStorage && sourceStorage["functions"]) {
+      const file_data = sourceStorage["functions"][funcName] || null;
+      if (file_data) {
+        if (!ThreadSliceDetailsTab.doubleClickHandled &&
+            ThreadSliceDetailsTab.currRenderTimestamp - ThreadSliceDetailsTab.lastRenderTimestamp < 500) {
+          ThreadSliceDetailsTab.doubleClickHandled = true;
+          window.parent.postMessage({
+            type: 'viztracer',
+            action: 'openfile',
+            file: file_data[0],
+            line: file_data[1]
+          }, '*');
+        }
+        return m('button', {
+          style: {
+            'display': 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'background-color': '#2d2d2d',
+            'padding': '4px',
+            'border-radius': '6px',
+            'color': '#fff'
+          },
+          onclick: () => {
+            window.parent.postMessage({
+              type: 'viztracer',
+              action: 'openfile',
+              file: file_data[0],
+              line: file_data[1]
+            }, '*');
+          }
+        },
+        'Open in VSCode',
+        m('img', {
+          src: `${globals.root}assets/vscode-icon.png`,
+          style: {
+            'margin-left': '6px',
+            'width': '12px'
+          }
+        }));
+      }
+    }
+    // return an empty node
+    return m('div', {
+      style: {
+        display: 'none'
+      }
+    });
+  }
+
   private renderSourceCode(sliceInfo: SliceDetails): m.Vnode {
     const funcName = sliceInfo.name;
     const sourceStorage = globals.sourceFileStorage;

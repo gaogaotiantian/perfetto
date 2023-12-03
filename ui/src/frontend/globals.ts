@@ -276,6 +276,7 @@ class Globals implements AppContext {
   // Used for permalink load by trace_controller.ts.
   restoreAppStateAfterTraceLoad?: SerializedAppState;
   private _sourceFileStorage?: SourceFileStorage = undefined;
+  private _inVscode?: boolean = undefined;
 
   // TODO(hjd): Remove once we no longer need to update UUID on redraw.
   private _publishRedraw?: () => void = undefined;
@@ -326,6 +327,7 @@ class Globals implements AppContext {
     this._threadStateDetails = {};
     this._cpuProfileDetails = {};
     this._sourceFileStorage = {};
+    this._inVscode = false;
     this.engines.clear();
     this._selectionManager.clear();
   }
@@ -470,6 +472,14 @@ class Globals implements AppContext {
 
   set sourceFileStorage(value: any) {
     this._sourceFileStorage = value;
+  }
+
+  get inVscode() {
+    return assertExists(this._inVscode);
+  }
+
+  set inVscode(value: boolean) {
+    this._inVscode = value;
   }
 
   set numQueuedQueries(value: number) {
