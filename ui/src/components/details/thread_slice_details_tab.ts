@@ -54,6 +54,8 @@ import {renderSliceArguments} from './slice_args';
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/plugins/line-numbers/prism-line-numbers';
+import { AppImpl } from '../../core/app_impl';
+import { assetSrc } from '../../base/assets';
 
 interface ContextMenuItem {
   name: string;
@@ -219,6 +221,12 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
   private breakdownByThreadState?: BreakdownByThreadState;
   private readonly trace: TraceImpl;
 
+  // Handle double click for VS Code
+  static lastRenderTimestamp = 0;
+  static currRenderTimestamp = 0;
+  static lastClickedSliceId = -1;
+  static doubleClickHandled = false;
+
   constructor(trace: Trace) {
     // Rationale for the assertIsInstance: ThreadSliceDetailsPanel requires a
     // TraceImpl (because of flows) but here we must take a Trace interface,
@@ -229,6 +237,15 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
   async load({eventId}: TrackEventSelection) {
     const {trace} = this;
     const details = await getSliceDetails(trace.engine, eventId);
+
+    ThreadSliceDetailsPanel.lastRenderTimestamp = ThreadSliceDetailsPanel.currRenderTimestamp;
+    ThreadSliceDetailsPanel.currRenderTimestamp = Date.now();
+    if (ThreadSliceDetailsPanel.lastClickedSliceId == eventId) {
+      ThreadSliceDetailsPanel.doubleClickHandled = false;
+    } else {
+      ThreadSliceDetailsPanel.doubleClickHandled = true;
+    }
+    ThreadSliceDetailsPanel.lastClickedSliceId = eventId;
 
     if (
       details !== undefined &&
@@ -266,6 +283,7 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
         ),
         m(
           GridLayoutColumn,
+          this.renderVsCodeButton(slice),
           this.renderSourceCode(this.trace, slice),
         )
       ),
@@ -433,6 +451,61 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
       return undefined;
     }
   }
+
+  private renderVsCodeButton(sliceInfo: SliceDetails): m.Vnode {
+    const funcName = sliceInfo.name;
+    const sourceStorage = AppImpl.instance.trace?.traceInfo.vizTracerSourceStorage;
+    const inVscode = AppImpl.instance.settings.get('inVscode')?.get() || false;
+    if (inVscode && sourceStorage && sourceStorage["functions"]) {
+      const file_data = sourceStorage["functions"][funcName] || null;
+      if (file_data) {
+        if (!ThreadSliceDetailsPanel.doubleClickHandled &&
+            ThreadSliceDetailsPanel.currRenderTimestamp - ThreadSliceDetailsPanel.lastRenderTimestamp < 500) {
+          ThreadSliceDetailsPanel.doubleClickHandled = true;
+          window.parent.postMessage({
+            type: 'viztracer',
+            action: 'openfile',
+            file: file_data[0],
+            line: file_data[1]
+          }, '*');
+        }
+        return m('button', {
+          style: {
+            'display': 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'background-color': '#2d2d2d',
+            'padding': '4px',
+            'border-radius': '6px',
+            'color': '#fff'
+          },
+          onclick: () => {
+            window.parent.postMessage({
+              type: 'viztracer',
+              action: 'openfile',
+              file: file_data[0],
+              line: file_data[1]
+            }, '*');
+          }
+        },
+        'Open in VSCode',
+        m('img', {
+          src: assetSrc('assets/vscode-icon.png'),
+          style: {
+            'margin-left': '6px',
+            'width': '12px'
+          }
+        }));
+      }
+    }
+    // return an empty node
+    return m('div', {
+      style: {
+        display: 'none'
+      }
+    });
+  }
+
   private renderSourceCode(trace: Trace, sliceInfo: SliceDetails): m.Vnode {
     const funcName = sliceInfo.name;
     const sourceStorage = trace.traceInfo.vizTracerSourceStorage;

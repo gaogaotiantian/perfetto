@@ -103,8 +103,7 @@ export class UiMainPerTrace implements m.ClassComponent {
     // commands or anything in this state as they will be useless.
     if (trace === undefined) return;
     document.title = `${trace.traceInfo.traceTitle || 'Trace'} - Perfetto UI`;
-    // VizTracer does not show this warning
-    // this.maybeShowJsonWarning();
+    this.maybeShowJsonWarning();
   }
 
   private renderOmnibox(): m.Children {
@@ -445,6 +444,9 @@ export class UiMainPerTrace implements m.ClassComponent {
   }
 
   private async maybeShowJsonWarning() {
+    // VizTracer does not show this warning
+    return;
+
     // Show warning if the trace is in JSON format.
     const isJsonTrace = this.trace?.traceInfo.traceType === 'json';
     const SHOWN_JSON_WARNING_KEY = 'shownJsonWarning';

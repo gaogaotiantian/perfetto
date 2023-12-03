@@ -251,6 +251,14 @@ function main() {
     defaultValue: true,
   });
 
+  const inVscodeSetting = settingsManager.register({
+    id: 'inVscode',
+    name: 'VizTracer VSCode plugin indicator',
+    description: 'Indicates whether the VizTracer extension is running in VSCode.',
+    schema: z.boolean(),
+    defaultValue: false,
+  });
+
   AppImpl.initialize({
     initialRouteArgs: Router.parseUrl(window.location.href).args,
     settingsManager,
@@ -260,6 +268,7 @@ function main() {
     analyticsSetting,
     startupCommandsSetting,
     enforceStartupCommandAllowlistSetting,
+    inVscodeSetting,
   });
 
   // Load the css. The load is asynchronous and the CSS is not ready by the time

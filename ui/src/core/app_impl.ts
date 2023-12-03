@@ -57,6 +57,7 @@ export interface AppInitArgs {
   readonly analyticsSetting: Setting<boolean>;
   readonly startupCommandsSetting: Setting<CommandInvocation[]>;
   readonly enforceStartupCommandAllowlistSetting: Setting<boolean>;
+  readonly inVscodeSetting?: Setting<boolean>;
 }
 
 /**
