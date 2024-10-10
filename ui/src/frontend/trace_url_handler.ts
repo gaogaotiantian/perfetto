@@ -292,31 +292,13 @@ function openTraceFromVizTracer() {
     })
     .then(res => {
       globals.sourceFileStorage = res;
+      // To make it auto-load the trace, we try to load localtrace
+      globals.dispatch(Actions.openTraceFromUrl({
+        url: `${url}/localtrace`,
+      }));
     })
     .catch(error => {
       console.log(error);
-    })
-
-    fetch(`${url}/vizviewer_info`)
-    .then(data => {
-      return data.json();
-    })
-    .then(() => {
-      // Try to load the function map
-      fetch(`${url}/file_info`)
-      .then(data => {
-        return data.json();
-      })
-      .then(res => {
-        globals.sourceFileStorage = res;
-        // To make it auto-load the trace, we try to load localtrace
-        globals.dispatch(Actions.openTraceFromUrl({
-          url: `${url}/localtrace`,
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-      })
     })
   })
 }
