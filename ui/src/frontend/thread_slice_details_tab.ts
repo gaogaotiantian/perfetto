@@ -275,7 +275,6 @@ interface ThreadSliceDetailsTabConfig {
 }
 
 export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig> {
-  private pre_height=100;
   private sliceDetails?: SliceDetails;
   private breakdownByThreadState?: BreakdownByThreadState;
 
@@ -582,14 +581,11 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
         return m(
           'pre.language-py.line-numbers',
           {
-            style: {
-              height: `${this.pre_height}px`
+            oncreate: (vnode) => {
+              this.resize(vnode, lineno, total_lineno, true);
             },
-            oncreate: () => {
-              this.resize(lineno, total_lineno);
-            },
-            onupdate: () => {
-              this.resize(lineno, total_lineno)
+            onupdate: (vnode) => {
+              this.resize(vnode, lineno, total_lineno)
             }
           },
           m.trust(el_pre.innerHTML)
@@ -625,14 +621,11 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
     return m(
       'pre.language-py',
       {
-        style: {
-          height: `${this.pre_height}px`
+        oncreate: (vnode) => {
+          this.resize(vnode, -1, -1);
         },
-        oncreate: () => {
-          this.resize(-1, -1);
-        },
-        onupdate: () => {
-          this.resize(-1, -1);
+        onupdate: (vnode) => {
+          this.resize(vnode, -1, -1);
         }
       },
       m.trust(el_pre.innerHTML)
@@ -654,14 +647,15 @@ export class ThreadSliceDetailsTab extends BottomTab<ThreadSliceDetailsTabConfig
     return "";
   }
 
-  private resize(lineno: number, total_lineno: number) {
-    var contents_height = document.getElementsByClassName("details-panel-container")[0].clientHeight;
-    var handle_height = document.getElementsByClassName("handle")[0].clientHeight;
-    var heading_height = document.getElementsByClassName("pf-header-bar")[0].clientHeight;
-    this.pre_height = contents_height - handle_height - heading_height;
-    const pre_el: HTMLElement | null = document.querySelector("pre.language-py");
-    const code_el: HTMLElement | null = document.querySelector("code.language-py");
-    if (pre_el !== null && code_el !== null) {
+  private resize(vnode: m.VnodeDOM, lineno: number, total_lineno: number, scroll: boolean = false) {
+    var contents_height = document.getElementsByClassName("details-panel-container")[0]?.clientHeight;
+    var handle_height = document.getElementsByClassName("handle")[0]?.clientHeight;
+    var heading_height = document.getElementsByClassName("pf-header-bar")[0]?.clientHeight;
+    var pre_height = contents_height - handle_height - heading_height;
+    const pre_el: HTMLElement = vnode.dom as HTMLElement;
+    const code_el: HTMLElement = vnode.dom.children[0] as HTMLElement;
+    pre_el.style.height = `${pre_height}px`;
+    if (scroll) {
       pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
     }
   }
