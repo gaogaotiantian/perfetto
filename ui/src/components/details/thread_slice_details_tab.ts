@@ -51,6 +51,10 @@ import {extensions} from '../extensions';
 import {TraceImpl} from '../../core/trace_impl';
 import {renderSliceArguments} from './slice_args';
 
+import * as Prism from 'prismjs';
+import 'prismjs/components/prism-python';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
+
 interface ContextMenuItem {
   name: string;
   shouldDisplay(slice: SliceDetails): boolean;
@@ -255,8 +259,15 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
       },
       m(
         GridLayout,
-        renderDetails(this.trace, slice, this.breakdownByThreadState),
-        this.renderRhs(this.trace, slice),
+        m(
+          GridLayoutColumn,
+          renderDetails(this.trace, slice, this.breakdownByThreadState),
+          this.renderRhs(this.trace, slice),
+        ),
+        m(
+          GridLayoutColumn,
+          this.renderSourceCode(this.trace, slice),
+        )
       ),
     );
   }
@@ -420,6 +431,59 @@ export class ThreadSliceDetailsPanel implements TrackEventDetailsPanel {
       );
     } else {
       return undefined;
+    }
+  }
+  private renderSourceCode(trace: Trace, sliceInfo: SliceDetails): m.Vnode {
+    const funcName = sliceInfo.name;
+    const sourceStorage = trace.traceInfo.vizTracerSourceStorage;
+    if (sourceStorage && sourceStorage["functions"]) {
+      const file_data = sourceStorage["functions"][funcName] || null;
+      if (file_data) {
+        const file_name = file_data[0];
+        const lineno = file_data[1];
+        const code = sourceStorage["files"][file_name][0];
+        const total_lineno = sourceStorage["files"][file_name][1];
+        var el_pre = document.createElement("pre");
+        var el_code = document.createElement("code");
+        el_pre.className = "language-py line-numbers"
+        el_code.className = "language-py"
+        el_pre.appendChild(el_code)
+        el_code.innerHTML = Prism.highlight(code, Prism.languages.python, "python");
+        var env = {
+          element: el_code,
+          language: "python",
+          grammar: Prism.languages.python,
+          code: code
+        }
+        Prism.hooks.run("complete", env);
+        return m(
+          'pre.language-py.line-numbers',
+          {
+            oncreate: (vnode) => {
+              this.resize(vnode, lineno, total_lineno, true);
+            },
+            onupdate: (vnode) => {
+              this.resize(vnode, lineno, total_lineno)
+            }
+          },
+          m.trust(el_pre.innerHTML)
+        )
+      }
+    }
+    return m(
+      "h1", "No source code found"
+    )
+  }
+  private resize(vnode: m.VnodeDOM, lineno: number, total_lineno: number, scroll: boolean = false) {
+    const contents_height = document.getElementsByClassName("pf-split-panel__drawer")[0]?.clientHeight;
+    const handle_height = document.getElementsByClassName("pf-split-panel__handle")[0]?.clientHeight;
+    const heading_height = document.getElementsByClassName("pf-header-bar")[0]?.clientHeight;
+    const pre_height = contents_height - handle_height - heading_height;
+    const pre_el: HTMLElement | null = vnode.dom as HTMLElement;
+    const code_el: HTMLElement | null = vnode.dom.children[0] as HTMLElement;
+    pre_el.style.height = `${pre_height}px`;
+    if (scroll) {
+      pre_el.scrollTop = 12 + (lineno - 1) / total_lineno * code_el.offsetHeight;
     }
   }
 }
