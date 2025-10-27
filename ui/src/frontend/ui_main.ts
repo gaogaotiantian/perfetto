@@ -103,7 +103,8 @@ export class UiMainPerTrace implements m.ClassComponent {
     // commands or anything in this state as they will be useless.
     if (trace === undefined) return;
     document.title = `${trace.traceInfo.traceTitle || 'Trace'} - Perfetto UI`;
-    this.maybeShowJsonWarning();
+    // VizTracer does not show this warning
+    // this.maybeShowJsonWarning();
   }
 
   private renderOmnibox(): m.Children {
