@@ -69,23 +69,6 @@ class TraceErrorIcon implements m.ClassComponent<TraceImplAttrs> {
   }
 }
 
-class RefreshIcon implements m.ClassComponent {
-  view() {
-    return m(
-      'button.topbar-button',
-      {
-        onclick: () => {
-          // @ts-ignore this function is set in index.html
-          window.clearAllCaches();
-        },
-      },
-      m('i.material-icons',
-        'refresh'
-      )
-    )
-  }
-}
-
 export interface TopbarAttrs {
   omnibox: m.Children;
   trace?: TraceImpl;
@@ -102,8 +85,7 @@ export class Topbar implements m.ClassComponent<TopbarAttrs> {
         ),
       },
       omnibox,
-      trace && m(TraceErrorIcon, {trace}),
-      m(RefreshIcon)
+      trace && m(TraceErrorIcon, {trace})
     );
   }
 }
